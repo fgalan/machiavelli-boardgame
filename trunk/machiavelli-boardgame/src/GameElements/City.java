@@ -20,10 +20,14 @@
 
 package GameElements;
 
+import org.apache.log4j.Logger;
+
 import GameEngine.Player;
 
 public class City {
 
+	private final static Logger log = Logger.getLogger("City.class");
+	
 	private int size;
 	
 	private Player controller;

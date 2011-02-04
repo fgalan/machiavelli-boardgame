@@ -20,10 +20,14 @@
 
 package GameElements;
 
+import org.apache.log4j.Logger;
+
 import GameEngine.Player;
 
 public class Garrison extends Unit {
 
+	private final static Logger log = Logger.getLogger("Garrison.class");
+	
 	public Garrison(Player owner, City c, int elite) {
 		super(owner, elite);
 		setLocation(c.getProvince());

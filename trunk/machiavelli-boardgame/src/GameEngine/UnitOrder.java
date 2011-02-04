@@ -20,7 +20,11 @@
 
 package GameEngine;
 
+import org.apache.log4j.Logger;
+
 public class UnitOrder extends Order {
+	
+	private final static Logger log = Logger.getLogger("UnitOrder.class");
 	
 	// TODO
 

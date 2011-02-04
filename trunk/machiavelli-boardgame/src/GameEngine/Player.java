@@ -20,8 +20,12 @@
 
 package GameEngine;
 
+import org.apache.log4j.Logger;
+
 public class Player {
 
+	private final static Logger log = Logger.getLogger("Player.class");
+	
 	private String countryName;
 	private int money;
 	

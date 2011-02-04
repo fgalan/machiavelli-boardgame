@@ -20,9 +20,13 @@
 
 package GameEngine;
 
+import org.apache.log4j.Logger;
+
 import GameElements.Map;
 
 public class Engine {
+	
+	private final static Logger log = Logger.getLogger("Engine.class");
 
 	public static TurnResult processTurnt(Player p[], Map m, Turn t) {
 		// TODO

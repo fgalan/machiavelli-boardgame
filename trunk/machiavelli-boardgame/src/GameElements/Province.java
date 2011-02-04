@@ -20,7 +20,11 @@
 
 package GameElements;
 
+import org.apache.log4j.Logger;
+
 public class Province extends Territory {
+	
+	private final static Logger log = Logger.getLogger("Province.class");
 	
 	private boolean famine;
 	private boolean unrest;

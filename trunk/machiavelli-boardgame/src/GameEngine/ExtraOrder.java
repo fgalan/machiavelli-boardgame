@@ -20,7 +20,11 @@
 
 package GameEngine;
 
+import org.apache.log4j.Logger;
+
 public class ExtraOrder extends Order {
+
+	private final static Logger log = Logger.getLogger("ExtraOrder.class");
 	
 	// TODO
 

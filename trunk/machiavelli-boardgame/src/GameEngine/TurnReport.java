@@ -20,7 +20,11 @@
 
 package GameEngine;
 
+import org.apache.log4j.Logger;
+
 public class TurnReport {
+	
+	private final static Logger log = Logger.getLogger("TurnReport.class");
 	
 	public String toString() {
 		// TODO
