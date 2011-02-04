@@ -20,7 +20,11 @@
 
 package GameEngine;
 
+import org.apache.log4j.Logger;
+
 public abstract class PlayerTurn {
+	
+	private final static Logger log = Logger.getLogger("PlayerTurn.class");
 	
 	protected Player player;
 

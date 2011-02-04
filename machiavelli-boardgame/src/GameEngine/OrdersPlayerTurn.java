@@ -20,7 +20,11 @@
 
 package GameEngine;
 
+import org.apache.log4j.Logger;
+
 public class OrdersPlayerTurn extends PlayerTurn {
+
+	private final static Logger log = Logger.getLogger("OrdersPlayerTurn.class");
 	
 	private UnitOrder[] unitOrders;
 	private ExtraOrder[] extraOrders;

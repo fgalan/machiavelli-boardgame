@@ -20,9 +20,13 @@
 
 package GameElements;
 
+import org.apache.log4j.Logger;
+
 import GameEngine.Player;
 
 public abstract class Unit {
+	
+	private final static Logger log = Logger.getLogger("Unit.class");
 	
 	private Player owner;
 	private int elite;

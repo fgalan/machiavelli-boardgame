@@ -20,6 +20,10 @@
 
 package GameEngine;
 
+import org.apache.log4j.Logger;
+
 public class Turn {
 
+	private final static Logger log = Logger.getLogger("Turn.class");
+	
 }

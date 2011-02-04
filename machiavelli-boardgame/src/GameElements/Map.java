@@ -40,7 +40,7 @@ import GameEngine.Player;
 
 public class Map {
 	
-	private final static Logger log = Logger.getLogger("Map");
+	private final static Logger log = Logger.getLogger("Map.class");
 	
 	private HashMap<String, Territory> territories;
 

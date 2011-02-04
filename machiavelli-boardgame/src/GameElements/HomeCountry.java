@@ -20,10 +20,14 @@
 
 package GameElements;
 
+import org.apache.log4j.Logger;
+
 import GameEngine.Player;
 
 public class HomeCountry {
 
+	private final static Logger log = Logger.getLogger("HomeCountry.class");
+	
 	private Province[] provinces;
 	private Player player;
 	

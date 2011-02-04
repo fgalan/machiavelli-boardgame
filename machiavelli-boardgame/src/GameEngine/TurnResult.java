@@ -20,6 +20,8 @@
 
 package GameEngine;
 
+import org.apache.log4j.Logger;
+
 import GameElements.Map;
 
 /**
@@ -28,6 +30,8 @@ import GameElements.Map;
  *
  */
 public class TurnResult {
+	
+	private final static Logger log = Logger.getLogger("TurnResult.class");
 	
 	private Map map;
 	private TurnReport report;

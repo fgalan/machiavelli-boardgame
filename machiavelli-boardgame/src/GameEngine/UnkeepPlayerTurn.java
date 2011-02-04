@@ -20,8 +20,12 @@
 
 package GameEngine;
 
+import org.apache.log4j.Logger;
+
 public class UnkeepPlayerTurn extends PlayerTurn {
 
+	private final static Logger log = Logger.getLogger("UnkeepPlayerTurn.class");
+	
 	private UnkeepOrder[] unkeepOrders;
 	private NewUnitOrder[] newUnitOrders;
 	
