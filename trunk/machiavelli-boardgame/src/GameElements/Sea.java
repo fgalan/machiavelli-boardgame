@@ -26,8 +26,8 @@ public class Sea extends Territory {
 
 	private final static Logger log = Logger.getLogger("Sea.class");
 	
-	public Sea(String n, Territory[] a) {
-		super(n, a);
+	public Sea(String n) {
+		super(n);
 	}
 
 }

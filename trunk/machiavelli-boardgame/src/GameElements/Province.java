@@ -30,8 +30,8 @@ public class Province extends Territory {
 	private boolean unrest;
 	private City city;
 
-	public Province(String n, Territory[] a) {
-		super(n, a);
+	public Province(String n) {
+		super(n);
 	}
 
 	public void setFamine(boolean famine) {
@@ -49,9 +49,13 @@ public class Province extends Territory {
 	public boolean isUnrest() {
 		return unrest;
 	}
-
+	
 	public City getCity() {
 		return city;
+	}
+
+	public void setCity(City city) {
+		this.city = city;
 	}
 
 }
