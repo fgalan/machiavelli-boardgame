@@ -23,6 +23,7 @@ package GameElements;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -65,25 +66,98 @@ public class Map {
 									
 			/* Province or sea? */
 			if (at.getNamedItem("type").getNodeValue().equals("Province")) {
-				t = new Province(at.getNamedItem("name").getNodeValue(),getAdjacents(l.item(i)));
+				t = new Province(at.getNamedItem("name").getNodeValue());
 				log.info("province " + at.getNamedItem("name").getNodeValue());
 			}
 			else { // "Sea"
-				t = new Sea(at.getNamedItem("name").getNodeValue(), getAdjacents(l.item(i)));
+				t = new Sea(at.getNamedItem("name").getNodeValue());
 				log.info("sea " + at.getNamedItem("name").getNodeValue());
 			}
 			
-			/* Look for a city */
+			/* Look for controller */
+			t.setController(parseController(l.item(i)));
 			
-			/* Look for a port */
+			if (t instanceof Province) {
+				/* Look for a city */
+				City c = parseCity(l.item(i), (Province)t);
+				((Province)t).setCity(c);
+				
+				/* Look for famine */
+				((Province)t).setFamine(parseFamine(l.item(i)));
+				
+				/* Look for unrest */
+				((Province)t).setFamine(parseUnrest(l.item(i)));
+			}
+						
+			/* Add adjacent territories */
+			t.setAdjacents(parseAdjacents(l.item(i)));
+			
+			/* Look for unit */
+			t.setUnit(parseUnit(l.item(i)));
 		}
+	}
+	
+	/**
+	 * @param item XML element reprensenting a Territory
+	 * @return the Unit controllict the Territory, null if the Territory is empty
+	 */
+	private Unit parseUnit(Node item) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	/**
-	 * @param item a Node of the DOM tree representing a <Territory>
-	 * @return the list of Adjacent 
+	 * @param item XML element reprensenting a Territory
+	 * @return the Vector of adjacent Territories
 	 */
-	private Territory[] getAdjacents(Node item) {
+	private Vector<String> parseAdjacents(Node item) {
+		
+		Vector<String> v = new Vector<String>();
+		NodeList l = item.getChildNodes();
+		for (int i = 0; i < l.getLength(); i++) {
+			if (l.item(i).getNodeName().equals("Adjacency")) {
+				v.add(l.item(i).getTextContent());
+				log.info("adjacency: " + l.item(i).getTextContent());
+			}
+		}
+		return v;
+	}
+
+	/**
+	 * @param item XML element reprensenting a Province
+	 * @return true if Province is under unrest, false otherwise
+	 */
+	private boolean parseUnrest(Node item) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/**
+	 * @param item XML element reprensenting a Province
+	 * @return true if Province is under famine, false otherwise
+	 */
+	private boolean parseFamine(Node item) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/**
+	 * @param item XML element reprensenting a Province
+	 * @param the Province object
+	 * @return the City object corresponding to the Province or nothing 
+	 */
+	private City parseCity(Node item, Province t) {
+		// TODO
+		
+		/* Look for port */
+		return null;
+	}
+
+	/**
+	 * @param item XML element reprensenting a Territory
+	 * @return the controller name or null if the Territory is controled by no player
+	 */
+	private String parseController(Node item) {
 		// TODO Auto-generated method stub
 		return null;
 	}

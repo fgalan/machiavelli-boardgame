@@ -20,6 +20,8 @@
 
 package GameElements;
 
+import java.util.Vector;
+
 import org.apache.log4j.Logger;
 
 import GameEngine.Player;
@@ -29,24 +31,27 @@ public abstract class Territory {
 	private final static Logger log = Logger.getLogger("Territory.class");
 	
 	private String name;
-	private Territory[] adjacents;
-	private Player controller;
+	private Vector<String> adjacents;
+	private String controller;
 	private Unit unit;
 	
-	public Territory(String n, Territory[] a) {
+	public Territory(String n) {
 		name = n;
-		adjacents = a;
 	}
 
-	public void setController(Player controller) {
+	public void setController(String controller) {
 		this.controller = controller;
 	}
 
-	public Player getController() {
+	public String getController() {
 		return controller;
 	}
 
-	public Territory[] getAdjacents() {
+	public void setAdjacents(Vector<String> adjacents) {
+		this.adjacents = adjacents;
+	}
+	
+	public Vector<String> getAdjacents() {
 		return adjacents;
 	}
 

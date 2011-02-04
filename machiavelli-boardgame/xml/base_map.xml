@@ -1,66 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Map>
 	<Territory name="Avignon" type="Province">
-		<Static>
-			<City size="1" fortified="yes"/>
-			<Adjacency>Swiss</Adjacency>
-			<Adjacency>Turin</Adjacency>
-			<Adjacency>Provence</Adjacency>
-			<Adjacency>Western Gulf Of Lyons</Adjacency>
-		</Static>
+		<Adjacency>Swiss</Adjacency>
+		<Adjacency>Turin</Adjacency>
+		<Adjacency>Provence</Adjacency>
+		<Adjacency>Western Gulf Of Lyons</Adjacency>
+		<City size="1" fortified="yes"/>		
 	</Territory>
 	<Territory name="Provence" type="Province">
-		<Static>
-			<Adjacency>Avignon</Adjacency>
-			<Adjacency>Turin</Adjacency>
-			<!--Adjacency>Saluzzo</Adjacency-->
-			<!--Adjacency>Savoy</Adjacency-->
-			<Adjacency>Marseille</Adjacency>
-			<Adjacency>Western Gulf Of Lyons</Adjacency>
-			<!--Adjacency>Eartern Gulf Of Lyons</Adjacency-->
-		</Static>
+		<Adjacency>Avignon</Adjacency>
+		<Adjacency>Turin</Adjacency>
+		<!--Adjacency>Saluzzo</Adjacency-->
+		<!--Adjacency>Savoy</Adjacency-->
+		<Adjacency>Marseille</Adjacency>
+		<Adjacency>Western Gulf Of Lyons</Adjacency>
+		<!--Adjacency>Eartern Gulf Of Lyons</Adjacency-->
 	</Territory>
 	<Territory name="Marseille" type="Province">
-		<Static>
-			<City size="1" fortified="yes"/>
-			<Port/>
-			<Adjacency>Provence</Adjacency>
-			<Adjacency>Western Gulf Of Lyons</Adjacency>
-		</Static>
+		<City size="1" fortified="yes" port="yes"/>
+		<Adjacency>Provence</Adjacency>
+		<Adjacency>Western Gulf Of Lyons</Adjacency>
 	</Territory>
 	<Territory name="Turin" type="Province">
-		<Static>
-			<City size="1" fortified="yes"/>
-			<Port/>
-			<Adjacency>Swiss</Adjacency>
-			<Adjacency>Avignon</Adjacency>
-			<Adjacency>Provence</Adjacency>
-			<!--Adjacency>Saluzzo</Adjacency>
-			<Adjacency>Savoy</Adjacency>
-			<Adjacency>Montferrat</Adjacency>
-			<Adjacency>Pavia</Adjacency>
-			<Adjacency>Como</Adjacency>
-			<Adjacency>Tyrolea</Adjacency-->
-		</Static>
+		<Adjacency>Swiss</Adjacency>
+		<Adjacency>Avignon</Adjacency>
+		<Adjacency>Provence</Adjacency>
+		<!--Adjacency>Saluzzo</Adjacency>
+		<Adjacency>Savoy</Adjacency>
+		<Adjacency>Montferrat</Adjacency>
+		<Adjacency>Pavia</Adjacency>
+		<Adjacency>Como</Adjacency>
+		<Adjacency>Tyrolea</Adjacency-->
+		<City size="1" fortified="yes" port="yes"/>
 	</Territory>
 	<Territory name="Swiss" type="Province">
-		<Static>
-			<City size="1" fortified="no"/>
-			<Adjacency>Avignon</Adjacency>
-			<Adjacency>Turin</Adjacency>
-			<Adjacency>Tyrolea</Adjacency>
-		</Static>
+		<City size="1"/>
+		<Adjacency>Avignon</Adjacency>
+		<Adjacency>Turin</Adjacency>
+		<Adjacency>Tyrolea</Adjacency>
 	</Territory>
 	<Territory name="Western Gulf Of Lyons" type="Sea">
-		<Static>
-			<Adjacency>Avignon</Adjacency>
-			<Adjacency>Provence</Adjacency>
-			<Adjacency>Marseille</Adjacency>
-			<!--Adjacency>Eartern Gulf Of Lyons</Adjacency-->
-			<!--Adjacency>Corsica</Adjacency-->
-			<!--Adjacency>Sardinia</Adjacency-->
-			<!--Adjacency>Western Mediterranean</Adjacency-->
-			<!--Adjacency>Western Tyrrhenian Sea</Adjacency-->
-		</Static>
+		<Adjacency>Avignon</Adjacency>
+		<Adjacency>Provence</Adjacency>
+		<Adjacency>Marseille</Adjacency>
+		<!--Adjacency>Eartern Gulf Of Lyons</Adjacency-->
+		<!--Adjacency>Corsica</Adjacency-->
+		<!--Adjacency>Sardinia</Adjacency-->
+		<!--Adjacency>Western Mediterranean</Adjacency-->
+		<!--Adjacency>Western Tyrrhenian Sea</Adjacency-->
 	</Territory>	
 </Map>

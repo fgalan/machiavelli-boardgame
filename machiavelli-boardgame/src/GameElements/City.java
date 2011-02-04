@@ -32,15 +32,18 @@ public class City {
 	
 	private Player controller;
 	private Province province;
+	private boolean fortified;
+	private boolean port;
+	
 	private Unit unit;
 	private boolean underSiege;
 	private boolean neutralGarrison;
-	private boolean fortified;
 	
-	public City(Province p, int s, boolean f, boolean ng) {
+	public City(Province p, int s, boolean f, boolean po, boolean ng) {
 		province = p;
 		size = s;
 		fortified = f;
+		port = po;
 		neutralGarrison = ng;
 	}
 	
@@ -77,6 +80,10 @@ public class City {
 
 	public boolean isFortified() {
 		return fortified;
+	}
+
+	public boolean isPort() {
+		return port;
 	}
 	
 }
