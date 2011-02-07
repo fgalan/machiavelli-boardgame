@@ -22,4 +22,8 @@ package Exceptions;
 
 public class AdjacencyException extends Exception {
 
+	public AdjacencyException(String s) {
+		super(s);
+	}
+	
 }

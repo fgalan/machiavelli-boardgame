@@ -28,9 +28,9 @@ public class Fleet extends Unit {
 
 	private final static Logger log = Logger.getLogger("Fleet.class");
 	
-	public Fleet(Player owner, Sea pr, int elite) {
+	public Fleet(String owner, Sea sea, int elite) {
 		super(owner, elite);
-		setLocation(pr);
+		setLocation(sea);
 	}
 	
 }

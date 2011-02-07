@@ -37,14 +37,14 @@ public class City {
 	
 	private Unit unit;
 	private boolean underSiege;
-	private boolean neutralGarrison;
+	private boolean autonomousGarrison;
 	
-	public City(Province p, int s, boolean f, boolean po, boolean ng) {
+	public City(Province p, int s, boolean f, boolean po, boolean ag) {
 		province = p;
 		size = s;
 		fortified = f;
 		port = po;
-		neutralGarrison = ng;
+		autonomousGarrison = ag;
 	}
 	
 	public void setController(Player controller) {
@@ -74,8 +74,8 @@ public class City {
 		return province;
 	}
 
-	public boolean isNeutralGarrison() {
-		return neutralGarrison;
+	public boolean hasAutonomousGarrison() {
+		return autonomousGarrison;
 	}
 
 	public boolean isFortified() {

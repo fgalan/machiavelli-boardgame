@@ -32,19 +32,10 @@ public abstract class Territory {
 	
 	private String name;
 	private Vector<String> adjacents;
-	private String controller;
 	private Unit unit;
 	
 	public Territory(String n) {
 		name = n;
-	}
-
-	public void setController(String controller) {
-		this.controller = controller;
-	}
-
-	public String getController() {
-		return controller;
 	}
 
 	public void setAdjacents(Vector<String> adjacents) {
