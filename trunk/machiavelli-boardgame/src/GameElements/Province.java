@@ -30,6 +30,8 @@ public class Province extends Territory {
 	private boolean unrest;
 	private City city;
 
+	private String controller;
+
 	public Province(String n) {
 		super(n);
 	}
@@ -58,4 +60,12 @@ public class Province extends Territory {
 		this.city = city;
 	}
 
+	public void setController(String controller) {
+		this.controller = controller;
+	}
+
+	public String getController() {
+		return controller;
+	}
+	
 }

@@ -28,12 +28,12 @@ public class Garrison extends Unit {
 
 	private final static Logger log = Logger.getLogger("Garrison.class");
 	
-	public Garrison(Player owner, City c, int elite) {
+	public Garrison(String owner, City c, int elite) {
 		super(owner, elite);
 		setLocation(c.getProvince());
 	}
 	
-	public Garrison(Player owner, Province p, int elite) {
+	public Garrison(String owner, Province p, int elite) {
 		super(owner, elite);
 		setLocation(p);
 	}

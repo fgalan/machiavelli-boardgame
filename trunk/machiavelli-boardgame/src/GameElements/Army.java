@@ -28,7 +28,7 @@ public class Army extends Unit {
 	
 	private final static Logger log = Logger.getLogger("Army.class");
 	
-	public Army(Player owner, Province pr, int elite) {
+	public Army(String owner, Province pr, int elite) {
 		super(owner, elite);
 		setLocation(pr);
 	}

@@ -17,7 +17,9 @@ public class Tester {
 		
 		BasicConfigurator.configure();		
 		try {
-			Map m = new Map(new File("D://eclipse-my-projects//machiavelli-gameboard//xml//base_map.xml"));
+			Map m = new Map(new File("D://eclipse-my-projects//machiavelli-gameboard//xml//initial-scenario-1.xml"));
+			System.out.println(m.toString());
+			System.out.println(m.toXml());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

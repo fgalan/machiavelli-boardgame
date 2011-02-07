@@ -18,44 +18,12 @@
  *
  */
 
-package GameElements;
+package Exceptions;
 
-import org.apache.log4j.Logger;
+public class ParseMapException extends Exception {
 
-import GameEngine.Player;
-
-public abstract class Unit {
-	
-	private final static Logger log = Logger.getLogger("Unit.class");
-	
-	private String owner;
-	private int elite;
-	private Territory location;
-	
-	public static final int NO_ELITE = 0;
-	public static final int ELITE_TYPE_1 = 1;
-	public static final int ELITE_TYPE_2 = 2;
-	public static final int ELITE_TYPE_3 = 3;
-	
-	public Unit (String p, int e) {
-		owner = p;
-		elite = e;
-	}
-	
-	public String getOwner() {
-		return owner;
-	}
-
-	public int getElite() {
-		return elite;
-	}
-
-	public void setLocation(Territory location) {
-		this.location = location;
-	}
-
-	public Territory getLocation() {
-		return location;
+	public ParseMapException(String string) {
+		super(string);
 	}
 
 }
