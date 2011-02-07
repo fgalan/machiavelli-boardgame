@@ -28,8 +28,8 @@ public class Army extends Unit {
 	
 	private final static Logger log = Logger.getLogger("Army.class");
 	
-	public Army(String owner, Province pr, int elite) {
-		super(owner, elite);
+	public Army(String name, String owner, Province pr, int elite) {
+		super(name, owner, elite);
 		setLocation(pr);
 	}
 

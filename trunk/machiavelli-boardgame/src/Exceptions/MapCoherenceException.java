@@ -20,9 +20,9 @@
 
 package Exceptions;
 
-public class AdjacencyException extends Exception {
+public class MapCoherenceException extends Exception {
 
-	public AdjacencyException(String s) {
+	public MapCoherenceException(String s) {
 		super(s);
 	}
 	

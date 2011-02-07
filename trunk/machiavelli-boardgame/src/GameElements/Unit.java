@@ -28,6 +28,7 @@ public abstract class Unit {
 	
 	private final static Logger log = Logger.getLogger("Unit.class");
 	
+	private String name;
 	private String owner;
 	private int elite;
 	private Territory location;
@@ -37,7 +38,8 @@ public abstract class Unit {
 	public static final int ELITE_TYPE_2 = 2;
 	public static final int ELITE_TYPE_3 = 3;
 	
-	public Unit (String p, int e) {
+	public Unit (String n, String p, int e) {
+		name = n;
 		owner = p;
 		elite = e;
 	}
@@ -56,6 +58,10 @@ public abstract class Unit {
 
 	public Territory getLocation() {
 		return location;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 }
