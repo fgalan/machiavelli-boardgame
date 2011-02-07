@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Map>
-	<Territory name="Avignon" type="Province">
+	<Territory name="Avignon" type="Province" controller="France">
 		<Adj>Swiss</Adj>
 		<Adj>Turin</Adj>
 		<Adj>Provence</Adj>
 		<Adj>Western Gulf of Lyons</Adj>
-		<City size="1" fortified="yes"/>		
+		<City size="1" fortified="yes"/>
+		<Unit name="A1" type="Army" owner="France"/>
 	</Territory>
-	<Territory name="Provence" type="Province">
+	<Territory name="Provence" type="Province" controller="France">
 		<Adj>Avignon</Adj>
 		<Adj>Turin</Adj>
 		<Adj>Saluzzo</Adj>
@@ -16,10 +17,11 @@
 		<Adj>Western Gulf of Lyons</Adj>
 		<Adj>Eastern Gulf of Lyons</Adj>
 	</Territory>
-	<Territory name="Marseille" type="Province">
+	<Territory name="Marseille" type="Province" controller="France">
 		<Adj>Provence</Adj>
 		<Adj>Western Gulf of Lyons</Adj>
 		<City size="1" fortified="yes" port="yes"/>
+		<Unit name="F1" type="Fleet" owner="France"/>
 	</Territory>
 	<Territory name="Turin" type="Province">
 		<Adj>Swiss</Adj>
@@ -32,14 +34,16 @@
 		<Adj>Como</Adj>
 		<Adj>Tyrolea</Adj>
 		<City size="1" fortified="yes"/>
+		<AutonomousGarrison/>
 	</Territory>
-	<Territory name="Swiss" type="Province">
+	<Territory name="Swiss" type="Province" contoller="Austria">
 		<Adj>Avignon</Adj>
 		<Adj>Turin</Adj>
 		<Adj>Tyrolea</Adj>
 		<City size="1"/>
+		<Unit name="A3" type="Army" owner="Austria"/>
 	</Territory>
-	<Territory name="Tyrolea" type="Province">
+	<Territory name="Tyrolea" type="Province" controller="Austria">
 		<Adj>Swiss</Adj>
 		<Adj>Turin</Adj>
 		<Adj>Como</Adj>
@@ -47,15 +51,17 @@
 		<Adj>Carinthia</Adj>
 		<Adj>Austria</Adj>
 		<City size="1" fortified="yes"/>
+		<Unit name="A1" type="Army" owner="Austria"/>
 	</Territory>
-	<Territory name="Austria" type="Province">
+	<Territory name="Austria" type="Province" controller="Austria">
 		<Adj>Tyrolea</Adj>
 		<Adj>Carinthia</Adj>
 		<Adj>Slavonia</Adj>
 		<Adj>Hungrary</Adj>
-		<City size="1" fortified="yes"/>		
+		<City size="1" fortified="yes"/>
+		<Unit name="A2" type="Army" owner="Austria"/>		
 	</Territory>
-	<Territory name="Hungrary" type="Province">
+	<Territory name="Hungrary" type="Province" controller="Austria">
 		<Adj>Austria</Adj>
 		<Adj>Slavonia</Adj>
 		<City size="1"/>
@@ -67,7 +73,7 @@
 		<Adj>Carniola</Adj>
 		<Adj>Croatia</Adj>
 	</Territory>
-	<Territory name="Carinthia" type="Province">
+	<Territory name="Carinthia" type="Province" controller="Austria">
 		<Adj>Tyrolea</Adj>
 		<Adj>Austria</Adj>
 		<Adj>Slavonia</Adj>
@@ -85,8 +91,9 @@
 		<Adj>Brescia</Adj>
 		<Adj>Bergamo</Adj>
 		<City size="1" fortified="yes"/>
+		<AutonomousGarrison/>
 	</Territory>
-	<Territory name="Milan" type="Province">
+	<Territory name="Milan" type="Province" controller="France">
 		<Adj>Como</Adj>
 		<Adj>Tyrolea</Adj>
 		<Adj>Carinthia</Adj>
@@ -96,6 +103,7 @@
 		<Adj>Piacenzzia</Adj>
 		<Adj>Pavia</Adj>
 		<City size="3" fortified="yes"/>
+		<Unit name="A2" type="Army" owner="France"/>
 	</Territory>
 	<Territory name="Como" type="Province">
 		<Adj>Turin</Adj>
@@ -111,6 +119,7 @@
 		<Adj>Fornova</Adj>
 		<Adj>Montferrat</Adj>
 		<City size="1" fortified="yes"/>
+		<AutonomousGarrison/>
 	</Territory>
 	<Territory name="Montferrat" type="Province">
 		<Adj>Turin</Adj>
@@ -119,12 +128,14 @@
 		<Adj>Genoa</Adj>
 		<Adj>Savoy</Adj>
 		<City size="1" fortified="yes"/>
+		<AutonomousGarrison/>
 	</Territory>
-	<Territory name="Saluzzo" type="Province">
+	<Territory name="Saluzzo" type="Province" controller="France">
 		<Adj>Provence</Adj>
 		<Adj>Turin</Adj>
 		<Adj>Savoy</Adj>
 		<City size="1" fortified="yes" port="yes"/>
+		<Unit name="A5" type="Army" owner="France"/>
 	</Territory>	
 	<Territory name="Savoy" type="Province">
 		<Adj>Provence</Adj>
@@ -134,8 +145,9 @@
 		<Adj>Genoa</Adj>
 		<Adj>Eastern Gulf of Lyons</Adj>
 		<City size="1" fortified="yes" port="yes"/>
+		<AutonomousGarrison/>
 	</Territory>
-	<Territory name="Genoa" type="Province">
+	<Territory name="Genoa" type="Province" controller="France">
 		<Adj>Savoy</Adj>
 		<Adj>Montferrat</Adj>
 		<Adj>Fornova</Adj>
@@ -143,6 +155,7 @@
 		<Adj>Modena</Adj>
 		<Adj>Eastern Gulf of Lyons</Adj>
 		<City size="3" fortified="yes" port="yes"/>
+		<Unit name="F2" type="Fleet" owner="France"/>
 	</Territory>
 	<Territory name="Fornova" type="Province">
 		<Adj>Montferrat</Adj>
@@ -151,7 +164,6 @@
 		<Adj>Parma</Adj>
 		<Adj>Pontremoni</Adj>
 		<Adj>Genoa</Adj>
-		<!-- City size="1" fortified="yes"/-->
 	</Territory>
 	<Territory name="Pontremoni" type="Province">
 		<Adj>Genoa</Adj>
@@ -166,7 +178,6 @@
 		<Adj>Mantua</Adj>
 		<Adj>Modena</Adj>
 		<Adj>Pontremoni</Adj>
-		<!-- City size="1" fortified="yes"/-->
 	</Territory>
 	<Territory name="Piacenzzia" type="Province">
 		<Adj>Pavia</Adj>
@@ -174,7 +185,6 @@
 		<Adj>Cremona</Adj>
 		<Adj>Parma</Adj>
 		<Adj>Fornova</Adj>
-		<!-- City size="1" fortified="yes"/-->
 	</Territory>
 	<Territory name="Cremona" type="Province">
 		<Adj>Milan</Adj>
@@ -184,6 +194,7 @@
 		<Adj>Parma</Adj>
 		<Adj>Piacenzzia</Adj>
 		<City size="1" fortified="yes"/>
+		<AutonomousGarrison/>
 	</Territory>
 	<Territory name="Mantua" type="Province">
 		<Adj>Cremona</Adj>
@@ -194,32 +205,30 @@
 		<Adj>Modena</Adj>
 		<Adj>Parma</Adj>
 		<City size="1" fortified="yes"/>
+		<AutonomousGarrison/>
 	</Territory>
-	<Territory name="Bergamo" type="Province">
+	<Territory name="Bergamo" type="Province" controller="Venice">
 		<Adj>Milan</Adj>
 		<Adj>Trent</Adj>
 		<Adj>Brescia</Adj>
 		<Adj>Cremona</Adj>
-		<!-- City size="1" fortified="yes"/-->
 	</Territory>
-	<Territory name="Brescia" type="Province">
+	<Territory name="Brescia" type="Province" controller="Venice">
 		<Adj>Bergamo</Adj>
 		<Adj>Trent</Adj>
 		<Adj>Verona</Adj>
 		<Adj>Mantua</Adj>
 		<Adj>Cremona</Adj>
-		<!-- City size="1" fortified="yes"/-->
 	</Territory>
-	<Territory name="Verona" type="Province">
+	<Territory name="Verona" type="Province" controller="Venice">
 		<Adj>Brescia</Adj>
 		<Adj>Trent</Adj>
 		<Adj>Vicenza</Adj>
 		<Adj>Ferrara</Adj>
 		<Adj>Mantua</Adj>
 		<Adj>Padua</Adj>
-		<!-- City size="1" fortified="yes"/-->
 	</Territory>
-	<Territory name="Padua" type="Province">
+	<Territory name="Padua" type="Province" controller="Venice">
 		<Adj>Verona</Adj>
 		<Adj>Vicenza</Adj>
 		<Adj>Treviso</Adj>
@@ -227,33 +236,35 @@
 		<Adj>Venice Lagoon</Adj>
 		<Adj>Upper Adriatic</Adj>
 		<City size="1" fortified="yes"/>
+		<Unit name="A1" type="Army" owner="Venice"/>
 	</Territory>
-	<Territory name="Vicenza" type="Province">
+	<Territory name="Vicenza" type="Province" controller="Venice">
 		<Adj>Trent</Adj>
 		<Adj>Carinthia</Adj>
 		<Adj>Friuli</Adj>
 		<Adj>Treviso</Adj>
 		<Adj>Padua</Adj>
 		<Adj>Verona</Adj>
-		<!-- City size="1" fortified="yes"/-->
 	</Territory>
-	<Territory name="Treviso" type="Province">
+	<Territory name="Treviso" type="Province" controller="Venice">
 		<Adj>Padua</Adj>
 		<Adj>Vicenza</Adj>
 		<Adj>Friuli</Adj>
 		<Adj>Venice Lagoon</Adj>
 		<City size="1" fortified="yes"/>
+		<Unit name="A1" type="Army" owner="Venice"/>
 	</Territory>
-	<Territory name="Friuli" type="Province">
+	<Territory name="Friuli" type="Province" controller="Venice">
 		<Adj>Treviso</Adj>
 		<Adj>Vicenza</Adj>
 		<Adj>Carinthia</Adj>
 		<Adj>Carniola</Adj>
 		<Adj>Upper Adriatic</Adj>
 	</Territory>
-	<Territory name="Venice" type="Province">
+	<Territory name="Venice" type="Province" controller="Venice">
 		<Adj>Venice Lagoon</Adj>
 		<City size="3" fortified="yes" port="yes"/>
+		<Unit name="G1" type="Garrison" owner="Venice"/>
 	</Territory>	
 	<Territory name="Carniola" type="Province">
 		<Adj>Friuli</Adj>
@@ -266,55 +277,26 @@
 	<Territory name="Croatia" type="Province">
 		<Adj>Istria</Adj>
 		<Adj>Dalmatia</Adj>
-		<Adj>Bosnia</Adj>
 		<Adj>Carniola</Adj>
 		<Adj>Slavonia</Adj>
 		<Adj>Upper Adriatic</Adj>
 		<City size="1"/>
 	</Territory>
-	<Territory name="Istria" type="Province">
+	<Territory name="Istria" type="Province" controller="Venice">
 		<Adj>Croatia</Adj>
 		<Adj>Dalmatia</Adj>
 		<Adj>Upper Adriatic</Adj>
+		<Unit name="F1" type="Fleet" owner="Venice"/>
 	</Territory>
 	<Territory name="Dalmatia" type="Province">
 		<Adj>Istria</Adj>
 		<Adj>Croatia</Adj>
-		<Adj>Bosnia</Adj>
-		<Adj>Herzegovina</Adj>
 		<Adj>Upper Adriatic</Adj>
 		<Adj>Lower Adriatic</Adj>
 		<City size="1"/>		
 	</Territory>
-	<Territory name="Bosnia" type="Province">
-		<Adj>Croatia</Adj>
-		<Adj>Dalmatia</Adj>
-		<Adj>Herzegovina</Adj>
-	</Territory>
-	<Territory name="Herzegovina" type="Province">
-		<Adj>Dalmatia</Adj>
-		<Adj>Bosnia</Adj>
-		<Adj>Ragusa</Adj>
-		<Adj>Albania</Adj>
-		<Adj>Lower Adriatic</Adj>
-	</Territory>
 	<Territory name="Ragusa" type="Province">
-		<Adj>Herzegovina</Adj>
-		<Adj>Albania</Adj>
 		<Adj>Lower Adriatic</Adj>
-		<City size="1" fortified="yes" port="yes"/>
-	</Territory>
-	<Territory name="Albania" type="Province">
-		<Adj>Ragusa</Adj>
-		<Adj>Herzegovina</Adj>
-		<Adj>Durazzo</Adj>
-		<Adj>Lower Adriatic</Adj>
-		<City size="1"/>
-	</Territory>
-	<Territory name="Durazzo" type="Province">
-		<Adj>Albania</Adj>
-		<Adj>Lower Adriatic</Adj>
-		<Adj>Ionian Sea</Adj>
 		<City size="1" fortified="yes" port="yes"/>
 	</Territory>
 	<Territory name="Ferrara" type="Province">
@@ -324,8 +306,9 @@
 		<Adj>Bologna</Adj>
 		<Adj>Upper Adriatic</Adj>
 		<City size="1" fortified="yes"/>
+		<AutonomousGarrison/>
 	</Territory>
-	<Territory name="Bologna" type="Province">
+	<Territory name="Bologna" type="Province" controller="Papacy">
 		<Adj>Ferrara</Adj>
 		<Adj>Mantua</Adj>
 		<Adj>Modena</Adj>
@@ -345,6 +328,7 @@
 		<Adj>Lucca</Adj>
 		<Adj>Eastern Gulf of Lyons</Adj>
 		<City size="1" fortified="yes"/>
+		<AutonomousGarrison/>
 	</Territory>
 	<Territory name="Lucca" type="Province">
 		<Adj>Modena</Adj>
@@ -353,8 +337,9 @@
 		<Adj>Pisa</Adj>
 		<Adj>Eastern Gulf of Lyons</Adj>
 		<City size="1" fortified="yes"/>
+		<AutonomousGarrison/>
 	</Territory>
-	<Territory name="Pisa" type="Province">
+	<Territory name="Pisa" type="Province" controller="Florence">
 		<Adj>Lucca</Adj>
 		<Adj>Pistoia</Adj>
 		<Adj>Florence</Adj>
@@ -363,14 +348,15 @@
 		<Adj>Eastern Gulf of Lyons</Adj>
 		<Adj>Western Tyrrhenian Sea</Adj>
 		<City size="1" fortified="yes" port="yes"/>
+		<Unit name="A3" type="Army" owner="Florence"/>
 	</Territory>
-	<Territory name="Pistoia" type="Province">
+	<Territory name="Pistoia" type="Province" controller="Florence">
 		<Adj>Pisa</Adj>
 		<Adj>Lucca</Adj>
 		<Adj>Bologna</Adj>
 		<Adj>Florence</Adj>
 	</Territory>
-	<Territory name="Florence" type="Province">
+	<Territory name="Florence" type="Province" controller="Florence">
 		<Adj>Pisa</Adj>
 		<Adj>Pistoia</Adj>
 		<Adj>Bologna</Adj>
@@ -379,30 +365,30 @@
 		<Adj>Arezzo</Adj>
 		<Adj>Sienna</Adj>
 		<City size="3" fortified="yes"/>
+		<Unit name="A2" type="Army" owner="Florence"/>
 	</Territory>
-	<Territory name="Romagna" type="Province">
+	<Territory name="Romagna" type="Province" controller="Papacy">
 		<Adj>Bologna</Adj>
 		<Adj>Florence</Adj>
 		<Adj>Urbino</Adj>
 		<Adj>Ancona</Adj>
 		<Adj>Upper Adriatic</Adj>
-		<!-- City size="1" fortified="yes"/-->
 	</Territory>
-	<Territory name="Urbino" type="Province">
+	<Territory name="Urbino" type="Province" controller="Papacy">
 		<Adj>Florence</Adj>
 		<Adj>Romagna</Adj>
 		<Adj>Ancona</Adj>
 		<Adj>Spoleto</Adj>
 		<Adj>Perugia</Adj>
 		<Adj>Arezzo</Adj>
-		<!-- City size="1" fortified="yes"/-->
 	</Territory>
-	<Territory name="Arezzo" type="Province">
+	<Territory name="Arezzo" type="Province" controller="Florence">
 		<Adj>Florence</Adj>
 		<Adj>Urbino</Adj>
 		<Adj>Perugia</Adj>
 		<Adj>Sienna</Adj>
 		<City size="1" fortified="yes"/>
+		<Unit name="A1" type="Army" owner="Florence"/>
 	</Territory>
 	<Territory name="Sienna" type="Province">
 		<Adj>Piombino</Adj>
@@ -413,6 +399,7 @@
 		<Adj>Patrimony</Adj>
 		<Adj>Eastern Tyrrhenian Sea</Adj>
 		<City size="1" fortified="yes"/>
+		<AutonomousGarrison/>
 	</Territory>
 	<Territory name="Piombino" type="Province">
 		<Adj>Pisa</Adj>
@@ -420,8 +407,9 @@
 		<Adj>Eastern Tyrrhenian Sea</Adj>
 		<Adj>Western Tyrrhenian Sea</Adj>
 		<City size="1" fortified="yes" port="yes"/>
+		<AutonomousGarrison/>
 	</Territory>
-	<Territory name="Ancona" type="Province">
+	<Territory name="Ancona" type="Province" controller="Papacy">
 		<Adj>Romagna</Adj>
 		<Adj>Urbino</Adj>
 		<Adj>Spoleto</Adj>
@@ -429,8 +417,9 @@
 		<Adj>Upper Adriatic</Adj>
 		<Adj>Lower Adriatic</Adj>
 		<City size="1" fortified="yes" port="yes"/>
+		<Unit name="A4" type="Army" owner="Papacy"/>
 	</Territory>
-	<Territory name="Spoleto" type="Province">
+	<Territory name="Spoleto" type="Province" controller="Papacy">
 		<Adj>Tivoli</Adj>
 		<Adj>Rome</Adj>
 		<Adj>Perugia</Adj>
@@ -438,9 +427,8 @@
 		<Adj>Ancona</Adj>
 		<Adj>Aquila</Adj>
 		<Adj>Capua</Adj>
-		<!-- City size="1" fortified="yes"/-->
 	</Territory>
-	<Territory name="Perugia" type="Province">
+	<Territory name="Perugia" type="Province" controller="Papacy">
 		<Adj>Sienna</Adj>
 		<Adj>Arezzo</Adj>
 		<Adj>Urbino</Adj>
@@ -448,30 +436,30 @@
 		<Adj>Rome</Adj>
 		<Adj>Patrimony</Adj>
 		<City size="1" fortified="yes"/>
+		<Unit name="A2" type="Army" owner="Papacy"/>
 	</Territory>
-	<Territory name="Patrimony" type="Province">
+	<Territory name="Patrimony" type="Province" controller="Papacy">
 		<Adj>Sienna</Adj>
 		<Adj>Perugia</Adj>
 		<Adj>Rome</Adj>
 		<Adj>Tivoli</Adj>
 		<Adj>Eastern Tyrrhenian Sea</Adj>
-		<!-- City size="1" fortified="yes"/-->
 	</Territory>
-	<Territory name="Rome" type="Province">
+	<Territory name="Rome" type="Province" controller="Papacy">
 		<Adj>Patrimony</Adj>
 		<Adj>Perugia</Adj>
 		<Adj>Spoleto</Adj>
 		<Adj>Tivoli</Adj>
 		<City size="2" fortified="yes"/>
+		<Unit name="A3" type="Army" owner="Papacy"/>
 	</Territory>
-	<Territory name="Tivoli" type="Province">
+	<Territory name="Tivoli" type="Province" controller="Papacy">
 		<Adj>Patrimony</Adj>
 		<Adj>Rome</Adj>
 		<Adj>Spoleto</Adj>
 		<Adj>Capua</Adj>
 		<Adj>Eastern Tyrrhenian Sea</Adj>
 		<Adj>Gulf of Naples</Adj>
-		<!-- City size="1" fortified="yes" port="yes"/-->
 	</Territory>
 	<Territory name="Capua" type="Province">
 		<Adj>Tivoli</Adj>
@@ -488,14 +476,14 @@
 		<Adj>Naples</Adj>
 		<Adj>Capua</Adj>
 		<Adj>Lower Adriatic</Adj>
-		<!-- City size="1" fortified="yes"/-->
 	</Territory>
-	<Territory name="Naples" type="Province">
+	<Territory name="Naples" type="Province" controller="France">
 		<Adj>Capua</Adj>
 		<Adj>Aquila</Adj>
 		<Adj>Salerno</Adj>
 		<Adj>Gulf of Naples</Adj>
 		<City size="2" fortified="yes" port="yes"/>
+		<Unit name="A3" type="Army" owner="France"/>
 	</Territory>
 	<Territory name="Salerno" type="Province">
 		<Adj>Naples</Adj>
@@ -503,14 +491,14 @@
 		<Adj>Bari</Adj>
 		<Adj>Otranto</Adj>
 		<Adj>Gulf of Naples</Adj>
-		<!-- City size="1" fortified="yes" port="yes"/-->
 	</Territory>
-	<Territory name="Bari" type="Province">
+	<Territory name="Bari" type="Province" controller="France">
 		<Adj>Aquila</Adj>
 		<Adj>Salerno</Adj>
 		<Adj>Otranto</Adj>
 		<Adj>Lower Adriatic</Adj>
 		<City size="1" fortified="yes" port="yes"/>
+		<Unit name="A3" type="Army" owner="France"/>
 	</Territory>
 	<Territory name="Otranto" type="Province">
 		<Adj>Salerno</Adj>
@@ -519,14 +507,15 @@
 		<Adj>Ionian Sea</Adj>
 		<Adj>Gulf of Naples</Adj>
 	</Territory>
-	<Territory name="Messina" type="Province">
+	<Territory name="Messina" type="Province" controller="Austria">
 		<Adj>Palermo</Adj>
 		<Adj>Eastern Tyrrhenian Sea</Adj>
 		<Adj>Gulf of Naples</Adj>
 		<Adj>Ionian Sea</Adj>
 		<City size="1" fortified="yes" port="yes"/>
+		<Unit name="A4" type="Army" owner="Austria"/>
 	</Territory>
-	<Territory name="Palermo" type="Province">
+	<Territory name="Palermo" type="Province" controller="Austria">
 		<Adj>Messina</Adj>
 		<Adj>Ionian Sea</Adj>
 		<Adj>Bay of Tunis</Adj>
@@ -534,17 +523,14 @@
 		<Adj>Western Tyrrhenian Sea</Adj>
 		<Adj>Eastern Tyrrhenian Sea</Adj>
 		<City size="1" fortified="yes" port="yes"/>
+		<Unit name="F2" type="Fleet" owner="Austria"/>
 	</Territory>
-	<Territory name="Tunis" type="Province">
-		<Adj>Western Mediterranean Sea</Adj>
-		<Adj>Bay of Tunis</Adj>
-		<City size="2" fortified="yes" port="yes"/>
-	</Territory>
-	<Territory name="Sardinia" type="Province">
+	<Territory name="Sardinia" type="Province" controller="Austria">
 		<Adj>Western Mediterranean Sea</Adj>
 		<Adj>Western Gulf of Lyons</Adj>
 		<Adj>Western Tyrrhenian Sea</Adj>
 		<City size="1" port="yes"/>
+		<Unit name="F1" type="Fleet" owner="Austria"/>
 	</Territory>
 	<Territory name="Corsica" type="Province">
 		<Adj>Western Gulf of Lyons</Adj>
@@ -575,7 +561,6 @@
 	</Territory>
 	<Territory name="Western Mediterranean Sea" type="Sea">
 		<Adj>Sardinia</Adj>
-		<Adj>Tunis</Adj>
 		<Adj>Palermo</Adj>
 		<Adj>Western Gulf of Lyons</Adj>
 		<Adj>Western Tyrrhenian Sea</Adj>
@@ -603,7 +588,6 @@
 		<Adj>Gulf of Naples</Adj>
 	</Territory>
 	<Territory name="Bay of Tunis" type="Sea">
-		<Adj>Tunis</Adj>
 		<Adj>Palermo</Adj>
 		<Adj>Western Mediterranean Sea</Adj>
 		<Adj>Ionian Sea</Adj>
@@ -622,7 +606,6 @@
 		<Adj>Palermo</Adj>
 		<Adj>Messina</Adj>
 		<Adj>Otranto</Adj>
-		<Adj>Durazzo</Adj>
 		<Adj>Gulf of Naples</Adj>
 		<Adj>Bay of Tunis</Adj>
 		<Adj>Lower Adriatic</Adj>
@@ -633,10 +616,7 @@
 		<Adj>Aquila</Adj>
 		<Adj>Ancona</Adj>
 		<Adj>Dalmatia</Adj>
-		<Adj>Herzegovina</Adj>
 		<Adj>Ragusa</Adj>
-		<Adj>Albania</Adj>
-		<Adj>Durazzo</Adj>
 		<Adj>Ionian Sea</Adj>
 		<Adj>Upper Adriatic</Adj>
 	</Territory>
