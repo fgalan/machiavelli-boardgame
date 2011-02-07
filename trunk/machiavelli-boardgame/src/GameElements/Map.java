@@ -48,7 +48,7 @@ public class Map {
 	private final static Logger log = Logger.getLogger("Map.class");
 	
 	private HashMap<String, Territory> territories;
-	private HashMap<String, String> players;
+	private Vector<String> players;
 
 	/**
 	 * Class constructor
@@ -66,7 +66,7 @@ public class Map {
 		Document doc = builder.parse(f);
 		
 		territories = new HashMap<String, Territory>();
-		players = new HashMap<String, String>();
+		HashMap<String,String> playersTemp = new HashMap<String, String>();
 		
 		NodeList l = doc.getElementsByTagName("Territory");
 		for (int i = 0; i < l.getLength(); i++) {
@@ -94,7 +94,7 @@ public class Map {
 				if (ctl != null) {
 					/* We are using the players hashmap just to mark the existing players, so the 
 					 * value part is not meaningful and we are just replicating the string name */
-					players.put(ctl, ctl);
+					playersTemp.put(ctl, ctl);
 				}
 				
 				/* Look for a city */
@@ -125,6 +125,9 @@ public class Map {
 			throw new MapCoherenceException(s);
 		}
 
+		/* Make the players vector */
+		players = new Vector<String>(playersTemp.keySet());
+		Collections.sort(players);
 	}
 	
 	/**
@@ -151,21 +154,20 @@ public class Map {
 					elite = Integer.parseInt(at.getNamedItem("elite").getNodeValue());
 				}
 				
-				Unit u;
 				if (type.equals("Army")) {
-					u = new Army(name, owner, (Province)t, elite);
+					return new Army(name, owner, (Province)t, elite);
 				}
 				else if (type.equals("Fleet")) {
-					u = new Fleet(name, owner, t, elite);
+					return new Fleet(name, owner, t, elite);
 				}
 				else if (type.equals("Garrison")) {
-					u = new Garrison(name, owner, (Province)t, elite);
+					/* We do nothing in this case, because Garrison units are processed
+					 * as part of parseCity method */
 				}
 				else {
 					throw new ParseMapException("unknown Unit type: " + type);
 				}
 				
-				return u;
 			}
 		}
 		
@@ -193,7 +195,7 @@ public class Map {
 
 	/**
 	 * @param item XML element representing a Province
-	 * @return the player againts the Unrest has been produced, null if there is no rebellion 
+	 * @return the player against the Unrest has been produced, null if there is no rebellion 
 	 */
 	private String parseUnrest(Node item) {
 		NodeList l = item.getChildNodes();
@@ -228,6 +230,7 @@ public class Map {
 	private City parseCity(Node item, Province p) {
 		
 		NodeList l = item.getChildNodes();
+		City c = null;
 		for (int i = 0; i < l.getLength(); i++) {
 			if (l.item(i).getNodeName().equals("City")) {
 				
@@ -263,15 +266,41 @@ public class Map {
 					}
 				}
 				
-				City c = new City(p, size, fortified, port, ng);
+				c = new City(p, size, fortified, port, ng);
 				log.info("city: size="+size+" fortified="+fortified+" port="+port+" ng="+ng);
 				
-				return c;
+				break;
 			}
 		}
 		
-		/* No city found */
-		return null;
+		/* check for Garrison Units */
+		if (c != null) {
+			for (int i = 0; i < l.getLength(); i++) {
+				if (l.item(i).getNodeName().equals("Unit")) {
+					
+					NamedNodeMap at = l.item(i).getAttributes();
+					if (at.getNamedItem("type").getNodeValue().equals("Garrison")) {
+						
+						/* name and owner are mandatory */				
+						String name = at.getNamedItem("name").getNodeValue();
+						String owner = at.getNamedItem("owner").getNodeValue();
+						
+						/* elite is optional */
+						int elite = Unit.NO_ELITE;
+						if (at.getNamedItem("elite")!=null) {
+							elite = Integer.parseInt(at.getNamedItem("elite").getNodeValue());
+						}
+						
+						Unit u = new Garrison(name, owner, c, elite);
+						c.setUnit(u);
+						break;
+						
+					}
+				}
+			}
+		}
+	
+		return c;
 
 	}
 
@@ -297,17 +326,55 @@ public class Map {
 	public String toString() {
 		String s = "";
 		
-		// TODO: put the actual campaign and year
-		s = s + "------------ TURN Spring 1457 ------------\n";
-		s = s + "\n";
-		s = s + "PLAYERS: ";
-		for (Iterator<String> i = players.keySet().iterator(); i.hasNext(); ) {
+		s = s + "PLAYERS:\n";
+		s = s + "   ";
+		
+		for (Iterator<String> i = players.iterator(); i.hasNext(); ) {
 			s = s + i.next() + ", ";
 		}
 		s = s + "\n";
 		
-		s = s + "------------ CONTROLLED TERRITORIES ------------\n";
-		// TODO
+		s = s + "CONTROLLED PROVINCES:\n";
+		s = s + "   ";
+		/* Using a hashmap to index list by controlling player */
+		HashMap<String,String> controlledProvinces = new HashMap<String,String>();
+		for (Iterator<String> i = players.iterator(); i.hasNext(); ) {
+
+			/* Process territories one by one (in alphabetic order)*/
+			Vector<String> l = new Vector<String>(territories.keySet());
+			Collections.sort(l);
+			for (Iterator<String> j = l.iterator(); j.hasNext() ; ) {
+				Territory t = territories.get(j.next());
+				
+				if (t instanceof Province) {
+				
+					/* The "code" is as follows:
+					 * 
+					 *   Swiss      -> the player controls the province and the unfortified city (if any)
+					 *   Turin(+)   -> the player controls the province *and* the fortified city
+					 *   Turin(-)   -> the player controls the province *but not* the fortified city (which is controlled
+					 *                 by another player with a Garrasion unit there
+					 *   Turin(c)   -> the player controls the city *but not* the city
+					 *   
+					 * Note that Seas have no controller by definition */
+				 
+					/* is there any city controller (only for fortified cities)? */
+					String cityController;
+					City c = ((Province)t).getCity();
+					if (c != null && c.isFortified() && !c.hasAutonomousGarrison()) {
+						
+					}
+				
+				
+						/* is the city occupied by a garrison? */
+						
+						/* are province controller and garrison controller the same? */ 
+						
+			
+				}
+			}
+			
+		}		
 		
 		s = s + "------------ MILITARY UNITS ------------\n";
 		// TODO
@@ -321,8 +388,9 @@ public class Map {
 	
 	/**
 	 * @return an XML-based map render
+	 * @throws MapCoherenceException 
 	 */
-	public String toXml() {
+	public String toXml() throws MapCoherenceException {
 		
 		/* We could use DOM to render the XML, but we prefer using text direclty so we can
 		 * have complete control (e.g. pretty-printing format)
@@ -376,7 +444,7 @@ public class Map {
 
 			}
 			
-			/* Generate unit*/
+			/* Generate unit (Army or Fleet) */
 			if (t.getUnit()!=null) {
 				String name = t.getUnit().getName();
 				String owner = t.getUnit().getOwner();
@@ -391,10 +459,26 @@ public class Map {
 				else if (t.getUnit() instanceof Fleet) {
 					s = s + "      <Unit name='"+name+"' type='Fleet' owner='"+owner+"'"+eliteString+"/>\n";
 				}
-				else { // Garrison
-					s = s + "      <Unit name='"+name+"' type='Garrison' owner='"+owner+"'"+eliteString+"/>\n";
+				else { 
+					/* Note that Garrison are forbidden as units for Territories (they are for cities) */
+					throw new MapCoherenceException("rendering "+t.getName()+", unit type "+t.getUnit().getClass()+" is unkown or fobidden");
 				}
 			}
+			
+			/* Generate unit (Garrison) */
+			if (t instanceof Province && ((Province)t).getCity()!=null && ((Province)t).getCity().getUnit()!=null) {
+				String name = ((Province)t).getCity().getUnit().getName();
+				String owner = ((Province)t).getCity().getUnit().getOwner();
+				
+				String eliteString = "";
+				if (((Province)t).getCity().getUnit().getElite() != 0) {
+					eliteString =" elite='"+((Province)t).getCity().getUnit().getElite()+"'";
+				}
+					
+				s = s + "      <Unit name='"+name+"' type='Garrison' owner='"+owner+"'"+eliteString+"/>\n";
+				
+			}
+			
 			
 			/* Generate famine */
 			if (territoryType.equals("Province") && ((Province)t).hasFamine()) {
@@ -521,9 +605,19 @@ public class Map {
 			}
 				
 			/* Match Unrest country with list of available countries */
-			if (t instanceof Province && ((Province)t).getUnrest()!= null && !players.containsKey(((Province)t).getUnrest())) {
+			if (t instanceof Province && ((Province)t).getUnrest()!= null && !players.contains(((Province)t).getUnrest())) {
 				s = s + "unrest in province "+t.getName()+" is declared againts "+((Province)t).getUnrest()+", which is not defined as any province controller\n";
 			}
+					
+			/* Check there aren't two Army and/or Fleets in the same territory */
+			// TODO
+			
+			/* Check there aren't two Garrison Unit in the same province */
+			// TODO
+			
+			/* Check there is no Garrison Unit declared in a province where a city with autonomous garrison exists */
+			// TODO
+
 		}
 		return s;
 	}
