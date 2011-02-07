@@ -38,6 +38,7 @@ public class Tester {
 			f.write(m.toXml());
 			f.close();
 			
+			System.out.println(m.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
