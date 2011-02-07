@@ -22,10 +22,9 @@ package GameElements;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.PortUnreachableException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Set;
 import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -40,7 +39,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import Exceptions.AdjacencyException;
+import Exceptions.MapCoherenceException;
 import Exceptions.ParseMapException;
 import GameEngine.Player;
 
@@ -59,9 +58,9 @@ public class Map {
 	 * @throws SAXException 
 	 * @throws ParseMapException 
 	 * @throws DOMException 
-	 * @throws AdjacencyException 
+	 * @throws MapCoherenceException 
 	 */
-	public Map(File f) throws ParserConfigurationException, IOException, SAXException, DOMException, ParseMapException, AdjacencyException {
+	public Map(File f) throws ParserConfigurationException, IOException, SAXException, DOMException, ParseMapException, MapCoherenceException {
 		
 		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 		Document doc = builder.parse(f);
@@ -106,7 +105,7 @@ public class Map {
 				((Province)t).setFamine(parseFamine(l.item(i)));
 				
 				/* Look for unrest */
-				((Province)t).setFamine(parseUnrest(l.item(i)));
+				((Province)t).setUnrest(parseUnrest(l.item(i)));
 			}
 						
 			/* Add adjacent territories */
@@ -121,9 +120,9 @@ public class Map {
 		}
 				
 		/* Check map consistency */
-		String s = checkAdjacencies();
+		String s = checkInconsistencies();
 		if (s != null) {
-			throw new AdjacencyException(s);
+			throw new MapCoherenceException(s);
 		}
 
 	}
@@ -154,13 +153,13 @@ public class Map {
 				
 				Unit u;
 				if (type.equals("Army")) {
-					u = new Army(owner, (Province)t, elite);
+					u = new Army(name, owner, (Province)t, elite);
 				}
 				else if (type.equals("Fleet")) {
-					u = new Fleet(owner, (Sea)t, elite);
+					u = new Fleet(name, owner, t, elite);
 				}
 				else if (type.equals("Garrison")) {
-					u = new Garrison(owner, (Province)t, elite);
+					u = new Garrison(name, owner, (Province)t, elite);
 				}
 				else {
 					throw new ParseMapException("unknown Unit type: " + type);
@@ -194,19 +193,30 @@ public class Map {
 
 	/**
 	 * @param item XML element representing a Province
-	 * @return true if Province is under unrest, false otherwise
+	 * @return the player againts the Unrest has been produced, null if there is no rebellion 
 	 */
-	private boolean parseUnrest(Node item) {
-		// TODO Auto-generated method stub
-		return false;
+	private String parseUnrest(Node item) {
+		NodeList l = item.getChildNodes();
+		for (int i = 0; i < l.getLength(); i++) {
+			if (l.item(i).getNodeName().equals("Unrest")) {
+				NamedNodeMap at = l.item(i).getAttributes();
+				return at.getNamedItem("againts").getNodeValue();				
+			}
+		}
+		return null;
 	}
 
 	/**
-	 * @param item XML element representing a Province
-	 * @return true if Province is under famine, false otherwise
+	 * @param item XML element representing a Province 
+	 * @return true if Province is under unrest, false otherwise
 	 */
 	private boolean parseFamine(Node item) {
-		// TODO Auto-generated method stub
+		NodeList l = item.getChildNodes();
+		for (int i = 0; i < l.getLength(); i++) {
+			if (l.item(i).getNodeName().equals("Famine")) {
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -282,7 +292,7 @@ public class Map {
 	}
 
 	/**
-	 * Render the map to text
+	 * @return a text-based map render
 	 */
 	public String toString() {
 		String s = "";
@@ -291,7 +301,7 @@ public class Map {
 		s = s + "------------ TURN Spring 1457 ------------\n";
 		s = s + "\n";
 		s = s + "PLAYERS: ";
-		for (Iterator i = players.keySet().iterator(); i.hasNext(); ) {
+		for (Iterator<String> i = players.keySet().iterator(); i.hasNext(); ) {
 			s = s + i.next() + ", ";
 		}
 		s = s + "\n";
@@ -310,7 +320,7 @@ public class Map {
 	}
 	
 	/**
-	 * Render the map to XML
+	 * @return an XML-based map render
 	 */
 	public String toXml() {
 		
@@ -320,8 +330,11 @@ public class Map {
 		String s = "<?xml version='1.0' encoding='UTF-8'?>\n";
 		s = s + "<Map>\n";
 		
+		Vector<String> l = new Vector<String>(territories.keySet());
+		Collections.sort(l);
+		
 		/* Process territories one by one */
-		for (Iterator<String> i = territories.keySet().iterator(); i.hasNext() ; ) {
+		for (Iterator<String> i = l.iterator(); i.hasNext() ; ) {
 			Territory t = territories.get(i.next());
 			
 			String territoryType;
@@ -339,8 +352,8 @@ public class Map {
 			s = s + "   <Territory name='"+t.getName()+"' type='"+territoryType+"'"+controllerString+">\n";
 			
 			/* Generate adjacent territories elements*/
-			for (Iterator<String> l = t.getAdjacents().iterator(); l.hasNext() ; ) {
-				s = s + "      <Adj>"+l.next()+"</Adj>\n";
+			for (Iterator<String> l2 = t.getAdjacents().iterator(); l2.hasNext() ; ) {
+				s = s + "      <Adj>"+l2.next()+"</Adj>\n";
 			}
 			
 			/* Generate city */
@@ -364,13 +377,34 @@ public class Map {
 			}
 			
 			/* Generate unit*/
-			// name, owner, type, elite (optional)
+			if (t.getUnit()!=null) {
+				String name = t.getUnit().getName();
+				String owner = t.getUnit().getOwner();
+				String eliteString = "";
+				if (t.getUnit().getElite() != 0) {
+					eliteString =" elite='"+t.getUnit().getElite()+"'";
+				}
+					
+				if (t.getUnit() instanceof Army) {
+					s = s + "      <Unit name='"+name+"' type='Army' owner='"+owner+"'"+eliteString+"/>\n";
+				}
+				else if (t.getUnit() instanceof Fleet) {
+					s = s + "      <Unit name='"+name+"' type='Fleet' owner='"+owner+"'"+eliteString+"/>\n";
+				}
+				else { // Garrison
+					s = s + "      <Unit name='"+name+"' type='Garrison' owner='"+owner+"'"+eliteString+"/>\n";
+				}
+			}
 			
 			/* Generate famine */
-			// TODO
+			if (territoryType.equals("Province") && ((Province)t).hasFamine()) {
+				s = s + "      <Famine/>\n";
+			}
 			
 			/* Generate unrest */
-			// TODO
+			if (territoryType.equals("Province") && ((Province)t).getUnrest()!=null) {
+				s = s + "      <Unrest againts='"+((Province)t).getUnrest()+"'/>\n";
+			}
 			
 			s = s + "   </Territory>\n";
 			
@@ -417,9 +451,22 @@ public class Map {
 	}
 	
 	/**
-	 * 
+	 * @return a list of inconsistencies, null if no inconsistency is found
+	 */
+	private String checkInconsistencies() {
+		String s = checkAdjacencies() + checkControlConsistency();
+		if (s.equals("")) {
+			return null;
+		}
+		else {
+			return s;
+		}
+	}
+	
+	/**
 	 * @return a list of adjacency inconsistencies, e.g.
-	 * Territory A in B's adjacency list, but B is not in A's adjacency list
+	 * Territory A in B's adjacency list, but B is not in A's adjacency list, "" if no
+	 * inconsistencies are found
 	 */
 	private String checkAdjacencies() {
 		
@@ -453,13 +500,34 @@ public class Map {
 			}
 			
 		}
-		if (s.equals("")) {
-			return null;
-		}
-		else {
-			return s;
-		}
+		return s;
 	}
+	
+	/**
+	 * @return a list of control inconsistencies, e.g. Army in a province belong to country X, but
+	 * province controller is Y, "" if no inconsistencies are found
+	 */
+	private String checkControlConsistency() {
+		String s = "";
+		
+		/* Process territories one by one */
+		for (Iterator<String> i = territories.keySet().iterator(); i.hasNext() ; ) {
+			Territory t = territories.get(i.next());
+			if (t instanceof Province && t.getUnit()!=null && ((Province)t).getController()!=null) {
+				/* Compare Unit's and Territory's controller */
+				if (!t.getUnit().getOwner().equals(((Province)t).getController())) {
+					s = s + "unit in province "+t.getName()+" is own by "+t.getUnit().getOwner()+", but province's controller is "+((Province)t).getController()+"\n";
+				}
+			}
+				
+			/* Match Unrest country with list of available countries */
+			if (t instanceof Province && ((Province)t).getUnrest()!= null && !players.containsKey(((Province)t).getUnrest())) {
+				s = s + "unrest in province "+t.getName()+" is declared againts "+((Province)t).getUnrest()+", which is not defined as any province controller\n";
+			}
+		}
+		return s;
+	}
+	
 
 	public HashMap<String,Territory> getTerritories() {
 		return territories;
