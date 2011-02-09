@@ -30,7 +30,6 @@ public class City {
 	
 	private int size;
 	
-	private Player controller;
 	private Province province;
 	private boolean fortified;
 	private boolean port;
@@ -47,12 +46,6 @@ public class City {
 		autonomousGarrison = ag;
 	}
 	
-	public void setController(Player controller) {
-		this.controller = controller;
-	}
-	public Player getController() {
-		return controller;
-	}
 	public void setUnit(Unit unit) {
 		this.unit = unit;
 	}
