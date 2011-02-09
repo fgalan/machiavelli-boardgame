@@ -118,16 +118,16 @@ public class Map {
 			territories.put(t.getName(), t);
 
 		}
-				
+
+		/* Make the players vector */
+		players = new Vector<String>(playersTemp.keySet());
+		Collections.sort(players);
+		
 		/* Check map consistency */
 		String s = checkInconsistencies();
 		if (s != null) {
 			throw new MapCoherenceException(s);
 		}
-
-		/* Make the players vector */
-		players = new Vector<String>(playersTemp.keySet());
-		Collections.sort(players);
 	}
 	
 	/**
@@ -326,64 +326,199 @@ public class Map {
 	public String toString() {
 		String s = "";
 		
+		/* PLAYERS */
+		
 		s = s + "PLAYERS:\n";
 		s = s + "   ";
 		
 		for (Iterator<String> i = players.iterator(); i.hasNext(); ) {
 			s = s + i.next() + ", ";
 		}
-		s = s + "\n";
+		s = s + "\n\n";
 		
-		s = s + "CONTROLLED PROVINCES:\n";
-		s = s + "   ";
+		/* CONTROLLED PROVINCES */
+		
 		/* Using a hashmap to index list by controlling player */
 		HashMap<String,String> controlledProvinces = new HashMap<String,String>();
-		for (Iterator<String> i = players.iterator(); i.hasNext(); ) {
 
-			/* Process territories one by one (in alphabetic order)*/
-			Vector<String> l = new Vector<String>(territories.keySet());
-			Collections.sort(l);
-			for (Iterator<String> j = l.iterator(); j.hasNext() ; ) {
-				Territory t = territories.get(j.next());
-				
-				if (t instanceof Province) {
-				
-					/* The "code" is as follows:
-					 * 
-					 *   Swiss      -> the player controls the province and the unfortified city (if any)
-					 *   Turin(+)   -> the player controls the province *and* the fortified city
-					 *   Turin(-)   -> the player controls the province *but not* the fortified city (which is controlled
-					 *                 by another player with a Garrasion unit there
-					 *   Turin(c)   -> the player controls the city *but not* the city
-					 *   
-					 * Note that Seas have no controller by definition */
-				 
-					/* is there any city controller (only for fortified cities)? */
-					String cityController;
-					City c = ((Province)t).getCity();
-					if (c != null && c.isFortified() && !c.hasAutonomousGarrison()) {
-						
-					}
-				
-				
-						/* is the city occupied by a garrison? */
-						
-						/* are province controller and garrison controller the same? */ 
-						
+		/* Process territories one by one (in alphabetic order)*/
+		Vector<String> l = new Vector<String>(territories.keySet());
+		Collections.sort(l);
+		for (Iterator<String> i = l.iterator(); i.hasNext() ; ) {
+			Territory t = territories.get(i.next());
 			
+			if (t instanceof Province && ((Province)t).getController()!=null) {
+				
+				/* The "code" is as follows:
+				 * 
+				 *   Swiss      -> the player controls the province and the unfortified city (if any)
+				 *   Turin(+)   -> the player controls the province *and* the fortified city
+				 *   Turin(-)   -> the player controls the province *but not* the fortified city (which is controlled
+				 *                 by another player with a Garrison unit there
+				 *   Turin(c)   -> the player controls the city *but not* the city
+				 *   
+				 * Note that Seas have no controller by definition */
+			 
+				String provinceName = ((Province)t).getName();
+				String provinceController = ((Province)t).getController();
+				
+				/* has city? */
+				City c = ((Province)t).getCity();
+				if (c == null) {
+					appendToHashMap(controlledProvinces, provinceController, provinceName);
+				}
+				/* is fortified? */
+				else if (c.isFortified()) {
+					
+					/* has autonomous garrison? */
+					if (c.hasAutonomousGarrison()) {
+						appendToHashMap(controlledProvinces, provinceController, provinceName + "(-)");
+					}
+					/* has occupying garrison? */
+					else if (c.getUnit()!=null) {
+						String cityController = c.getUnit().getOwner();
+						
+						/* garrison owner is the same than province controller? */
+						if (cityController.equals(provinceController)) {
+							appendToHashMap(controlledProvinces, provinceController, provinceName + "(+)");
+						}
+						/* is not the same */
+						else {
+							appendToHashMap(controlledProvinces, provinceController, provinceName + "(-)");
+							appendToHashMap(controlledProvinces, cityController, provinceName + "(c)");								
+						}
+					}
+					else {
+						/* no garrison, so city belongs to the province controller */
+						appendToHashMap(controlledProvinces, provinceController, provinceName + "(+)");
+					}
 				}
 			}
+		}
 			
-		}		
+		s = s + "CONTROLLED PROVINCES:\n";
+		l = new Vector<String>(controlledProvinces.keySet());
+		Collections.sort(l);
+		for (Iterator<String> i = l.iterator(); i.hasNext() ; ) {
+			String player = i.next();
+			s = s + "   " + player + ":\n      ";
+			s = s + controlledProvinces.get(player);
+			s = s + "\n";
+		}
+			
+		/* MILITARY UNITS */
 		
-		s = s + "------------ MILITARY UNITS ------------\n";
-		// TODO
+		/* Using a hashmap to index list by owing player and simple String for autonomous garrisons*/
+		HashMap<String,String> unitsInMap = new HashMap<String,String>();
+		String ags = "";
 		
-		s = s + "------------ TEMPORARY MARKERS ------------\n";
-		// TODO Famile
-		// TODO Unrest
+		/* Process territories one by one (in alphabetic order)*/
+		l = new Vector<String>(territories.keySet());
+		Collections.sort(l);
+		for (Iterator<String> i = l.iterator(); i.hasNext() ; ) {
+			Territory t = territories.get(i.next());
+			if (t.getUnit()!=null) {
+				
+				String type;
+				if (t.getUnit() instanceof Army) {
+					type = "(Army)";
+				}
+				else if (t.getUnit() instanceof Fleet) {
+					type = "(Fleet)";
+				}
+				else { 
+					/* Note that Garrison are forbidden as units for Territories (they are for cities) */
+					//throw new MapCoherenceException("rendering "+t.getName()+", unit type "+t.getUnit().getClass()+" is unkown or fobidden");
+					// We can not throw exception because we are overriding toString(), which signature is fixed in Object class
+					type = "(UNKNOWN)";
+				}
+				
+				String u = t.getUnit().getName() + elite2String(t.getUnit()) + " " + type + " in " + t.getName(); 
+				appendToHashMap(unitsInMap, t.getUnit().getOwner(), u);
+			}
+			/* Look for unit at city */
+			if (t instanceof Province && ((Province)t).getCity()!=null && ((Province)t).getCity().isFortified()) {
+				if (((Province)t).getCity().getUnit() != null) {
+					String u = ((Province)t).getCity().getUnit().getName() + elite2String(((Province)t).getCity().getUnit()) + " (Garrison) in " + t.getName();
+				}
+				if (((Province)t).getCity().hasAutonomousGarrison()) {
+					ags = ags + t.getName() + "\n      ";
+				}
+			}
+		}
+		
+		s = s + "MILLITARY UNITS:\n";
+		l = new Vector<String>(unitsInMap.keySet());
+		Collections.sort(l);
+		for (Iterator<String> i = l.iterator(); i.hasNext() ; ) {
+			String player = i.next();
+			s = s + "   " + player + ":\n      ";
+			s = s + unitsInMap.get(player);
+			s = s + "\n";
+		}
+		s = s + "   Autonomous Garrisons:\n      " + ags + "\n";
+		
+		/* TEMPORARY MARKERS */
+		String famine = "";
+		String unrest = "";
+		/* Process territories one by one (in alphabetic order)*/
+		l = new Vector<String>(territories.keySet());
+		Collections.sort(l);
+		for (Iterator<String> i = l.iterator(); i.hasNext() ; ) {
+			Territory t = territories.get(i.next());
+			if (t instanceof Province) {
+				if (((Province)t).getUnrest()!=null) {
+					unrest = unrest + "   unrest in " + t.getName() + " againts " + ((Province)t).getUnrest() + "\n"; 
+				}
+				if (((Province)t).hasFamine()) {
+					famine = famine + "   famine in " + t.getName() + "\n";
+				}
+			}
+		}
+		
+		s = s + "TEMPORARY MARKERS:\n";
+		if (famine.isEmpty() && unrest.isEmpty()) {
+			s = s + "   none\n";
+		}
+		else {
+			s = s + famine + unrest;
+		}
 		
 		return s;
+	}
+	
+	/**
+	 * Helper method, to factorice code in toString()
+	 * @param u
+	 * @return
+	 */
+	private String elite2String(Unit u) {
+		String s = "";
+		if (u.getElite() == Unit.ELITE_TYPE_1) {
+			s ="*";;
+		}
+		else if (u.getElite() == Unit.ELITE_TYPE_2) {
+			s = "**";
+		}
+		else if (u.getElite() == Unit.ELITE_TYPE_3) {
+			s = "***";
+		}
+		return s;
+	}
+	
+	/**
+	 * Helper method, to factorize code in toString()
+	 * @param h
+	 * @param key
+	 * @param s
+	 */
+	private void appendToHashMap(HashMap<String,String> h, String key, String s) {
+		if (h.get(key)!=null) {
+			h.put(key, h.get(key) + s + "\n      ");
+		}
+		else {
+			h.put(key, s + "\n      ");
+		}
 	}
 	
 	/**
