@@ -53,6 +53,10 @@ public abstract class Territory {
 	public Unit getUnit() {
 		return unit;
 	}
+	
+	public void clearUnit() {
+		unit = null;
+	}
 
 	public String getName() {
 		return name;

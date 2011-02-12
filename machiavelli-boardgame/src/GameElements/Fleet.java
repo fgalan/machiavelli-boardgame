@@ -33,4 +33,8 @@ public class Fleet extends Unit {
 		setLocation(t);
 	}
 	
+	public String toString() {
+		return (super.toString() + " (Fleet)");
+	}	
+	
 }

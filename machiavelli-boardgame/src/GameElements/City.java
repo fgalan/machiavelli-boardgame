@@ -52,6 +52,9 @@ public class City {
 	public Unit getUnit() {
 		return unit;
 	}
+	public void clearUnit() {
+		unit = null;
+	}	
 	public void setUnderSiege(boolean underSiege) {
 		this.underSiege = underSiege;
 	}
@@ -69,6 +72,10 @@ public class City {
 
 	public boolean hasAutonomousGarrison() {
 		return autonomousGarrison;
+	}
+	
+	public void clearAutonomousGarrison() {
+		autonomousGarrison = false;
 	}
 
 	public boolean isFortified() {

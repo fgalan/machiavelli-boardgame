@@ -32,5 +32,9 @@ public class Army extends Unit {
 		super(name, owner, elite);
 		setLocation(pr);
 	}
+	
+	public String toString() {
+		return (super.toString() + " (Army)");
+	}
 
 }

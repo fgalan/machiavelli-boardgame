@@ -63,5 +63,23 @@ public abstract class Unit {
 	public String getName() {
 		return name;
 	}
+	
+	public String toString() {
+		return (name + eliteString() + " ["+owner+"]");
+	}
+	
+	private String eliteString() {
+		String s = "";
+		if (elite == Unit.ELITE_TYPE_1) {
+			s ="*";;
+		}
+		else if (elite == Unit.ELITE_TYPE_2) {
+			s = "**";
+		}
+		else if (elite == Unit.ELITE_TYPE_3) {
+			s = "***";
+		}
+		return s;
+	}	
 
 }
