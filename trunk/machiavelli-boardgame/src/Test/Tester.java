@@ -6,6 +6,7 @@ import java.io.FileWriter;
 
 import GameElements.Map;
 import GameEngine.Engine;
+import GameEngine.GameStatus;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
@@ -22,9 +23,11 @@ public class Tester {
 		BasicConfigurator.configure();		
 		try {
 			Map m;
+			GameStatus gs;
 			FileWriter f;
 			
 			m = new Map(new File("D://eclipse-my-projects//machiavelli-gameboard//xml//initial-scenario-1.xml"));
+			gs = new GameStatus(new File("D://eclipse-my-projects//machiavelli-gameboard//xml//game_status.xml"));
 			
 			/* Just to get provinces in alphabetical order, so we can compare maps XML easily */
 			f = new FileWriter("D://eclipse-my-projects//machiavelli-gameboard//xml//test-0.xml");
@@ -53,6 +56,11 @@ public class Tester {
 			f.close();
 						
 			System.out.println(m.toString());
+			
+			f = new FileWriter("D://eclipse-my-projects//machiavelli-gameboard//xml//gs-0.xml");
+			f.write(gs.toXml());
+			f.close();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
