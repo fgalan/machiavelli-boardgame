@@ -20,12 +20,13 @@
 
 package Exceptions;
 
-/**
- * @author fermin
- *
- */
 public class ParseGameStatusException extends Exception {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public ParseGameStatusException(String string) {
 		super(string);
 	}

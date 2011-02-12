@@ -22,6 +22,11 @@ package Exceptions;
 
 public class ParseMapException extends Exception {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public ParseMapException(String string) {
 		super(string);
 	}

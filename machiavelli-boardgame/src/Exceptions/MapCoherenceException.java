@@ -22,6 +22,8 @@ package Exceptions;
 
 public class MapCoherenceException extends Exception {
 
+	private static final long serialVersionUID = 1L;
+
 	public MapCoherenceException(String s) {
 		super(s);
 	}
