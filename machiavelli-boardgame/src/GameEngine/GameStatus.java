@@ -39,6 +39,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import Exceptions.ParseGameStatusException;
+import Exceptions.PlayerNotFountException;
 
 
 /**
@@ -135,8 +136,33 @@ public class GameStatus {
 		return s;
 	}
 	
-	public String getStatus(String p) {
-		// TODO
-		return "";
+	public String getStatus(String p) throws PlayerNotFountException {
+		
+		try {
+			String s = "Status for player " + p + ":\n";
+			s = s + "-------------------------------\n";
+			s = s + "Treasury: " + money.get(p) + "\n";
+			
+			s = s + "Home country provinces: ";
+			Vector<String> hp = homeCountries.get(p);
+			Collections.sort(hp);
+			for (Iterator<String> i = hp.iterator(); i.hasNext(); ) {
+				s = s + i.next() + ", ";
+			}
+			s = s + "\n";
+			
+			s = s + "Assasins: ";
+			Vector<String> as = assassinTokens.get(p);
+			Collections.sort(as);
+			for (Iterator<String> i = as.iterator(); i.hasNext(); ) {
+				s = s + i.next() + ", ";
+			}
+			s = s + "\n";
+			
+			return s;
+		} 
+		catch (NullPointerException e) {
+			throw new PlayerNotFountException(p);
+		}
 	}
 }

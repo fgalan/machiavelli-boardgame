@@ -61,6 +61,12 @@ public class Tester {
 			f.write(gs.toXml());
 			f.close();
 			
+			System.out.println(gs.getStatus("Austria"));
+			System.out.println(gs.getStatus("France"));
+			System.out.println(gs.getStatus("Papacy"));
+			System.out.println(gs.getStatus("Florence"));
+			System.out.println(gs.getStatus("Venice"));
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
