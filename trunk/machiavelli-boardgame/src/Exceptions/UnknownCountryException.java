@@ -22,6 +22,8 @@ package Exceptions;
 
 public class UnknownCountryException extends Exception {
 
+	private static final long serialVersionUID = 1L;
+
 	public UnknownCountryException(String string) {
 		super(string);
 	}
