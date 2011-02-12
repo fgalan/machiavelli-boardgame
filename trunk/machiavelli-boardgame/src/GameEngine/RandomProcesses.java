@@ -20,7 +20,9 @@
 
 package GameEngine;
 
+import java.util.Iterator;
 import java.util.Random;
+import java.util.Vector;
 
 import Exceptions.UnknownCountryException;
 
@@ -83,12 +85,99 @@ public class RandomProcesses {
 		{"","Trent","Herzegovina","","Brescia","","","","Corsica","","Patrimony","Saluzzo"},
 	};	
 	
-	public static String famineDiceRoll() {
-		return famineTable[generator.nextInt(6)+generator.nextInt(6)+1][generator.nextInt(6)+generator.nextInt(6)+1];
+	public static final int NO_DISASTER = 0;
+	public static final int ONLY_ROW = 1;
+	public static final int ONLY_COLUMN = 2;
+	public static final int ROW_AND_COLUMN = 3; 
+	
+	private static Vector<String> getFamineRow(int row) {
+		Vector<String> v = new Vector<String>();
+		for (int i = 1 ; i < 12 ; i++) {
+			if (!famineTable[row][i].isEmpty()) {
+				v.add(famineTable[row][i]);
+			}
+		}
+		return v;
 	}
 	
-	public static String plageDiceRoll() {
-		return plagueTable[generator.nextInt(6)+generator.nextInt(6)+1][generator.nextInt(6)+generator.nextInt(6)+1];
+	private static Vector<String> getFamineColumn(int column) {
+		Vector<String> v = new Vector<String>();
+		for (int i = 1 ; i < 12 ; i++) {
+			if (!famineTable[i][column].isEmpty()) {
+				v.add(famineTable[i][column]);
+			}
+		}
+		return v;
+	}
+	
+	private static Vector<String> getPlagueRow(int row) {
+		Vector<String> v = new Vector<String>();
+		for (int i = 1 ; i < 12 ; i++) {
+			if (!plagueTable[row][i].isEmpty()) {
+				v.add(plagueTable[row][i]);
+			}
+		}
+		return v;
+	}
+	
+	private static Vector<String> getPlagueColumn(int column) {
+		Vector<String> v = new Vector<String>();
+		for (int i = 1 ; i < 12 ; i++) {
+			if (!plagueTable[i][column].isEmpty()) {
+				v.add(plagueTable[i][column]);
+			}
+		}
+		return v;
+	}
+	
+	private static int kindOfYear() {
+		int diceRoll =  generator.nextInt(6)+generator.nextInt(6)+1;
+		if (diceRoll < 4) {
+			return NO_DISASTER;
+		}
+		else if (diceRoll == 4 || diceRoll == 7) {
+			return ONLY_ROW;
+		}
+		else if (diceRoll == 5 || diceRoll == 6) {
+			return ONLY_COLUMN;
+		}
+		else { // diceRoll > 7
+			return ROW_AND_COLUMN;
+		}
+	}
+	
+	public static Vector<String> famineResult() {
+		switch (kindOfYear()) {
+		case ONLY_ROW:
+			return getFamineRow(generator.nextInt(6)+generator.nextInt(6)+1);
+		case ONLY_COLUMN:
+			return getFamineColumn(generator.nextInt(6)+generator.nextInt(6)+1);
+		case ROW_AND_COLUMN:
+			Vector<String> v = getFamineRow(generator.nextInt(6)+generator.nextInt(6)+1);
+			v.addAll(getFamineColumn(generator.nextInt(6)+generator.nextInt(6)+1));
+			return v;
+		default:
+			// NO_DISASTER
+			return null;
+		}
+		
+	}
+	
+	public static Vector<String> plagueResult() {
+		switch (kindOfYear()) {
+		case ONLY_ROW:
+			return getPlagueRow(generator.nextInt(6)+generator.nextInt(6)+1);
+		case ONLY_COLUMN:
+			return getPlagueColumn(generator.nextInt(6)+generator.nextInt(6)+1);
+		case ROW_AND_COLUMN:
+			Vector<String> v = getPlagueRow(generator.nextInt(6)+generator.nextInt(6)+1);
+			v.addAll(getPlagueColumn(generator.nextInt(6)+generator.nextInt(6)+1));
+			return v;
+		default:
+			// NO_DISASTER
+			return null;
+		}
+		
 	}
 	
 	public static int randomIncome(String country) throws UnknownCountryException {
@@ -189,14 +278,30 @@ public class RandomProcesses {
 	 */
 	public static void main(String[] args) {
 		try {
-			System.out.println("Plague at " + plageDiceRoll());
-			System.out.println("Plague at " + plageDiceRoll());
-			System.out.println("Plague at " + plageDiceRoll());
-			System.out.println("Plague at " + plageDiceRoll());
-			System.out.println("Famine at " + famineDiceRoll());
-			System.out.println("Famine at " + famineDiceRoll());
-			System.out.println("Famine at " + famineDiceRoll());
-			System.out.println("Famine at " + famineDiceRoll());
+			Vector<String> v = famineResult();
+			System.out.print("Famine: ");
+			if (v != null) {
+				for (Iterator<String> i = v.iterator(); i.hasNext() ; ) {
+					System.out.print(i.next() + ", ");
+				}
+			}
+			else {
+				System.out.print("none");
+			}
+			System.out.println();
+			
+			v = plagueResult();
+			if (v != null ) {
+			System.out.print("Plague: ");
+			for (Iterator<String> i = v.iterator(); i.hasNext() ; ) {
+				System.out.print(i.next() + ", ");
+			}
+			}
+			else {
+				System.out.print("none");
+			}
+			System.out.println();			
+			
 			System.out.println("Austria gets " + randomIncome("Austria"));
 			System.out.println("Florence gets " + randomIncome("Florence"));
 			System.out.println("France gets " + randomIncome("France"));
