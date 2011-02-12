@@ -76,11 +76,9 @@ public class Map {
 			/* Province or sea? */
 			if (at.getNamedItem("type").getNodeValue().equals("Province")) {
 				t = new Province(at.getNamedItem("name").getNodeValue());
-				log.info("province " + at.getNamedItem("name").getNodeValue());
 			}
 			else if (at.getNamedItem("type").getNodeValue().equals("Sea")) {
 				t = new Sea(at.getNamedItem("name").getNodeValue());
-				log.info("sea " + at.getNamedItem("name").getNodeValue());
 			}
 			else {
 				throw new ParseMapException("Territory type "+at.getNamedItem("type").getNodeValue()+" is not valid");
@@ -102,7 +100,12 @@ public class Map {
 				((Province)t).setCity(c);
 				
 				/* Look for famine */
-				((Province)t).setFamine(parseFamine(l.item(i)));
+				if (parseFamine(l.item(i))) {
+					((Province)t).setFamine();
+				}
+				else {
+					((Province)t).clearFamine();
+				}
 				
 				/* Look for unrest */
 				((Province)t).setUnrest(parseUnrest(l.item(i)));
@@ -187,7 +190,6 @@ public class Map {
 		for (int i = 0; i < l.getLength(); i++) {
 			if (l.item(i).getNodeName().equals("Adj")) {
 				v.add(l.item(i).getTextContent());
-				log.info("adjacency: " + l.item(i).getTextContent());
 			}
 		}
 		return v;
@@ -267,7 +269,6 @@ public class Map {
 				}
 				
 				c = new City(p, size, fortified, port, ng);
-				log.info("city: size="+size+" fortified="+fortified+" port="+port+" ng="+ng);
 				
 				break;
 			}
@@ -419,27 +420,14 @@ public class Map {
 			Territory t = territories.get(i.next());
 			if (t.getUnit()!=null) {
 				
-				String type;
-				if (t.getUnit() instanceof Army) {
-					type = "(Army)";
-				}
-				else if (t.getUnit() instanceof Fleet) {
-					type = "(Fleet)";
-				}
-				else { 
-					/* Note that Garrison are forbidden as units for Territories (they are for cities) */
-					//throw new MapCoherenceException("rendering "+t.getName()+", unit type "+t.getUnit().getClass()+" is unkown or fobidden");
-					// We can not throw exception because we are overriding toString(), which signature is fixed in Object class
-					type = "(UNKNOWN)";
-				}
-				
-				String u = t.getUnit().getName() + elite2String(t.getUnit()) + " " + type + " in " + t.getName(); 
+				String u = t.getUnit() + " in " + t.getName(); 
 				appendToHashMap(unitsInMap, t.getUnit().getOwner(), u);
 			}
 			/* Look for unit at city */
 			if (t instanceof Province && ((Province)t).getCity()!=null && ((Province)t).getCity().isFortified()) {
 				if (((Province)t).getCity().getUnit() != null) {
-					String u = ((Province)t).getCity().getUnit().getName() + elite2String(((Province)t).getCity().getUnit()) + " (Garrison) in " + t.getName();
+					String u = ((Province)t).getCity().getUnit() + " in " + t.getName();
+					appendToHashMap(unitsInMap, ((Province)t).getCity().getUnit().getOwner(), u);
 				}
 				if (((Province)t).getCity().hasAutonomousGarrison()) {
 					ags = ags + t.getName() + "\n      ";
@@ -484,25 +472,6 @@ public class Map {
 			s = s + famine + unrest;
 		}
 		
-		return s;
-	}
-	
-	/**
-	 * Helper method, to factorice code in toString()
-	 * @param u
-	 * @return
-	 */
-	private String elite2String(Unit u) {
-		String s = "";
-		if (u.getElite() == Unit.ELITE_TYPE_1) {
-			s ="*";;
-		}
-		else if (u.getElite() == Unit.ELITE_TYPE_2) {
-			s = "**";
-		}
-		else if (u.getElite() == Unit.ELITE_TYPE_3) {
-			s = "***";
-		}
 		return s;
 	}
 	
@@ -757,8 +726,23 @@ public class Map {
 		return s;
 	}
 	
-
-	public HashMap<String,Territory> getTerritories() {
-		return territories;
+	public Territory getTerritoryByName(String n) {
+		if (territories.containsKey(n)) {
+			return territories.get(n);
+		}
+		else {
+			return null;
+		}
 	}
+	
+	public Vector<Province> getProvincesWithFamine() {
+		Vector<Province> v = new Vector<Province>();
+		for (Iterator<String> i = territories.keySet().iterator(); i.hasNext() ; ) {
+			Territory t = territories.get(i.next());
+			if (t instanceof Province && ((Province)t).hasFamine()) {
+				v.add((Province)t);
+			}
+		}
+		return v;
+	}	
 }

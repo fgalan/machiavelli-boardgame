@@ -38,4 +38,8 @@ public class Garrison extends Unit {
 		setLocation(p);
 	}
 	
+	public String toString() {
+		return (super.toString() + " (Garrison)");
+	}	
+	
 }

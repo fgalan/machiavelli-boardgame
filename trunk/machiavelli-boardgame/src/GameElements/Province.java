@@ -36,8 +36,12 @@ public class Province extends Territory {
 		super(n);
 	}
 
-	public void setFamine(boolean famine) {
-		this.famine = famine;
+	public void setFamine() {
+		this.famine = true;
+	}
+	
+	public void clearFamine() {
+		this.famine = false;
 	}
 
 	public boolean hasFamine() {
