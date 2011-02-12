@@ -496,7 +496,7 @@ public class Map {
 	 */
 	public String toXml() throws MapCoherenceException {
 		
-		/* We could use DOM to render the XML, but we prefer using text direclty so we can
+		/* We could use DOM to render the XML, but we prefer using text directly so we can
 		 * have complete control (e.g. pretty-printing format)
 		 */
 		String s = "<?xml version='1.0' encoding='UTF-8'?>\n";
@@ -606,9 +606,48 @@ public class Map {
 	 * @param p a Player
 	 * @return the income for Player p based on the map
 	 */
-	public int getIncome(Player p) {
-		// TODO
-		return 0;
+	public int calculateIncome(String p) {
+		
+		// TODO: Venice generates income as province *and* city or only as province *or* as city?
+		
+		int income = 0;
+		
+		/* Process territories one by one */
+		for (Iterator<String> i = territories.keySet().iterator(); i.hasNext() ; ) {
+			Territory t = territories.get(i.next());
+			if (t instanceof Province) {
+				/* Provinces and cities */
+				if (((Province)t).getController().equals(p)) {
+					income++;
+				}
+				
+				City c = ((Province)t).getCity(); 
+				if (c != null) {
+					if (c.getUnit() != null) {
+						/* garrison at the city, so if the garrisons belong to the player and the
+						 * city is not under siege, then the player gets the money */
+						if (c.getUnit().getOwner().equals(p) && !c.isUnderSiege()) {
+							income += c.getSize();
+						}
+					}
+					else {
+						/* no garrison, so if the player controls the province and there is no autonomos garrison
+						 * the player gets the money */
+						if (((Province)t).getController().equals(p) && !c.hasAutonomousGarrison()) {
+							income += c.getSize();
+						}
+					}
+				}
+			}
+			else {
+				/* Seas */
+				if (t.getUnit().getOwner().equals(p)) {
+					income ++;
+				}
+			}
+		}
+		return income;
+
 	}
 	
 	/** 
