@@ -146,7 +146,7 @@ public class Map {
 				NamedNodeMap at = l.item(i).getAttributes();
 				
 				/* name, type and owner are mandatory */				
-				String name = at.getNamedItem("name").getNodeValue();
+				int id = Integer.parseInt(at.getNamedItem("id").getNodeValue());
 				String type = at.getNamedItem("type").getNodeValue();
 				String owner = at.getNamedItem("owner").getNodeValue();
 				
@@ -157,10 +157,10 @@ public class Map {
 				}
 				
 				if (type.equals("Army")) {
-					return new Army(name, owner, (Province)t, elite);
+					return new Army(id, owner, (Province)t, elite);
 				}
 				else if (type.equals("Fleet")) {
-					return new Fleet(name, owner, t, elite);
+					return new Fleet(id, owner, t, elite);
 				}
 				else if (type.equals("Garrison")) {
 					/* We do nothing in this case, because Garrison units are processed
@@ -282,7 +282,7 @@ public class Map {
 					if (at.getNamedItem("type").getNodeValue().equals("Garrison")) {
 						
 						/* name and owner are mandatory */				
-						String name = at.getNamedItem("name").getNodeValue();
+						int id = Integer.parseInt(at.getNamedItem("id").getNodeValue());
 						String owner = at.getNamedItem("owner").getNodeValue();
 						
 						/* elite is optional */
@@ -291,7 +291,7 @@ public class Map {
 							elite = Integer.parseInt(at.getNamedItem("elite").getNodeValue());
 						}
 						
-						Unit u = new Garrison(name, owner, c, elite);
+						Unit u = new Garrison(id, owner, c, elite);
 						c.setUnit(u);
 						break;
 						
@@ -549,7 +549,7 @@ public class Map {
 			
 			/* Generate unit (Army or Fleet) */
 			if (t.getUnit()!=null) {
-				String name = t.getUnit().getName();
+				int id = t.getUnit().getId();
 				String owner = t.getUnit().getOwner();
 				String eliteString = "";
 				if (t.getUnit().getElite() != 0) {
@@ -557,10 +557,10 @@ public class Map {
 				}
 					
 				if (t.getUnit() instanceof Army) {
-					s = s + "      <Unit name='"+name+"' type='Army' owner='"+owner+"'"+eliteString+"/>\n";
+					s = s + "      <Unit id='"+id+"' type='Army' owner='"+owner+"'"+eliteString+"/>\n";
 				}
 				else if (t.getUnit() instanceof Fleet) {
-					s = s + "      <Unit name='"+name+"' type='Fleet' owner='"+owner+"'"+eliteString+"/>\n";
+					s = s + "      <Unit id='"+id+"' type='Fleet' owner='"+owner+"'"+eliteString+"/>\n";
 				}
 				else { 
 					/* Note that Garrison are forbidden as units for Territories (they are for cities) */
@@ -570,7 +570,7 @@ public class Map {
 			
 			/* Generate unit (Garrison) */
 			if (t instanceof Province && ((Province)t).getCity()!=null && ((Province)t).getCity().getUnit()!=null) {
-				String name = ((Province)t).getCity().getUnit().getName();
+				int id = ((Province)t).getCity().getUnit().getId();
 				String owner = ((Province)t).getCity().getUnit().getOwner();
 				
 				String eliteString = "";
@@ -578,7 +578,7 @@ public class Map {
 					eliteString =" elite='"+((Province)t).getCity().getUnit().getElite()+"'";
 				}
 					
-				s = s + "      <Unit name='"+name+"' type='Garrison' owner='"+owner+"'"+eliteString+"/>\n";
+				s = s + "      <Unit name='"+id+"' type='Garrison' owner='"+owner+"'"+eliteString+"/>\n";
 				
 			}
 			

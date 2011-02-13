@@ -26,7 +26,7 @@ public abstract class Unit {
 	
 	private final static Logger log = Logger.getLogger("Unit.class");
 	
-	private String name;
+	private int id;
 	private String owner;
 	private int elite;
 	private Territory location;
@@ -36,8 +36,8 @@ public abstract class Unit {
 	public static final int ELITE_TYPE_2 = 2;
 	public static final int ELITE_TYPE_3 = 3;
 	
-	public Unit (String n, String p, int e) {
-		name = n;
+	public Unit (int i, String p, int e) {
+		id = i;
 		owner = p;
 		elite = e;
 	}
@@ -58,12 +58,12 @@ public abstract class Unit {
 		return location;
 	}
 
-	public String getName() {
-		return name;
+	public int getId() {
+		return id;
 	}
 	
 	public String toString() {
-		return (name + eliteString() + " ["+owner+"]");
+		return (id + eliteString() + " ["+owner+"]");
 	}
 	
 	private String eliteString() {

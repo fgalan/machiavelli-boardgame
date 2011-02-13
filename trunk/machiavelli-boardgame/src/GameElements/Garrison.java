@@ -26,18 +26,18 @@ public class Garrison extends Unit {
 
 	private final static Logger log = Logger.getLogger("Garrison.class");
 	
-	public Garrison(String name, String owner, City c, int elite) {
-		super(name, owner, elite);
+	public Garrison(int id, String owner, City c, int elite) {
+		super(id, owner, elite);
 		setLocation(c.getProvince());
 	}
 	
-	public Garrison(String name, String owner, Province p, int elite) {
-		super(name, owner, elite);
+	public Garrison(int id, String owner, Province p, int elite) {
+		super(id, owner, elite);
 		setLocation(p);
 	}
 	
 	public String toString() {
-		return (super.toString() + " (Garrison)");
+		return ("G" + super.toString() + " (Garrison)");
 	}	
 	
 }
