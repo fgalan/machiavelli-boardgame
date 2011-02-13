@@ -27,7 +27,7 @@ public class Province extends Territory {
 	private final static Logger log = Logger.getLogger("Province.class");
 	
 	private boolean famine;
-	private String unrest;
+	private String rebellion;
 	private City city;
 
 	private String controller;
@@ -48,16 +48,16 @@ public class Province extends Territory {
 		return famine;
 	}
 
-	public void setUnrest(String unrest) {
-		this.unrest = unrest;
+	public void setRebellion(String rebellion) {
+		this.rebellion = rebellion;
 	}
 
-	public String getUnrest() {
-		return unrest;
+	public String getRebellion() {
+		return rebellion;
 	}
 	
-	public void clearUnrest() {
-		unrest = null;
+	public void clearRebellion() {
+		rebellion = null;
 	}
 	
 	public City getCity() {
