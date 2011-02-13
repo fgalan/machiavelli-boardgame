@@ -24,8 +24,6 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
-import GameEngine.Player;
-
 public abstract class Territory {
 	
 	private final static Logger log = Logger.getLogger("Territory.class");

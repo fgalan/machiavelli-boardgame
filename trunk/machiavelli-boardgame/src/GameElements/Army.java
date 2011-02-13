@@ -22,8 +22,6 @@ package GameElements;
 
 import org.apache.log4j.Logger;
 
-import GameEngine.Player;
-
 public class Army extends Unit {
 	
 	private final static Logger log = Logger.getLogger("Army.class");
