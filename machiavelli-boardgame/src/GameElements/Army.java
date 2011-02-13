@@ -26,13 +26,13 @@ public class Army extends Unit {
 	
 	private final static Logger log = Logger.getLogger("Army.class");
 	
-	public Army(String name, String owner, Province pr, int elite) {
-		super(name, owner, elite);
+	public Army(int id, String owner, Province pr, int elite) {
+		super(id, owner, elite);
 		setLocation(pr);
 	}
 	
 	public String toString() {
-		return (super.toString() + " (Army)");
+		return ("A" + super.toString() + " (Army)");
 	}
 
 }

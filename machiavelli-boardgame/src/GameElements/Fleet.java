@@ -26,13 +26,13 @@ public class Fleet extends Unit {
 
 	private final static Logger log = Logger.getLogger("Fleet.class");
 	
-	public Fleet(String name, String owner, Territory t, int elite) {
-		super(name, owner, elite);
+	public Fleet(int id, String owner, Territory t, int elite) {
+		super(id, owner, elite);
 		setLocation(t);
 	}
 	
 	public String toString() {
-		return (super.toString() + " (Fleet)");
+		return ("F" + super.toString() + " (Fleet)");
 	}	
 	
 }
