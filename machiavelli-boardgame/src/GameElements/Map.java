@@ -41,7 +41,6 @@ import org.xml.sax.SAXException;
 
 import Exceptions.MapCoherenceException;
 import Exceptions.ParseMapException;
-import GameEngine.Player;
 
 public class Map {
 	
@@ -649,33 +648,7 @@ public class Map {
 		return income;
 
 	}
-	
-	/** 
-	 * @param p a Player
-	 * @return the Provinces controlled by Player p
-	 */
-	public Province[] getPlayerProvinces(Player p) {
-		// TODO
-		return null;
-	}
-	
-	/** 
-	 * @param p a Player
-	 * @return the Seas controlled by Player p
-	 */
-	public Sea[] getPlayerSeas(Player p) {
-		// TODO
-		return null;
-	}
-	
-	/** 
-	 * @param p a Player
-	 * @return the Territories (both Provinces and Seas) controlled by Player p
-	 */
-	public Territory[] getPlayerTerritories(Player p) {
-		// TODO
-		return null;
-	}
+
 	
 	/**
 	 * @return a list of inconsistencies, null if no inconsistency is found
