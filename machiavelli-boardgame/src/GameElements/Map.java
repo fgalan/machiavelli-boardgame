@@ -106,8 +106,8 @@ public class Map {
 					((Province)t).clearFamine();
 				}
 				
-				/* Look for unrest */
-				((Province)t).setUnrest(parseUnrest(l.item(i)));
+				/* Look for rebellion */
+				((Province)t).setRebellion(parseRebellion(l.item(i)));
 			}
 						
 			/* Add adjacent territories */
@@ -196,12 +196,12 @@ public class Map {
 
 	/**
 	 * @param item XML element representing a Province
-	 * @return the player against the Unrest has been produced, null if there is no rebellion 
+	 * @return the player against the Rebellion has been produced, null if there is no rebellion 
 	 */
-	private String parseUnrest(Node item) {
+	private String parseRebellion(Node item) {
 		NodeList l = item.getChildNodes();
 		for (int i = 0; i < l.getLength(); i++) {
-			if (l.item(i).getNodeName().equals("Unrest")) {
+			if (l.item(i).getNodeName().equals("Rebellion")) {
 				NamedNodeMap at = l.item(i).getAttributes();
 				return at.getNamedItem("againts").getNodeValue();				
 			}
@@ -211,7 +211,7 @@ public class Map {
 
 	/**
 	 * @param item XML element representing a Province 
-	 * @return true if Province is under unrest, false otherwise
+	 * @return true if Province is under rebellion, false otherwise
 	 */
 	private boolean parseFamine(Node item) {
 		NodeList l = item.getChildNodes();
@@ -447,15 +447,15 @@ public class Map {
 		
 		/* TEMPORARY MARKERS */
 		String famine = "";
-		String unrest = "";
+		String rebellion = "";
 		/* Process territories one by one (in alphabetic order)*/
 		l = new Vector<String>(territories.keySet());
 		Collections.sort(l);
 		for (Iterator<String> i = l.iterator(); i.hasNext() ; ) {
 			Territory t = territories.get(i.next());
 			if (t instanceof Province) {
-				if (((Province)t).getUnrest()!=null) {
-					unrest = unrest + "   unrest in " + t.getName() + " againts " + ((Province)t).getUnrest() + "\n"; 
+				if (((Province)t).getRebellion()!=null) {
+					rebellion = rebellion + "   rebellion in " + t.getName() + " againts " + ((Province)t).getRebellion() + "\n"; 
 				}
 				if (((Province)t).hasFamine()) {
 					famine = famine + "   famine in " + t.getName() + "\n";
@@ -464,11 +464,11 @@ public class Map {
 		}
 		
 		s = s + "TEMPORARY MARKERS:\n";
-		if (famine.isEmpty() && unrest.isEmpty()) {
+		if (famine.isEmpty() && rebellion.isEmpty()) {
 			s = s + "   none\n";
 		}
 		else {
-			s = s + famine + unrest;
+			s = s + famine + rebellion;
 		}
 		
 		return s;
@@ -588,9 +588,9 @@ public class Map {
 				s = s + "      <Famine/>\n";
 			}
 			
-			/* Generate unrest */
-			if (territoryType.equals("Province") && ((Province)t).getUnrest()!=null) {
-				s = s + "      <Unrest againts='"+((Province)t).getUnrest()+"'/>\n";
+			/* Generate rebellion */
+			if (territoryType.equals("Province") && ((Province)t).getRebellion()!=null) {
+				s = s + "      <Rebellion againts='"+((Province)t).getRebellion()+"'/>\n";
 			}
 			
 			s = s + "   </Territory>\n";
@@ -720,9 +720,9 @@ public class Map {
 				}
 			}
 				
-			/* Match Unrest country with list of available countries */
-			if (t instanceof Province && ((Province)t).getUnrest()!= null && !players.contains(((Province)t).getUnrest())) {
-				s = s + "unrest in province "+t.getName()+" is declared againts "+((Province)t).getUnrest()+", which is not defined as any province controller\n";
+			/* Match rebellion country with list of available countries */
+			if (t instanceof Province && ((Province)t).getRebellion()!= null && !players.contains(((Province)t).getRebellion())) {
+				s = s + "rebellion in province "+t.getName()+" is declared againts "+((Province)t).getRebellion()+", which is not defined as any province controller\n";
 			}
 					
 			/* Check there aren't two Army and/or Fleets in the same territory */
