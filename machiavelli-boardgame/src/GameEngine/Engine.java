@@ -32,10 +32,29 @@ public class Engine {
 	
 	private final static Logger log = Logger.getLogger("Engine.class");
 
-	//public static TurnResult processTurnt(Player p[], Map m, Turn t) {
-	//	// TODO
-	//	return null;
-	//}
+	/**
+	 * Processes a set of Command orders (supposed each one from a different player) on the
+	 * map, in the context of a given game status.
+	 * @param gs
+	 * @param m
+	 * @param cmds
+	 * @return
+	 */
+	public static Result processCommands(GameStatus gs, Map m, Vector<Commands> cmds) {
+		// TODO
+		return null;
+	}
+	
+	/**
+	 * Processes a set of Adjustments orders (supposed each one from a different player) on the
+	 * map, in the context of a givben game status. 
+	 * @param m
+	 * @return
+	 */
+	public static Result processAdustments(GameStatus gs, Map m, Vector<Adjustments> adj) {
+		// TODO
+		return null;
+	}
 	
 	public static Result doFamine(Map m) {
 		
