@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Commands player="Venice">
+	<Action type="Army" id="1">
+		<Advance territory=""/>
+	</Action>
+	<Action type="Army" id="1">
+		<Besiege/>
+	</Action>
+	<Action type="Army" id="1">
+		<Hold/>
+	</Action>
+	<Action type="Army" id="1">
+		<LiftSiege/>
+	</Action>
+	<Action type="Army" id="1">
+		<Support territory="" player=""/>
+	</Action>
+	<Action type="Fleet" id="1">
+		<Transport armyId="" player=""/>
+	</Action>
+	<Action type="Army" id="1">
+		<Convert newType="Fleet"/>
+	</Action>
+	<FamineRelief province=""/>
+	<PacifyRebellion province=""/>
+	<CounterBride type="Army" id="1" player="" amount="12"/>
+	<DisbandAutonomousGarrison province="" amount="6"/>
+	<BuyAutonomousGarrison province="" amount="9">
+		<Hold/>
+	</BuyAutonomousGarrison>
+	<GarrisonToAutonomous province="" amount="9"/>
+	<DisbandGarrison province="" amount="12"/>
+	<DisbandUnit province="" amount="12"/>
+	<BuyUnit province="" amount="24">
+		<Hold/>
+	</BuyUnit>
+	<Rebellion province=""/>
+	<Assasination player="" amount="12"/>
+	<Retreat type="Army" id="1">
+		<Province>Treviso</Province>
+		<Province>Padua</Province>
+	</Retreat>
+</Commands>
