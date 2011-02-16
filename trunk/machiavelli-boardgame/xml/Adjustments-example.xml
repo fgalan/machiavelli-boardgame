@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Adjustments player="Venice">
+	<Payment type="Army" id="1"/>
+	<Purchase type="Army" elite="0" province="Treviso"/>
+</Adjustments>

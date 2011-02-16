@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 
 import GameElements.Map;
+import GameEngine.Adjustments;
 import GameEngine.Commands;
 import GameEngine.Engine;
 import GameEngine.GameStatus;
@@ -69,6 +70,7 @@ public class Tester {
 			System.out.println(gs.getStatus("Venice"));
 			
 			Commands cms = new Commands(new File("D://eclipse-my-projects//machiavelli-gameboard//xml//Commands-example.xml"));
+			Adjustments adj = new Adjustments(new File("D://eclipse-my-projects//machiavelli-gameboard//xml//Adjustments-example.xml"));
 			
 		} catch (Exception e) {
 			e.printStackTrace();
