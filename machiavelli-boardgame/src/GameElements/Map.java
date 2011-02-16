@@ -393,6 +393,9 @@ public class Map {
 						appendToHashMap(controlledProvinces, provinceController, provinceName + "(+)");
 					}
 				}
+				else { // city but not fortified
+					appendToHashMap(controlledProvinces, provinceController, provinceName);
+				}
 			}
 		}
 			
