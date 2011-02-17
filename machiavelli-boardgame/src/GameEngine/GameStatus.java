@@ -49,9 +49,15 @@ import Exceptions.PlayerNotFountException;
  */
 public class GameStatus {
 	
-	HashMap<String,Vector<String>> homeCountries;
-	HashMap<String,Vector<String>> assassinTokens;
-	HashMap<String,Integer> money;
+	private int year;
+	private int campaign;
+	private final static int SPRING = 0;
+	private final static int SUMMER = 1;
+	private final static int FALL = 2;
+	
+	private HashMap<String,Vector<String>> homeCountries;
+	private HashMap<String,Vector<String>> assassinTokens;
+	private HashMap<String,Integer> money;
 
 	public GameStatus(File f) throws ParserConfigurationException, SAXException, IOException, ParseGameStatusException {
 		
@@ -62,7 +68,24 @@ public class GameStatus {
 		assassinTokens = new HashMap<String,Vector<String>>();
 		money = new HashMap<String,Integer>();
 		
-		NodeList l = doc.getElementsByTagName("Player");
+		/* Get year and campaign */
+		NodeList l = doc.getElementsByTagName("");
+		year = Integer.parseInt(l.item(0).getAttributes().getNamedItem("year").getNodeValue());
+		String campaignString = l.item(0).getAttributes().getNamedItem("campaign").getNodeValue();
+		if (campaignString.equals("spring")) {
+			campaign = SPRING;
+		}
+		else if (campaignString.equals("summer")) {
+			campaign = SUMMER;
+		}
+		else if (campaignString.equals("fall")) {
+			campaign = FALL;
+		}
+		else {
+			throw new ParseGameStatusException("campaing value not valid: " + campaignString);
+		}
+		
+		l = doc.getElementsByTagName("Player");
 		for (int i = 0; i < l.getLength(); i++) {
 			NamedNodeMap at = l.item(i).getAttributes();
 			String player = at.getNamedItem("name").getNodeValue();
