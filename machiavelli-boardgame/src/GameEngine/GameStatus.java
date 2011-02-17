@@ -59,10 +59,15 @@ public class GameStatus {
 	/* The number of variable income rolls for the player controlling Genoa */
 	private int genoaControllerRolls;
 	
+	/* The victory conditions */ 
+	private int citiesVictory;
+	private int homeCountriesVictory;
+	
 	private HashMap<String,Vector<String>> homeCountries;
 	private HashMap<String,Vector<String>> assassinTokens;
 	private HashMap<String,Integer> money;
 	private HashMap<String,Integer> incomeRolls;
+	private HashMap<String,Integer> conqueredHomeCountries;
 
 	public GameStatus(File f) throws ParserConfigurationException, SAXException, IOException, ParseGameStatusException {
 		
@@ -73,6 +78,7 @@ public class GameStatus {
 		assassinTokens = new HashMap<String,Vector<String>>();
 		money = new HashMap<String,Integer>();
 		incomeRolls = new HashMap<String,Integer>();
+		conqueredHomeCountries = new HashMap<String,Integer>(); 
 		
 		/* Get year and campaign */
 		NodeList l = doc.getElementsByTagName("GameStatus");
@@ -95,15 +101,23 @@ public class GameStatus {
 		l = doc.getElementsByTagName("GenoaControllerRolls");
 		genoaControllerRolls = Integer.parseInt(l.item(0).getChildNodes().item(0).getTextContent());
 		
+		/* Set the victory conditions */
+		l = doc.getElementsByTagName("CitiesForVictory");
+		citiesVictory = Integer.parseInt(l.item(0).getChildNodes().item(0).getTextContent());
+		l = doc.getElementsByTagName("HomeCountriesForVictory");
+		homeCountriesVictory = Integer.parseInt(l.item(0).getChildNodes().item(0).getTextContent());		
+		
 		/* Process Player by Player */
 		l = doc.getElementsByTagName("Player");
 		for (int i = 0; i < l.getLength(); i++) {
 			NamedNodeMap at = l.item(i).getAttributes();
 			String player = at.getNamedItem("name").getNodeValue();
 			int ir = Integer.parseInt(at.getNamedItem("incomeRolls").getNodeValue());
+			int chc = Integer.parseInt(at.getNamedItem("conqueredHomeCountries").getNodeValue());
 			
 			money.put(player, parseMoney(l.item(i)));
 			incomeRolls.put(player, new Integer(ir));
+			conqueredHomeCountries.put(player, new Integer(chc));
 			homeCountries.put(player, parseHomeCountry(l.item(i)));
 			assassinTokens.put(player, parseAssasins(l.item(i)));
 		}
@@ -147,22 +161,18 @@ public class GameStatus {
 		 * have complete control (e.g. pretty-printing format)
 		 */
 		String s = "<?xml version='1.0' encoding='UTF-8'?>\n";
-		s = s + "<GameStatus year='"+year+"' campaing='"+campaing2Text()+"'>\n";
+		s = s + "<GameStatus year='"+year+"' campaign='"+campaing2Text()+"'>\n";
 		
-		/* Configuration elmenet */
+		/* Configuration element */
 		s = s + "   <Configuration>\n";
 		s = s + "      <GenoaControllerRolls>"+genoaControllerRolls+"</GenoaControllerRolls>\n";
+		s = s + "      <CitiesForVictory>"+citiesVictory+"</CitiesForVictory>\n";
+		s = s + "      <HomeCountriesForVictory>"+homeCountriesVictory+"</HomeCountriesForVictory>\n";		
 		s = s + "   </Configuration>\n";
 		
-		/* By construction, all the hashmaps has the same keys. We are arbitrarily using money
-		 * for getting them */
-		
-		Vector<String> players = new Vector<String>(money.keySet());
-		Collections.sort(players);
-		
-		for (Iterator<String> i = players.iterator(); i.hasNext(); ) {
+		for (Iterator<String> i = getPlayers().iterator(); i.hasNext(); ) {
 			String player = i.next();
-			s = s + "   <Player name='"+player+"' incomeRolls='"+incomeRolls.get(player)+"'>\n";
+			s = s + "   <Player name='"+player+"' incomeRolls='"+incomeRolls.get(player)+"' conqueredHomeCountries='"+homeCountries.get(player)+"'>\n";
 			s = s + "      <Money>"+money.get(player)+"</Money>\n";
 			for (Iterator<String> l = homeCountries.get(player).iterator(); l.hasNext(); ) {
 				s = s + "      <HomeProvince>"+l.next()+"</HomeProvince>\n";
@@ -177,7 +187,7 @@ public class GameStatus {
 		return s;
 	}
 	
-	private String campaing2Text() {
+	public String campaing2Text() {
 		if (campaign == SPRING) {
 			return "spring";
 		}
@@ -237,13 +247,33 @@ public class GameStatus {
 	public int getCampaign() {
 		return campaign;
 	}
-
-	public HashMap<String, Integer> getMoney() {
-		return money;
+	
+	public int getMoney(String player) {
+		return money.get(player);
+	}
+	
+	public void incMoney(String player, int inc) {
+		money.put(player, money.get(player) + inc);
+	}
+	
+	public void decMoney(String player, int dec) {
+		money.put(player, money.get(player) - dec);
+	}
+	
+	public Vector<String> getPlayers() {
+		/* By construction, all the hashmaps has the same keys. We are arbitrarily using money
+		 * for getting them */
+		Vector<String> players = new Vector<String>(money.keySet());
+		Collections.sort(players);
+		return players;
 	}
 
 	public int getGenoaControllerRolls() {
 		return genoaControllerRolls;
+	}
+
+	public int getIncomeRolls(String p) {
+		return incomeRolls.get(p);
 	}
 
 }
