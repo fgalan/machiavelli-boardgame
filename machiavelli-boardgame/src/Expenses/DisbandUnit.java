@@ -19,19 +19,14 @@
  */
 
 
-package Expeditures;
+package Expenses;
 
-public  class CounterBride extends Expediture {
+public  class DisbandUnit extends Expense {
 
-	private String type;
-	private int id;
-	private String player;
-
-	public CounterBride(int amount, String t, int i, String p) {
-		super(amount);
-		type = t;
-		id = i;
-		player = p;
-	}
+	private String province;
 	
+	public DisbandUnit(int amount, String p) {
+		super(amount);
+		province = p;
+	}	
 }

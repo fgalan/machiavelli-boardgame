@@ -19,16 +19,15 @@
  */
 
 
-package Expeditures;
+package Expenses;
 
-public  class PacifyRebellion extends Expediture {
+public abstract class Expense {
 
-	private final static int PACIFYREBELLION_AMMOUNT = 12;
-	
-	private String province;
-	
-	public PacifyRebellion(String p) {
-		super(PACIFYREBELLION_AMMOUNT);
-		province = p;
+	private int amount;
+
+	public Expense(int amount) {
+		super();
+		this.amount = amount;
 	}
+	
 }
