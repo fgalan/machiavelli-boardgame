@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
 import Actions.Action;
 import Actions.Retreats;
 import Exceptions.ParseCommandsException;
-import Expeditures.Expediture;
+import Expenses.Expense;
 
 public class Adjustments {
 

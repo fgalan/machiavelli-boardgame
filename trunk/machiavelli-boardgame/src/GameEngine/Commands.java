@@ -46,18 +46,18 @@ import Actions.Retreats;
 import Actions.Support;
 import Actions.Transport;
 import Exceptions.ParseCommandsException;
-import Expeditures.Assasination;
-import Expeditures.BuyAutonomousGarrison;
-import Expeditures.BuyUnit;
-import Expeditures.CounterBride;
-import Expeditures.DisbandAutonomousGarrison;
-import Expeditures.DisbandGarrison;
-import Expeditures.DisbandUnit;
-import Expeditures.Expediture;
-import Expeditures.FamineRelief;
-import Expeditures.GarrisonToAutonomous;
-import Expeditures.PacifyRebellion;
-import Expeditures.Rebellion;
+import Expenses.Assasination;
+import Expenses.BuyAutonomousGarrison;
+import Expenses.BuyUnit;
+import Expenses.CounterBride;
+import Expenses.DisbandAutonomousGarrison;
+import Expenses.DisbandGarrison;
+import Expenses.DisbandUnit;
+import Expenses.Expense;
+import Expenses.FamineRelief;
+import Expenses.GarrisonToAutonomous;
+import Expenses.PacifyRebellion;
+import Expenses.Rebellion;
 
 public class Commands {
 	
@@ -65,7 +65,7 @@ public class Commands {
 	
 	private String player;
 	private Vector<Action> actions;
-	private Vector<Expediture> expeditures;
+	private Vector<Expense> expenses;
 	private Vector<Retreats> retreats;
 	
 	/**
@@ -82,7 +82,7 @@ public class Commands {
 		Document doc = builder.parse(f);
 		
 		actions = new Vector<Action>();
-		expeditures = new Vector<Expediture>();
+		expenses = new Vector<Expense>();
 		retreats = new Vector <Retreats>();
 		
 		/* Get player in the root node */
@@ -98,14 +98,14 @@ public class Commands {
 		l = doc.getElementsByTagName("FamineRelief");
 		for (int i = 0; i < l.getLength(); i++) {
 			NamedNodeMap at = l.item(i).getAttributes();
-			expeditures.add(new FamineRelief(at.getNamedItem("province").getNodeValue()));
+			expenses.add(new FamineRelief(at.getNamedItem("province").getNodeValue()));
 		}
 		
 		/* Pattern: <PacifyRebellion province=""/> */
 		l = doc.getElementsByTagName("PacifyRebellion");
 		for (int i = 0; i < l.getLength(); i++) {
 			NamedNodeMap at = l.item(i).getAttributes();
-			expeditures.add(new PacifyRebellion(at.getNamedItem("province").getNodeValue()));
+			expenses.add(new PacifyRebellion(at.getNamedItem("province").getNodeValue()));
 		}
 		
 		/* Pattern: <CounterBride type="Army" id="1" player="" amount=""/> */
@@ -116,7 +116,7 @@ public class Commands {
 			int id = Integer.parseInt(at.getNamedItem("id").getNodeValue());
 			String t = at.getNamedItem("type").getNodeValue();
 			String p = at.getNamedItem("player").getNodeValue();
-			expeditures.add(new CounterBride(amount, t, id, p));
+			expenses.add(new CounterBride(amount, t, id, p));
 		}
 		
 		/* Pattern: <DisbandAutonomousGarrison province="" amount="6"/> */
@@ -125,13 +125,13 @@ public class Commands {
 			NamedNodeMap at = l.item(i).getAttributes();
 			int amount = Integer.parseInt(at.getNamedItem("amount").getNodeValue());
 			String p = at.getNamedItem("province").getNodeValue();
-			expeditures.add(new DisbandAutonomousGarrison(amount, p));
+			expenses.add(new DisbandAutonomousGarrison(amount, p));
 		}
 		
 		/* Pattern: <BuyAutonomousGarrison province="" amount="9"> [Action] </BuyAutonomousGarrison> */
 		l = doc.getElementsByTagName("BuyAutonomousGarrison");
 		for (int i = 0; i < l.getLength(); i++) {
-			expeditures.add(parseBuyAutonomousGarrison(l.item(i)));
+			expenses.add(parseBuyAutonomousGarrison(l.item(i)));
 		}
 		
 		/* Pattern: <GarrisonToAutonomous province="" amount="9"/> */
@@ -140,7 +140,7 @@ public class Commands {
 			NamedNodeMap at = l.item(i).getAttributes();
 			int amount = Integer.parseInt(at.getNamedItem("amount").getNodeValue());
 			String p = at.getNamedItem("province").getNodeValue();
-			expeditures.add(new GarrisonToAutonomous(amount, p));
+			expenses.add(new GarrisonToAutonomous(amount, p));
 		}
 		
 		/* Pattern: <DisbandGarrison province="" amount="12"/> */
@@ -149,7 +149,7 @@ public class Commands {
 			NamedNodeMap at = l.item(i).getAttributes();
 			int amount = Integer.parseInt(at.getNamedItem("amount").getNodeValue());
 			String p = at.getNamedItem("province").getNodeValue();
-			expeditures.add(new DisbandGarrison(amount, p));
+			expenses.add(new DisbandGarrison(amount, p));
 		}
 		
 		/* Pattern: <DisbandUnit province="" amount="12"/> */
@@ -158,20 +158,20 @@ public class Commands {
 			NamedNodeMap at = l.item(i).getAttributes();
 			int amount = Integer.parseInt(at.getNamedItem("amount").getNodeValue());
 			String p = at.getNamedItem("province").getNodeValue();
-			expeditures.add(new DisbandUnit(amount, p));			
+			expenses.add(new DisbandUnit(amount, p));			
 		}
 		
 		/* Pattern: <BuyUnit province="" amount="24"> [Action] </BuyUnit> */
 		l = doc.getElementsByTagName("BuyUnit");
 		for (int i = 0; i < l.getLength(); i++) {
-			expeditures.add(parseBuyUnit(l.item(i)));
+			expenses.add(parseBuyUnit(l.item(i)));
 		}
 		
 		/* Pattern: <Rebellion province=""/> */
 		l = doc.getElementsByTagName("Rebellion");
 		for (int i = 0; i < l.getLength(); i++) {
 			NamedNodeMap at = l.item(i).getAttributes();
-			expeditures.add(new Rebellion(at.getNamedItem("province").getNodeValue()));
+			expenses.add(new Rebellion(at.getNamedItem("province").getNodeValue()));
 		}
 		
 		/* Pattern: <Assasination player="" amount=""/> */
@@ -180,7 +180,7 @@ public class Commands {
 			NamedNodeMap at = l.item(i).getAttributes();
 			int amount = Integer.parseInt(at.getNamedItem("amount").getNodeValue());
 			String p = at.getNamedItem("player").getNodeValue();
-			expeditures.add(new Assasination(amount, p));
+			expenses.add(new Assasination(amount, p));
 		}
 		
 		l = doc.getElementsByTagName("Retreat");
@@ -206,7 +206,7 @@ public class Commands {
 		return r;
 	}
 
-	private Expediture parseBuyUnit(Node item) throws ParseCommandsException {
+	private Expense parseBuyUnit(Node item) throws ParseCommandsException {
 
 		/* Pattern: <BuyUnit province="" amount="24"> [Action] </BuyUnit> */
 		String province = item.getAttributes().getNamedItem("province").getNodeValue();
@@ -255,7 +255,7 @@ public class Commands {
 		return new BuyUnit(amount, province, new Hold());
 	}
 
-	private Expediture parseBuyAutonomousGarrison(Node item) throws ParseCommandsException {
+	private Expense parseBuyAutonomousGarrison(Node item) throws ParseCommandsException {
 		
 		/* Pattern: <BuyAutonomousGarrison province="" amount="9"> [Action] </BuyAutonomousGarrison> */
 		String province = item.getAttributes().getNamedItem("province").getNodeValue();
