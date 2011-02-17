@@ -25,6 +25,10 @@ import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
+import Exceptions.ProcessAdjustmentsException;
+import Exceptions.ProcessCommandsException;
+import Exceptions.UnknownCountryException;
+import GameElements.City;
 import GameElements.Map;
 import GameElements.Province;
 
@@ -39,24 +43,102 @@ public class Engine {
 	 * @param m
 	 * @param cmds
 	 * @return
+	 * @throws ProcessCommandsException 
 	 */
-	public static Result processCommands(GameStatus gs, Map m, Vector<Commands> cmds) {
-		// TODO
-		return null;
+	public static Result processCommands(GameStatus gs, Map m, Vector<Commands> cmds) throws ProcessCommandsException {
+		
+		ComposedResult r = new ComposedResult();
+		
+		/* Header */
+		GenericResult r2 = new GenericResult();
+		r2.addResult("------ Turn "+gs.campaing2Text() + " "+gs.getYear()+" ------");
+		r.addResult(r2);
+		
+		/* Famine phase and income phase only in Spring */
+		if (gs.getCampaign() == GameStatus.SPRING) {
+			r.addResult(doFamine(m));
+			try {
+				r.addResult(doIncome(gs,m));
+			} 
+			catch (UnknownCountryException e) {
+				throw new ProcessCommandsException(e.toString());
+			}
+		}
+		
+		/* Famine markers removal phase and plague only in Summer */
+		if (gs.getCampaign() == GameStatus.SUMMER) {
+			r.addResult(clearFamine(m));
+			r.addResult(doPlague(m));
+		}
+		
+		/* Process actions, except at the beginning of the game (in that case cmd is null) */
+		if (cmds != null) {
+		
+			/* Process Assassinations */
+			for (Iterator<String> i = gs.getPlayers().iterator(); i.hasNext() ; i.next()) {
+				// TODO
+			}
+			
+			/* Process other Expenses */
+			for (Iterator<String> i = gs.getPlayers().iterator(); i.hasNext() ; i.next()) {
+				// TODO
+			}
+			
+			/* Process Actions */
+			for (Iterator<String> i = gs.getPlayers().iterator(); i.hasNext() ; i.next()) {
+				// TODO
+			}
+			
+			/* Resolve conflicts */
+			// TODO
+		
+			/* Check victory conditions */
+			// TODO
+			
+			/* Check home country changes */
+			// TODO
+			
+			/* Set the date of the new turn */
+			gs.incCampaign();
+			if (gs.getCampaign() == GameStatus.SPRING) {
+				gs.incYear();
+			}			
+			
+		}
+		
+		return r;
 	}
 	
+
 	/**
 	 * Processes a set of Adjustments orders (supposed each one from a different player) on the
-	 * map, in the context of a givben game status. 
+	 * map, in the context of a given game status. 
 	 * @param m
 	 * @return
+	 * @throws ProcessAdjustmentsException 
 	 */
-	public static Result processAdustments(GameStatus gs, Map m, Vector<Adjustments> adj) {
-		// TODO
-		return null;
+	public static Result processAdjustments(GameStatus gs, Map m, Vector<Adjustments> adj) throws ProcessAdjustmentsException {
+		
+		ComposedResult r = new ComposedResult();
+		
+		/* This process only can be done in spring, so other campaing will throw an Exception */
+		if (gs.getCampaign() != GameStatus.SPRING) {
+			throw new ProcessAdjustmentsException("wrong campaing " + gs.getCampaign());
+		}
+		
+		for (Iterator<String> i = gs.getPlayers().iterator(); i.hasNext() ; i.next()) {
+			
+			/* Process payments */
+			// TODO
+			
+			/* Process purchases */
+			// TODO
+		}
+		
+		return r;
 	}
 	
-	public static Result doFamine(Map m) {
+	private static Result doFamine(Map m) {
 		
 		GenericResult r = new GenericResult();
 		
@@ -80,7 +162,7 @@ public class Engine {
 		return r;
 	}
 	
-	public static Result clearFamine(Map m) {
+	private static Result clearFamine(Map m) {
 		
 		GenericResult r = new GenericResult();
 		
@@ -121,7 +203,7 @@ public class Engine {
 		return r;
 	}	
 	
-	public static Result doPlague(Map m) {
+	private static Result doPlague(Map m) {
 		
 		GenericResult r = new GenericResult();
 		
@@ -163,4 +245,63 @@ public class Engine {
 		}
 		return r;
 	}
+	
+	/**
+	 * Increase the players income in the gs, considering the game map
+	 * @param gs
+	 * @param m
+	 * @return
+	 * @throws UnknownCountryException 
+	 */
+	private static Result doIncome(GameStatus gs, Map m) throws UnknownCountryException {
+		
+		GenericResult r = new GenericResult();
+		
+		/* Calculate income, player by player */
+		for (Iterator<String> i = gs.getPlayers().iterator(); i.hasNext() ; ) {
+			String player = i.next();
+			
+			/* Fixed amount */
+			int fixed = m.calculateIncome(player);
+			
+			/* Variable, rolling dices */
+			int variable = 0;
+			for (int j = 0; j < gs.getIncomeRolls(player); j++) {
+				variable += RandomProcesses.randomIncome(player);
+			}
+			
+			/* If player controls Genoa city, then dice extra roll */
+			boolean extraDices = false;
+			Province genoa = (Province) m.getTerritoryByName("Genoa");
+			City genoaCity = genoa.getCity();
+			if (!genoaCity.hasAutonomousGarrison()) {
+				if (genoaCity.getUnit() != null) {
+					/* Genoa city has controlling unit, so the unit controller is the one with gets extra rolls */
+					if (genoaCity.getUnit().getOwner().equals(player)) {
+						extraDices = true;
+					}
+				}
+				else {
+					/* Genoa city has no controlling unit, so the province controller (if any) 
+					 * is the one which gets the extra roll */
+					if (genoa.getController().equals(player)) {
+						extraDices = true;
+					}
+				}
+			}
+			if (extraDices) {
+				for (int j = 0; j < gs.getGenoaControllerRolls(); j++) {
+					variable += RandomProcesses.randomIncome("Genoa");
+				}
+			}
+			
+			r.addResult("player "+player+" gets " + fixed + "d fixed and " + variable +"d variable (total "+(fixed+variable)+")");
+			
+			/* Update money */
+			gs.incMoney(player, fixed + variable);
+		}
+		
+		return r;
+	}
+
 }
