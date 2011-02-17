@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GameStatus year="1499" campaign="spring">
-	<Player name="Austria">
+    <Configuration>
+    	<GenoaControllerRolls>1</GenoaControllerRolls>
+    </Configuration>
+	<Player name="Austria" incomeRolls="2">
 		<Money>0</Money>
 		<HomeProvince>Austria</HomeProvince>
 		<HomeProvince>Carinthia</HomeProvince>
@@ -12,7 +15,7 @@
 		<Assasin>Papacy</Assasin>
 		<Assasin>Venice</Assasin>
 	</Player>
-	<Player name="Florence">
+	<Player name="Florence" incomeRolls="1">
 		<Money>0</Money>
 		<HomeProvince>Arezzo</HomeProvince>
 		<HomeProvince>Florence</HomeProvince>
@@ -23,7 +26,7 @@
 		<Assasin>Papacy</Assasin>
 		<Assasin>Venice</Assasin>
 	</Player>
-	<Player name="France">
+	<Player name="France" incomeRolls="1">
 		<Money>0</Money>
 		<HomeProvince>Avignon</HomeProvince>
 		<HomeProvince>Bari</HomeProvince>
@@ -38,7 +41,7 @@
 		<Assasin>Papacy</Assasin>
 		<Assasin>Venice</Assasin>
 	</Player>
-	<Player name="Papacy">
+	<Player name="Papacy" incomeRolls="1">
 		<Money>0</Money>
 		<HomeProvince>Ancona</HomeProvince>
 		<HomeProvince>Bologna</HomeProvince>
@@ -54,7 +57,7 @@
 		<Assasin>France</Assasin>
 		<Assasin>Venice</Assasin>
 	</Player>
-	<Player name="Venice">
+	<Player name="Venice" incomeRolls="1">
 		<Money>0</Money>
 		<HomeProvince>Bergamo</HomeProvince>
 		<HomeProvince>Brescia</HomeProvince>
