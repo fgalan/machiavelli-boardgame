@@ -49,15 +49,20 @@ import Exceptions.PlayerNotFountException;
  */
 public class GameStatus {
 	
+	public final static int SPRING = 0;
+	public final static int SUMMER = 1;
+	public final static int FALL = 2;
+
 	private int year;
 	private int campaign;
-	private final static int SPRING = 0;
-	private final static int SUMMER = 1;
-	private final static int FALL = 2;
+	
+	/* The number of variable income rolls for the player controlling Genoa */
+	private int genoaControllerRolls;
 	
 	private HashMap<String,Vector<String>> homeCountries;
 	private HashMap<String,Vector<String>> assassinTokens;
 	private HashMap<String,Integer> money;
+	private HashMap<String,Integer> incomeRolls;
 
 	public GameStatus(File f) throws ParserConfigurationException, SAXException, IOException, ParseGameStatusException {
 		
@@ -67,10 +72,11 @@ public class GameStatus {
 		homeCountries = new HashMap<String,Vector<String>>();
 		assassinTokens = new HashMap<String,Vector<String>>();
 		money = new HashMap<String,Integer>();
+		incomeRolls = new HashMap<String,Integer>();
 		
 		/* Get year and campaign */
-		NodeList l = doc.getElementsByTagName("");
-		year = Integer.parseInt(l.item(0).getAttributes().getNamedItem("year").getNodeValue());
+		NodeList l = doc.getElementsByTagName("GameStatus");
+		year = (Integer.parseInt(l.item(0).getAttributes().getNamedItem("year").getNodeValue()));
 		String campaignString = l.item(0).getAttributes().getNamedItem("campaign").getNodeValue();
 		if (campaignString.equals("spring")) {
 			campaign = SPRING;
@@ -79,18 +85,25 @@ public class GameStatus {
 			campaign = SUMMER;
 		}
 		else if (campaignString.equals("fall")) {
-			campaign = FALL;
+			campaign = (FALL);
 		}
 		else {
 			throw new ParseGameStatusException("campaing value not valid: " + campaignString);
 		}
 		
+		/* Set the Genoa rolls */
+		l = doc.getElementsByTagName("GenoaControllerRolls");
+		genoaControllerRolls = Integer.parseInt(l.item(0).getChildNodes().item(0).getTextContent());
+		
+		/* Process Player by Player */
 		l = doc.getElementsByTagName("Player");
 		for (int i = 0; i < l.getLength(); i++) {
 			NamedNodeMap at = l.item(i).getAttributes();
 			String player = at.getNamedItem("name").getNodeValue();
+			int ir = Integer.parseInt(at.getNamedItem("incomeRolls").getNodeValue());
 			
 			money.put(player, parseMoney(l.item(i)));
+			incomeRolls.put(player, new Integer(ir));
 			homeCountries.put(player, parseHomeCountry(l.item(i)));
 			assassinTokens.put(player, parseAssasins(l.item(i)));
 		}
@@ -134,7 +147,12 @@ public class GameStatus {
 		 * have complete control (e.g. pretty-printing format)
 		 */
 		String s = "<?xml version='1.0' encoding='UTF-8'?>\n";
-		s = s + "<GameStatus>\n";
+		s = s + "<GameStatus year='"+year+"' campaing='"+campaing2Text()+"'>\n";
+		
+		/* Configuration elmenet */
+		s = s + "   <Configuration>\n";
+		s = s + "      <GenoaControllerRolls>"+genoaControllerRolls+"</GenoaControllerRolls>\n";
+		s = s + "   </Configuration>\n";
 		
 		/* By construction, all the hashmaps has the same keys. We are arbitrarily using money
 		 * for getting them */
@@ -144,7 +162,7 @@ public class GameStatus {
 		
 		for (Iterator<String> i = players.iterator(); i.hasNext(); ) {
 			String player = i.next();
-			s = s + "   <Player name='"+player+"'>\n";
+			s = s + "   <Player name='"+player+"' incomeRolls='"+incomeRolls.get(player)+"'>\n";
 			s = s + "      <Money>"+money.get(player)+"</Money>\n";
 			for (Iterator<String> l = homeCountries.get(player).iterator(); l.hasNext(); ) {
 				s = s + "      <HomeProvince>"+l.next()+"</HomeProvince>\n";
@@ -159,6 +177,18 @@ public class GameStatus {
 		return s;
 	}
 	
+	private String campaing2Text() {
+		if (campaign == SPRING) {
+			return "spring";
+		}
+		else if (campaign == SUMMER) {
+			return "summer";
+		}
+		else { // FALL
+			return "fall";
+		}
+	}
+
 	public String getStatus(String p) throws PlayerNotFountException {
 		
 		try {
@@ -188,4 +218,32 @@ public class GameStatus {
 			throw new PlayerNotFountException(p);
 		}
 	}
+
+	public void incYear() {
+		year++;
+	}
+
+	public int getYear() {
+		return year;
+	}
+
+	public void incCampaign() {
+		campaign++;
+		if (campaign > FALL) {
+			campaign = SPRING;
+		}
+	}
+
+	public int getCampaign() {
+		return campaign;
+	}
+
+	public HashMap<String, Integer> getMoney() {
+		return money;
+	}
+
+	public int getGenoaControllerRolls() {
+		return genoaControllerRolls;
+	}
+
 }
