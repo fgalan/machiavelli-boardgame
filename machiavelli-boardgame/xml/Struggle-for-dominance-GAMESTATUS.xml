@@ -2,8 +2,10 @@
 <GameStatus year="1499" campaign="spring">
     <Configuration>
     	<GenoaControllerRolls>1</GenoaControllerRolls>
+    	<CitiesForVictory>15</CitiesForVictory>
+    	<HomeCountriesForVictory>1</HomeCountriesForVictory>    	
     </Configuration>
-	<Player name="Austria" incomeRolls="2">
+	<Player name="Austria" incomeRolls="2" conqueredHomeCountries="0">
 		<Money>0</Money>
 		<HomeProvince>Austria</HomeProvince>
 		<HomeProvince>Carinthia</HomeProvince>
@@ -15,7 +17,7 @@
 		<Assasin>Papacy</Assasin>
 		<Assasin>Venice</Assasin>
 	</Player>
-	<Player name="Florence" incomeRolls="1">
+	<Player name="Florence" incomeRolls="1" conqueredHomeCountries="0">
 		<Money>0</Money>
 		<HomeProvince>Arezzo</HomeProvince>
 		<HomeProvince>Florence</HomeProvince>
@@ -26,7 +28,7 @@
 		<Assasin>Papacy</Assasin>
 		<Assasin>Venice</Assasin>
 	</Player>
-	<Player name="France" incomeRolls="1">
+	<Player name="France" incomeRolls="1" conqueredHomeCountries="0">
 		<Money>0</Money>
 		<HomeProvince>Avignon</HomeProvince>
 		<HomeProvince>Bari</HomeProvince>
@@ -41,7 +43,7 @@
 		<Assasin>Papacy</Assasin>
 		<Assasin>Venice</Assasin>
 	</Player>
-	<Player name="Papacy" incomeRolls="1">
+	<Player name="Papacy" incomeRolls="1" conqueredHomeCountries="0">
 		<Money>0</Money>
 		<HomeProvince>Ancona</HomeProvince>
 		<HomeProvince>Bologna</HomeProvince>
@@ -57,7 +59,7 @@
 		<Assasin>France</Assasin>
 		<Assasin>Venice</Assasin>
 	</Player>
-	<Player name="Venice" incomeRolls="1">
+	<Player name="Venice" incomeRolls="1" conqueredHomeCountries="0">
 		<Money>0</Money>
 		<HomeProvince>Bergamo</HomeProvince>
 		<HomeProvince>Brescia</HomeProvince>

@@ -2,8 +2,10 @@
 <GameStatus year="1454" campaign="spring">
     <Configuration>
     	<GenoaControllerRolls>1</GenoaControllerRolls>
+    	<CitiesForVictory>15</CitiesForVictory>
+    	<HomeCountriesForVictory>1</HomeCountriesForVictory>
     </Configuration>
-	<Player name="Austria" incomeRolls="1">
+	<Player name="Austria" incomeRolls="1" conqueredHomeCountries="0">
 		<Money>0</Money>
 		<HomeProvince>Austria</HomeProvince>
 		<HomeProvince>Carinthia</HomeProvince>
@@ -17,7 +19,7 @@
 		<Assasin>Turks</Assasin>
 		<Assasin>Venice</Assasin>
 	</Player>
-	<Player name="Florence" incomeRolls="2">
+	<Player name="Florence" incomeRolls="2" conqueredHomeCountries="0">
 		<Money>0</Money>
 		<HomeProvince>Arezzo</HomeProvince>
 		<HomeProvince>Florence</HomeProvince>
@@ -31,7 +33,7 @@
 		<Assasin>Turks</Assasin>
 		<Assasin>Venice</Assasin>
 	</Player>
-	<Player name="France" incomeRolls="1">
+	<Player name="France" incomeRolls="1" conqueredHomeCountries="0">
 		<Money>0</Money>
 		<HomeProvince>Avignon</HomeProvince>
 		<HomeProvince>Marseille</HomeProvince>
@@ -45,7 +47,7 @@
 		<Assasin>Turks</Assasin>
 		<Assasin>Venice</Assasin>
 	</Player>
-	<Player name="Milan" incomeRolls="1">
+	<Player name="Milan" incomeRolls="1" conqueredHomeCountries="0">
 		<Money>0</Money>
 		<HomeProvince>Como</HomeProvince>
 		<HomeProvince>Cremona</HomeProvince>
@@ -62,7 +64,7 @@
 		<Assasin>Turks</Assasin>
 		<Assasin>Venice</Assasin>
 	</Player>
-	<Player name="Naples" incomeRolls="1">
+	<Player name="Naples" incomeRolls="1" conqueredHomeCountries="0">
 		<Money>0</Money>
 		<HomeProvince>Aquila</HomeProvince>
 		<HomeProvince>Bari</HomeProvince>
@@ -80,7 +82,7 @@
 		<Assasin>Turks</Assasin>
 		<Assasin>Venice</Assasin>	
 	</Player>
-	<Player name="Papacy" incomeRolls="1">
+	<Player name="Papacy" incomeRolls="1" conqueredHomeCountries="0">
 		<Money>0</Money>
 		<HomeProvince>Ancona</HomeProvince>
 		<HomeProvince>Bologna</HomeProvince>
@@ -98,7 +100,7 @@
 		<Assasin>Turks</Assasin>
 		<Assasin>Venice</Assasin>
 	</Player>
-	<Player name="Turks" incomeRolls="1">
+	<Player name="Turks" incomeRolls="1" conqueredHomeCountries="0">
 		<Money>0</Money>
 		<HomeProvince>Albania</HomeProvince>
 		<HomeProvince>Bosnia</HomeProvince>
@@ -113,7 +115,7 @@
 		<Assasin>Papacy</Assasin>
 		<Assasin>Venice</Assasin>
 	</Player>
-	<Player name="Venice" incomeRolls="2">
+	<Player name="Venice" incomeRolls="2" conqueredHomeCountries="0">
 		<Money>0</Money>
 		<HomeProvince>Bergamo</HomeProvince>
 		<HomeProvince>Brescia</HomeProvince>
