@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GameStatus year="1499" campaing="spring">
+	<Player name="Austria">
+		<Money>0</Money>
+		<HomeProvince>Austria</HomeProvince>
+		<HomeProvince>Carinthia</HomeProvince>
+		<HomeProvince>Messina</HomeProvince>
+		<HomeProvince>Palermo</HomeProvince>
+		<HomeProvince>Tyrolea</HomeProvince>
+		<Assasin>Florence</Assasin>
+		<Assasin>France</Assasin>
+		<Assasin>Papacy</Assasin>
+		<Assasin>Venice</Assasin>
+	</Player>
+	<Player name="Florence">
+		<Money>0</Money>
+		<HomeProvince>Arezzo</HomeProvince>
+		<HomeProvince>Florence</HomeProvince>
+		<HomeProvince>Pisa</HomeProvince>
+		<HomeProvince>Pistoia</HomeProvince>
+		<Assasin>Austria</Assasin>
+		<Assasin>France</Assasin>
+		<Assasin>Papacy</Assasin>
+		<Assasin>Venice</Assasin>
+	</Player>
+	<Player name="France">
+		<Money>0</Money>
+		<HomeProvince>Avignon</HomeProvince>
+		<HomeProvince>Bari</HomeProvince>
+		<HomeProvince>Genoa</HomeProvince>
+		<HomeProvince>Marseille</HomeProvince>
+		<HomeProvince>Milan</HomeProvince>
+		<HomeProvince>Naples</HomeProvince>
+		<HomeProvince>Provence</HomeProvince>
+		<HomeProvince>Saluzzo</HomeProvince>
+		<Assasin>Austria</Assasin>
+		<Assasin>Florence</Assasin>
+		<Assasin>Papacy</Assasin>
+		<Assasin>Venice</Assasin>
+	</Player>
+	<Player name="Papacy">
+		<Money>0</Money>
+		<HomeProvince>Ancona</HomeProvince>
+		<HomeProvince>Bologna</HomeProvince>
+		<HomeProvince>Patrimony</HomeProvince>
+		<HomeProvince>Perugia</HomeProvince>
+		<HomeProvince>Romagna</HomeProvince>
+		<HomeProvince>Rome</HomeProvince>
+		<HomeProvince>Spoleto</HomeProvince>
+		<HomeProvince>Tivoli</HomeProvince>
+		<HomeProvince>Urbino</HomeProvince>
+		<Assasin>Austria</Assasin>
+		<Assasin>Florence</Assasin>
+		<Assasin>France</Assasin>
+		<Assasin>Venice</Assasin>
+	</Player>
+	<Player name="Venice">
+		<Money>0</Money>
+		<HomeProvince>Bergamo</HomeProvince>
+		<HomeProvince>Brescia</HomeProvince>
+		<HomeProvince>Dalmatia</HomeProvince>		
+		<HomeProvince>Friuli</HomeProvince>
+		<HomeProvince>Istria</HomeProvince>
+		<HomeProvince>Padua</HomeProvince>
+		<HomeProvince>Treviso</HomeProvince>
+		<HomeProvince>Venice</HomeProvince>
+		<HomeProvince>Verona</HomeProvince>
+		<HomeProvince>Vicenza</HomeProvince>
+		<Assasin>Austria</Assasin>
+		<Assasin>Florence</Assasin>
+		<Assasin>France</Assasin>
+		<Assasin>Papacy</Assasin>
+	</Player>
+</GameStatus> 
