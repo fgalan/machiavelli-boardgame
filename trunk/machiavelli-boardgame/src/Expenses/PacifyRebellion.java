@@ -19,15 +19,16 @@
  */
 
 
-package Expeditures;
+package Expenses;
 
-public  class DisbandAutonomousGarrison extends Expediture {
+public  class PacifyRebellion extends Expense {
 
+	private final static int PACIFYREBELLION_AMMOUNT = 12;
+	
 	private String province;
 	
-	public DisbandAutonomousGarrison(int amount, String p) {
-		super(amount);
+	public PacifyRebellion(String p) {
+		super(PACIFYREBELLION_AMMOUNT);
 		province = p;
 	}
-	
 }

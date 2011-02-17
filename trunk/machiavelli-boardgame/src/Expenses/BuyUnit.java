@@ -19,15 +19,18 @@
  */
 
 
-package Expeditures;
+package Expenses;
 
-public  class Assasination extends Expediture {
+import Actions.Action;
 
-	private String player;
+public  class BuyUnit extends Expense {
+
+	private String province;
+	private Action action;
 	
-	public Assasination(int amount, String p) {
+	public BuyUnit(int amount, String p, Action a) {
 		super(amount);
-		this.player = p;
-	}
-	
+		province = p;
+		action = a;
+	}	
 }

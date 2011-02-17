@@ -19,16 +19,15 @@
  */
 
 
-package Expeditures;
+package Expenses;
 
-public  class FamineRelief extends Expediture {
+public  class Assasination extends Expense {
 
-	private final static int FAMINERELIEF_AMMOUNT = 3;
+	private String player;
 	
-	private String province;
-	
-	public FamineRelief(String p) {
-		super(FAMINERELIEF_AMMOUNT);
-		province = p;
+	public Assasination(int amount, String p) {
+		super(amount);
+		this.player = p;
 	}
+	
 }

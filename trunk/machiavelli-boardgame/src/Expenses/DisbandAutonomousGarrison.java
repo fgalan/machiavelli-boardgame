@@ -19,15 +19,15 @@
  */
 
 
-package Expeditures;
+package Expenses;
 
-public abstract class Expediture {
+public  class DisbandAutonomousGarrison extends Expense {
 
-	private int amount;
-
-	public Expediture(int amount) {
-		super();
-		this.amount = amount;
+	private String province;
+	
+	public DisbandAutonomousGarrison(int amount, String p) {
+		super(amount);
+		province = p;
 	}
 	
 }

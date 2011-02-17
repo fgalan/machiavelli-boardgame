@@ -19,16 +19,16 @@
  */
 
 
-package Expeditures;
+package Expenses;
 
-public  class Rebellion extends Expediture {
+public  class FamineRelief extends Expense {
 
+	private final static int FAMINERELIEF_AMMOUNT = 3;
+	
 	private String province;
 	
-	public Rebellion(String p) {
-		/* Rebellion amount cann't be known at construction time, so we set to -1 in the
-		 * parent constructor */
-		super(-1);
+	public FamineRelief(String p) {
+		super(FAMINERELIEF_AMMOUNT);
 		province = p;
-	}	
+	}
 }

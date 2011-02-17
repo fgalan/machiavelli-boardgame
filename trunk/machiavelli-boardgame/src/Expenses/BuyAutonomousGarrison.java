@@ -19,15 +19,19 @@
  */
 
 
-package Expeditures;
+package Expenses;
 
-public  class GarrisonToAutonomous extends Expediture {
+import Actions.Action;
+
+public  class BuyAutonomousGarrison extends Expense {
 
 	private String province;
+	private Action action;
 
-	public GarrisonToAutonomous(int amount, String p) {
+	public BuyAutonomousGarrison(int amount, String p, Action a) {
 		super(amount);
 		province = p;
+		action = a;
 	}
 	
 }

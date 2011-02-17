@@ -19,15 +19,16 @@
  */
 
 
-package Expeditures;
+package Expenses;
 
-public  class DisbandGarrison extends Expediture {
+public  class Rebellion extends Expense {
 
 	private String province;
-
-	public DisbandGarrison(int amount, String p) {
-		super(amount);
-		province = p;
-	}
 	
+	public Rebellion(String p) {
+		/* Rebellion amount cann't be known at construction time, so we set to -1 in the
+		 * parent constructor */
+		super(-1);
+		province = p;
+	}	
 }
