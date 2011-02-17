@@ -619,31 +619,37 @@ public class Map {
 			Territory t = territories.get(i.next());
 			if (t instanceof Province) {
 				/* Provinces and cities */
-				if (((Province)t).getController().equals(p)) {
-					income++;
+				if (((Province)t).getController() != null && ((Province)t).getController().equals(p)) {
+					/* Province only produces money if there is no Famine or Rebellion */
+					if (!((Province)t).hasFamine() && ((Province)t).getRebellion() == null) { 
+						income++;
+					}
 				}
 				
 				City c = ((Province)t).getCity(); 
 				if (c != null) {
 					if (c.getUnit() != null) {
 						/* garrison at the city, so if the garrisons belong to the player and the
-						 * city is not under siege, then the player gets the money */
+						 * city is not under siege, then the player gets the money, *no matter* if
+						 * famine or rebellion */
 						if (c.getUnit().getOwner().equals(p) && !c.isUnderSiege()) {
 							income += c.getSize();
 						}
 					}
 					else {
-						/* no garrison, so if the player controls the province and there is no autonomos garrison
-						 * the player gets the money */
-						if (((Province)t).getController().equals(p) && !c.hasAutonomousGarrison()) {
-							income += c.getSize();
+						/* no garrison, so if the player controls the province and there is no autonomous garrison
+						 * the player gets the money, *except* if famine or rebellion */
+						if (((Province)t).getController() != null && ((Province)t).getController().equals(p) && !c.hasAutonomousGarrison()) {
+							if (!((Province)t).hasFamine() && ((Province)t).getRebellion() == null) { 
+								income += c.getSize();
+							}
 						}
 					}
 				}
 			}
 			else {
 				/* Seas */
-				if (t.getUnit().getOwner().equals(p)) {
+				if (t.getUnit()!=null && t.getUnit().getOwner().equals(p)) {
 					income ++;
 				}
 			}
