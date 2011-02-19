@@ -26,6 +26,8 @@ public class Garrison extends Unit {
 
 	private final static Logger log = Logger.getLogger("Garrison.class");
 	
+	public final static int MAX = 6;
+	
 	public Garrison(int id, String owner, City c, int elite) {
 		super(id, owner, elite);
 		setLocation(c.getProvince());

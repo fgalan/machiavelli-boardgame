@@ -26,6 +26,8 @@ public class Fleet extends Unit {
 
 	private final static Logger log = Logger.getLogger("Fleet.class");
 	
+	public final static int MAX = 8;	
+	
 	public Fleet(int id, String owner, Territory t, int elite) {
 		super(id, owner, elite);
 		setLocation(t);
