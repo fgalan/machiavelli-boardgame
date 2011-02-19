@@ -68,16 +68,31 @@ public abstract class Unit {
 	
 	private String eliteString() {
 		String s = "";
-		if (elite == Unit.ELITE_TYPE_1) {
+		if (elite == ELITE_TYPE_1) {
 			s ="*";;
 		}
-		else if (elite == Unit.ELITE_TYPE_2) {
+		else if (elite == ELITE_TYPE_2) {
 			s = "**";
 		}
-		else if (elite == Unit.ELITE_TYPE_3) {
+		else if (elite == ELITE_TYPE_3) {
 			s = "***";
 		}
 		return s;
-	}	
+	}
+	
+	public int cost() {
+		if (elite == NO_ELITE) {
+			return 3;
+		}
+		else if (elite == ELITE_TYPE_1) {
+			return 6;
+		}
+		else if (elite == ELITE_TYPE_2) {
+			return 6;
+		}
+		else { // ELITE_TYPE_3
+			return 9;
+		}
+	}
 
 }
