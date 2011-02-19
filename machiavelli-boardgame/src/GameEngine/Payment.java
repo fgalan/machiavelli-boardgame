@@ -29,4 +29,12 @@ public class Payment {
 		type = t;
 		id = i;
 	}
+
+	public String getType() {
+		return type;
+	}
+
+	public int getId() {
+		return id;
+	}
 }
