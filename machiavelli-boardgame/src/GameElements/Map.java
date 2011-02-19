@@ -765,5 +765,87 @@ public class Map {
 			}
 		}
 		return v;
-	}	
+	}
+	
+	/**
+	 * @param player
+	 * @param type to return units of a given type, if null, returning all units
+	 * @return
+	 */
+	public Vector<Unit> getUnitBelongingToPlayer(String player, String type) {
+		Vector<Unit> v = new Vector<Unit>();
+		
+		/* Search all territories */
+		for (Iterator<String> i = territories.keySet().iterator(); i.hasNext(); ) {
+			Territory t = territories.get(i.next());
+			
+			/* Check unit in the territory */
+			if (t.getUnit() != null) {
+				if (t.getUnit().getOwner().equals(player)) {
+					if (t.getUnit() instanceof Army) {
+						if (type == null || type.equals("Army")) {
+							v.add(t.getUnit());
+						}
+					}
+					else { // Fleet
+						if (type == null || type.equals("Fleet")) {
+							v.add(t.getUnit());
+						}
+					}				
+				}
+			}
+			/* Check unit in the territory city (only for Provinces) */
+			if (t instanceof Province && ((Province)t).getCity() != null && ((Province)t).getCity().isFortified() && ((Province)t).getCity().getUnit() != null) {
+				if (((Province)t).getCity().getUnit().equals(player)) {
+					if (type == null || type.equals("Garrison")) {
+						v.add(((Province)t).getCity().getUnit());
+					}					
+				}
+			}
+		}
+		
+		return v;
+	}
+	
+	/**
+	 * @param player
+	 * @param type
+	 * @return the first free identifier, or 'max' if no free identifier is found
+	 */
+	public int GetFreeId(String player, String type) {
+				
+		Vector<Unit> v;
+
+		/* Search for the particular unit type */
+		int max;
+		if (type.equals("Army")) {
+			max = Army.MAX;
+			v = getUnitBelongingToPlayer(player, "Army"); 
+		}
+		else if (type.equals("Fleet")) {
+			max = Fleet.MAX;
+			v = getUnitBelongingToPlayer(player, "Fleet");
+		}
+		else { // Garrison
+			max = Garrison.MAX;
+			 v = getUnitBelongingToPlayer(player, "Garrison");
+		}
+		
+		/* Search from 1 to max, returning the first free one */
+		int free = -1;
+		for (int i = 0; i < max; i++) {
+			free = i;
+			for (Iterator<Unit> j = v.iterator(); j.hasNext(); ) {
+				Unit u = j.next();
+				if (u.getId() == i) {
+					free = max;
+					break; // j
+				}
+			}
+			if (free == i) {
+				break; // i
+			}
+		}
+		return free;
+	}
 }
