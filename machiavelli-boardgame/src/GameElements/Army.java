@@ -26,6 +26,8 @@ public class Army extends Unit {
 	
 	private final static Logger log = Logger.getLogger("Army.class");
 	
+	public final static int MAX = 12; 
+	
 	public Army(int id, String owner, Province pr, int elite) {
 		super(id, owner, elite);
 		setLocation(pr);
