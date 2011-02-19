@@ -18,7 +18,6 @@
  *
  */
 
-
 package GameEngine;
 
 import java.io.File;
@@ -76,5 +75,17 @@ public class Adjustments {
 			NamedNodeMap at = l.item(i).getAttributes();
 			purchases.add(new Purchase(at.getNamedItem("type").getNodeValue(),Integer.parseInt(at.getNamedItem("elite").getNodeValue()),at.getNamedItem("province").getNodeValue()));
 		}		
+	}
+
+	public String getPlayer() {
+		return player;
+	}
+
+	public Vector<Payment> getPayments() {
+		return payments;
+	}
+
+	public Vector<Purchase> getPurchases() {
+		return purchases;
 	}
 }

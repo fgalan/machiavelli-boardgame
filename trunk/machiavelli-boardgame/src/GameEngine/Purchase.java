@@ -31,5 +31,17 @@ public class Purchase {
 		elite = e;
 		province = p;
 	}
+
+	public String getType() {
+		return type;
+	}
+
+	public int getElite() {
+		return elite;
+	}
+
+	public String getProvince() {
+		return province;
+	}
 	
 }
