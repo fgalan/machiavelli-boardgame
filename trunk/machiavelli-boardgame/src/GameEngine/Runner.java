@@ -171,7 +171,7 @@ public class Runner {
 		for (Iterator<String> i = gs.getPlayers().iterator() ; i.hasNext(); ) {
 			String player = i.next();
 			f = new FileWriter(args[1] + "/"+player+".txt");
-			f.write(gs.getStatus(player));
+			f.write(gs.getStatus(player, m.getCitiesBelongingToPlayer(player).size()));
 			f.close();
 		}
 		

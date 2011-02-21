@@ -199,13 +199,15 @@ public class GameStatus {
 		}
 	}
 
-	public String getStatus(String p) throws PlayerNotFountException {
+	public String getStatus(String p, int controlledCities) throws PlayerNotFountException {
 		
 		try {
-			String s = "Status for player " + p + ":\n";
-			s = s + "-------------------------------\n";
+			String s = "Status for player " + p + " in " + year + " " + campaing2Text() + ":\n";
+			s = s + "--------------------------------------------------------------\n";
 			s = s + "Treasury: " + money.get(p) + "\n";
 			
+			s = s + "Conquered home countries: " + conqueredHomeCountries.get(p) + "\n";
+			s = s + "Controlled cities: " + controlledCities + "\n";
 			s = s + "Home country provinces: ";
 			Vector<String> hp = homeCountries.get(p);
 			Collections.sort(hp);
