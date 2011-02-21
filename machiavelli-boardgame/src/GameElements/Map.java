@@ -354,8 +354,8 @@ public class Map {
 				 *   Swiss      -> the player controls the province and the unfortified city (if any)
 				 *   Turin(+)   -> the player controls the province *and* the fortified city
 				 *   Turin(-)   -> the player controls the province *but not* the fortified city (which is controlled
-				 *                 by another player with a Garrison unit there
-				 *   Turin(c)   -> the player controls the city *but not* the city
+				 *                 by another player with a Garrison unit there or has an AutonomousGarrison)
+				 *   Turin(c)   -> the player controls the city *but not* the province
 				 *   
 				 * Note that Seas have no controller by definition */
 			 
@@ -847,5 +847,31 @@ public class Map {
 			}
 		}
 		return free;
+	}
+	
+	public Vector<City> getCitiesBelongingToPlayer(String p) {
+		
+		Vector<City> v = new Vector<City>();
+		
+		/* Search all territories */
+		for (Iterator<String> i = territories.keySet().iterator(); i.hasNext(); ) {
+			Territory t = territories.get(i.next());
+			if (t instanceof Province && ((Province)t).getCity() != null && !((Province)t).getCity().hasAutonomousGarrison()) {
+				if ( ((Province)t).getCity().getUnit() != null ) {
+					/* If Garrison at the city, then the Garrison owner is the city controller */
+					if ( ((Province)t).getCity().getUnit().getOwner().equals(p)) {
+						v.add(((Province)t).getCity());
+					}
+				}
+				else {
+					/* If not Garrison at the city, then the Province controller (if any) is the city controller */
+					if ( ((Province)t).getController() != null && ((Province)t).getController().equals(p)) {
+						v.add(((Province)t).getCity());
+					}					
+				}
+			}
+		}
+		
+		return v;
 	}
 }
