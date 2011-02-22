@@ -302,8 +302,35 @@ public class Engine {
 		
 		GenericResult r = new GenericResult();
 		
-		/* Get provinces with famine */
-		Vector<String> v = RandomProcesses.famineResult();
+		/* Get provinces with famine */		
+		int d1, d2, d3, d4, koy;
+		Vector<String> v;
+		
+		d1 = RandomProcesses.roll();
+		d2 = RandomProcesses.roll();
+		koy = RandomProcesses.kindOfYear(d1+d2);
+		String prefix = "kind of year ("+d1+"+"+d2+"): " + RandomProcesses.kindOfYear2String(koy);
+		
+		d1 = RandomProcesses.roll();
+		d2 = RandomProcesses.roll();
+		d3 = RandomProcesses.roll();
+		d4 = RandomProcesses.roll();
+		v = RandomProcesses.famineResult(koy,d1+d2,d3+d4); 
+		switch (koy) {
+		case RandomProcesses.ONLY_ROW:
+			r.addResult(prefix + ", row="+d1+"+"+d2);
+			break;
+		case RandomProcesses.ONLY_COLUMN:
+			r.addResult(prefix + ", column="+d1+"+"+d2);
+			break;
+		case RandomProcesses.ROW_AND_COLUMN:
+			r.addResult(prefix + ", row="+d1+"+"+d2+", column="+d3+"+"+d4);
+			break;
+		default: // NO DISASTER
+			r.addResult(prefix + ", no famine");
+			break;
+		}
+		
 		if (v != null) {
 			/* Put a marker in each province */
 			for (Iterator<String> i = v.iterator() ; i.hasNext() ; ) {
@@ -316,9 +343,7 @@ public class Engine {
 				}
 			}
 		}
-		else {
-			r.addResult("no famine this year");
-		}
+
 		return r;
 	}
 	
@@ -368,7 +393,34 @@ public class Engine {
 		GenericResult r = new GenericResult();
 		
 		/* Get provinces with plague */
-		Vector<String> v = RandomProcesses.famineResult();
+		int d1, d2, d3, d4, koy;
+		Vector<String> v;
+		
+		d1 = RandomProcesses.roll();
+		d2 = RandomProcesses.roll();
+		koy = RandomProcesses.kindOfYear(d1+d2);
+		String prefix = "kind of year ("+d1+"+"+d2+"): " + RandomProcesses.kindOfYear2String(koy);
+		
+		d1 = RandomProcesses.roll();
+		d2 = RandomProcesses.roll();
+		d3 = RandomProcesses.roll();
+		d4 = RandomProcesses.roll();
+		v = RandomProcesses.plagueResult(koy,d1+d2,d3+d4); 
+		switch (koy) {
+		case RandomProcesses.ONLY_ROW:
+			r.addResult(prefix + ", row="+d1+"+"+d2);
+			break;
+		case RandomProcesses.ONLY_COLUMN:
+			r.addResult(prefix + ", column="+d1+"+"+d2);
+			break;
+		case RandomProcesses.ROW_AND_COLUMN:
+			r.addResult(prefix + ", row="+d1+"+"+d2+", column="+d3+"+"+d4);
+			break;
+		default: // NO DISASTER
+			r.addResult(prefix + ", no plague");
+			break;
+		}
+		
 		if (v != null) {
 			for (Iterator<String> i = v.iterator(); i.hasNext(); ) {
 				Province p = (Province) m.getTerritoryByName(i.next());
@@ -421,13 +473,19 @@ public class Engine {
 		for (Iterator<String> i = gs.getPlayers().iterator(); i.hasNext() ; ) {
 			String player = i.next();
 			
+			r.addResult("player "+player+" gets: ");
+			
 			/* Fixed amount */
 			int fixed = m.calculateIncome(player);
+			r.addResult("   fixed: " + fixed + "d");
 			
 			/* Variable, rolling dices */
 			int variable = 0;
 			for (int j = 0; j < gs.getIncomeRolls(player); j++) {
-				variable += RandomProcesses.randomIncome(player);
+				int d = RandomProcesses.roll();
+				int partialVariable = RandomProcesses.randomIncome(player,d);
+				r.addResult("   variable at home (rolling "+d+"): " + partialVariable + "d");
+				variable += partialVariable;
 			}
 			
 			/* If player controls Genoa city, then dice extra roll */
@@ -451,11 +509,14 @@ public class Engine {
 			}
 			if (extraDices) {
 				for (int j = 0; j < gs.getGenoaControllerRolls(); j++) {
-					variable += RandomProcesses.randomIncome("Genoa");
+					int d = RandomProcesses.roll();
+					int partialVariable = RandomProcesses.randomIncome("Genoa",d);
+					r.addResult("   variable as Genoa controller (rolling "+d+"): " + partialVariable + "d");
+					variable += partialVariable;					
 				}
 			}
 			
-			r.addResult("player "+player+" gets " + fixed + "d fixed and " + variable +"d variable (total "+(fixed+variable)+")");
+			r.addResult("   TOTAL: "+(fixed+variable)+"d");
 			
 			/* Update money */
 			gs.incMoney(player, fixed + variable);

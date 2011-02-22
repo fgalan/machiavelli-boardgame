@@ -90,6 +90,10 @@ public class RandomProcesses {
 	public static final int ONLY_COLUMN = 2;
 	public static final int ROW_AND_COLUMN = 3; 
 	
+	public static int roll() {
+		return generator.nextInt(6)+1;
+	}
+	
 	private static Vector<String> getFamineRow(int row) {
 		Vector<String> v = new Vector<String>();
 		for (int i = 1 ; i < 12 ; i++) {
@@ -130,8 +134,7 @@ public class RandomProcesses {
 		return v;
 	}
 	
-	private static int kindOfYear() {
-		int diceRoll =  generator.nextInt(6)+generator.nextInt(6)+1;
+	public static int kindOfYear(int diceRoll) {
 		if (diceRoll < 4) {
 			return NO_DISASTER;
 		}
@@ -146,15 +149,23 @@ public class RandomProcesses {
 		}
 	}
 	
-	public static Vector<String> famineResult() {
-		switch (kindOfYear()) {
+	/**
+	 * Second diceRoll is only used in ROW_AND_COLUMN result
+	 */
+	public static Vector<String> famineResult(int kindOfYear, int diceRoll, int diceRoll2) {
+		switch (kindOfYear) {
 		case ONLY_ROW:
-			return getFamineRow(generator.nextInt(6)+generator.nextInt(6)+1);
+			return getFamineRow(diceRoll-1);
 		case ONLY_COLUMN:
-			return getFamineColumn(generator.nextInt(6)+generator.nextInt(6)+1);
+			return getFamineColumn(diceRoll-1);
 		case ROW_AND_COLUMN:
-			Vector<String> v = getFamineRow(generator.nextInt(6)+generator.nextInt(6)+1);
-			v.addAll(getFamineColumn(generator.nextInt(6)+generator.nextInt(6)+1));
+			Vector<String> v = getFamineRow(diceRoll-1);
+			for (Iterator<String> i = getFamineColumn(diceRoll2-1).iterator(); i.hasNext(); ) {
+				String p = i.next();
+				if (!v.contains(p)) {
+					v.add(p);
+				}
+			}			
 			return v;
 		default:
 			// NO_DISASTER
@@ -163,15 +174,24 @@ public class RandomProcesses {
 		
 	}
 	
-	public static Vector<String> plagueResult() {
-		switch (kindOfYear()) {
+	/**
+	 * Second diceRoll is only used in ROW_AND_COLUMN result
+	 */	
+	public static Vector<String> plagueResult(int kindOfYear, int diceRoll, int diceRoll2) {
+		switch (kindOfYear) {
 		case ONLY_ROW:
-			return getPlagueRow(generator.nextInt(6)+generator.nextInt(6)+1);
+			return getPlagueRow(diceRoll-1);
 		case ONLY_COLUMN:
-			return getPlagueColumn(generator.nextInt(6)+generator.nextInt(6)+1);
+			return getPlagueColumn(diceRoll-1);
 		case ROW_AND_COLUMN:
-			Vector<String> v = getPlagueRow(generator.nextInt(6)+generator.nextInt(6)+1);
-			v.addAll(getPlagueColumn(generator.nextInt(6)+generator.nextInt(6)+1));
+			Vector<String> v = getPlagueRow(diceRoll-1);
+			/* This loop avoids duplications */
+			for (Iterator<String> i = getPlagueColumn(diceRoll2-1).iterator(); i.hasNext(); ) {
+				String p = i.next();
+				if (!v.contains(p)) {
+					v.add(p);
+				}
+			}
 			return v;
 		default:
 			// NO_DISASTER
@@ -180,10 +200,9 @@ public class RandomProcesses {
 		
 	}
 	
-	public static int randomIncome(String country) throws UnknownCountryException {
-		int i = generator.nextInt(6)+1;
+	public static int randomIncome(String country, int diceRoll) throws UnknownCountryException {
 		if (country.equals("Austria")) {
-			switch (i) {
+			switch (diceRoll) {
 			case 1:
 				return 1;
 			case 2:
@@ -199,7 +218,7 @@ public class RandomProcesses {
 			}
 		} 
 		else if (country.equals("Florence")) {
-			switch (i) {
+			switch (diceRoll) {
 			case 1:
 				return 1;
 			case 2:
@@ -215,10 +234,10 @@ public class RandomProcesses {
 			}
 		}
 		else if (country.equals("France") || country.equals("Turks")) {
-			return i;
+			return diceRoll;
 		}
 		else if (country.equals("Genoa") || country.equals("Naples")) {
-			switch (i) {
+			switch (diceRoll) {
 			case 1:
 				return 1;
 			case 2:
@@ -234,7 +253,7 @@ public class RandomProcesses {
 			}
 		}
 		else if (country.equals("Milan") || country.equals("Venice")) {
-			switch (i) {
+			switch (diceRoll) {
 			case 1:
 				return 2;
 			case 2:
@@ -250,7 +269,7 @@ public class RandomProcesses {
 			}
 		}		
 		else if (country.equals("Papacy")) {
-			switch (i) {
+			switch (diceRoll) {
 			case 1:
 				return 2;
 			case 2:
@@ -272,45 +291,113 @@ public class RandomProcesses {
 		return -99999999;
 	}
 	
+	public static String kindOfYear2String(int kindOfYear) {
+		switch (kindOfYear) {
+		case ONLY_ROW:
+			return "good year (only row)";
+		case ONLY_COLUMN:
+			return "good year (only column)";
+		case ROW_AND_COLUMN:
+			return "bad year (row and column)";
+		default:
+			return "no natural disaster";
+		}
+	}
+	
 	/**
 	 * Some dice rolls to test the tables
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		try {
-			Vector<String> v = famineResult();
-			System.out.print("Famine: ");
+			
+			int d1, d2, d3, d4, koy;
+			Vector<String> v;
+			
+			/* Famine */
+			d1 = roll();
+			d2 = roll();
+			koy = kindOfYear(d1+d2);
+			System.out.println("Kind of Year ("+d1+"+"+d2+"): " + kindOfYear2String(koy));
+			
+			d1 = roll();
+			d2 = roll();
+			d3 = roll();
+			d4 = roll();
+			v = famineResult(koy,d1+d2,d3+d4); 
+			switch (koy) {
+			case ONLY_ROW:
+				System.out.print("Famine ("+d1+"+"+d2+"): ");
+				break;
+			case ONLY_COLUMN:
+				System.out.print("Famine ("+d1+"+"+d2+"): ");
+				break;
+			case ROW_AND_COLUMN:
+				System.out.print("Famine ("+d1+"+"+d2+","+d3+"+"+d4+"): ");
+				break;
+			default: // NO DISASTER
+				System.out.print("no famine");
+				break;
+			}
+			
 			if (v != null) {
 				for (Iterator<String> i = v.iterator(); i.hasNext() ; ) {
 					System.out.print(i.next() + ", ");
 				}
 			}
-			else {
-				System.out.print("none");
-			}
 			System.out.println();
 			
-			v = plagueResult();
-			if (v != null ) {
-			System.out.print("Plague: ");
-			for (Iterator<String> i = v.iterator(); i.hasNext() ; ) {
-				System.out.print(i.next() + ", ");
+			/* Plague */
+			d1 = roll();
+			d2 = roll();
+			koy = kindOfYear(d1+d2);
+			System.out.println("Kind of Year ("+d1+"+"+d2+"): " + kindOfYear2String(koy));
+			
+			d1 = roll();
+			d2 = roll();
+			d3 = roll();
+			d4 = roll();
+			v = plagueResult(koy,d1+d2,d3+d4); 
+			switch (koy) {
+			case ONLY_ROW:
+				System.out.print("Plague ("+d1+"+"+d2+"): ");
+				break;
+			case ONLY_COLUMN:
+				System.out.print("Plague ("+d1+"+"+d2+"): ");
+				break;
+			case ROW_AND_COLUMN:
+				System.out.print("Plague ("+d1+"+"+d2+","+d3+"+"+d4+"): ");
+				break;
+			default: // NO DISASTER
+				System.out.print("no plague");
+				break;
 			}
-			}
-			else {
-				System.out.print("none");
+			
+			if (v != null) {
+				for (Iterator<String> i = v.iterator(); i.hasNext() ; ) {
+					System.out.print(i.next() + ", ");
+				}
 			}
 			System.out.println();			
 			
-			System.out.println("Austria gets " + randomIncome("Austria"));
-			System.out.println("Florence gets " + randomIncome("Florence"));
-			System.out.println("France gets " + randomIncome("France"));
-			System.out.println("Genoa gets " + randomIncome("Genoa"));
-			System.out.println("Milan gets " + randomIncome("Milan"));
-			System.out.println("Naples gets " + randomIncome("Naples"));
-			System.out.println("Papacy gets " + randomIncome("Papacy"));
-			System.out.println("Turks gets " + randomIncome("Turks"));
-			System.out.println("Venice gets " + randomIncome("Venice"));
+			d1 = roll();
+			System.out.println("Austria rolls "+d1+", so gets " + randomIncome("Austria",d1));
+			d1 = roll();
+			System.out.println("Florence rolls "+d1+", so gets " + randomIncome("Florence",d1));
+			d1 = roll();
+			System.out.println("France rolls "+d1+", so gets " + randomIncome("France",d1));
+			d1 = roll();
+			System.out.println("Genoa rolls "+d1+", so gets " + randomIncome("Genoa",d1));
+			d1 = roll();
+			System.out.println("Milan rolls "+d1+", so gets " + randomIncome("Milan",d1));
+			d1 = roll();
+			System.out.println("Naples rolls "+d1+", so gets " + randomIncome("Naples",d1));
+			d1 = roll();
+			System.out.println("Papacy rolls "+d1+", so gets " + randomIncome("Papacy",d1));
+			d1 = roll();
+			System.out.println("Turks rolls "+d1+", so gets " + randomIncome("Turks",d1));
+			d1 = roll();
+			System.out.println("Venice rolls "+d1+", so gets " + randomIncome("Venice",d1));
 		} 
 		catch (UnknownCountryException e) {
 			e.printStackTrace();
