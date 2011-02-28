@@ -822,6 +822,24 @@ public class Map {
 	}
 	
 	/**
+	 * Return the elite unit belonging to player, null if the player has no elite unit. Note
+	 * that according the rules each player can have a maximum of *one* elite unit (no matter the
+	 * type) in any given moment
+	 * @param p, player
+	 * @return Unit
+	 */
+	public Unit getEliteUnitFromPlayer(String p) {
+		/* Search all units */
+		for (Iterator<Unit> i = getUnitBelongingToPlayer(p, null).iterator(); i.hasNext(); ) {
+			Unit u = i.next();
+			if (u.getElite() != Unit.NO_ELITE) {
+				return u;
+			}
+		}
+		return null;
+	}
+	
+	/**
 	 * @param player
 	 * @param type
 	 * @return the first free identifier, or 'max' if no free identifier is found
