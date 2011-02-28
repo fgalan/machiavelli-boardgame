@@ -31,29 +31,36 @@ public class RandomProcesses {
 	
 	private static Random generator = new Random(System.currentTimeMillis());
 	
+	/* Comented lines in tables are for the old Machiavelli board*/
+	
 	private static final String famineTable[][] = { 
 		// Row 1 (actually it is not used)
 		{"","","","","","","","","","","",""},
 		// Row 2
 		{"","","","Provence","Patrimony","Modena","","Corsica","Ancona","","",""},
 		// Row 3
-		{"","","Piomino","","","","","","Tunis","","","Palermo"},
+		{"","","Piombino","","","","","","Tunis","","","Palermo"},
 		// Row 4
-		{"","Tivoli","","Otranto","Padua","Swiss","Cremona","Pontremoli","","Herzegovina","",""},
+		//{"","Tivoli","","Otranto","Padua","Swiss","Cremona","Pontremoli","","Herzegovina","",""},
+		{"","Perugia","","Otranto","Padua","Swiss","Cremona","","","Herzegovina","",""},
 		// Row 5
 		{"","Friuli","","Bologna","Salerno","Verona","Austria","Milan","Sienna","","","Durazzo"},
 		// Row 6
-		{"","Marseille","Ragusa","Vicenza","Carinthia","Bergamo","Pisotia","Spoleto","","Piacenzia","Hungray",""},
+		//{"","Marseille","Ragusa","Vicenza","Carinthia","Bergamo","Pisotia","Spoleto","","Piacenzia","Hungray",""},
+		{"","Marseille","Ragusa","","Carinthia","Bergamo","Pisotia","Spoleto","","","Hungray",""},
 		// Row 7
 		{"","","Bari","Slavonia","Montferrat","Urbino","Fornova","","Como","Trent","",""},
 		// Row 8
-		{"","Ferrara","","Rome","Pavia","","","Arezzo","Brescia","Sluzzo","Albania","Genoa"},
+		//{"","Ferrara","","Rome","Pavia","","","Arezzo","Brescia","Sluzzo","Albania","Genoa"},
+		{"","Ferrara","","Rome","Pavia","","","Arezzo","","Sluzzo","Albania","Genoa"},
 		// Row 9
 		{"","","","Croatia","","Florence","Turin","Mantua","Capua","Treviso","",""},
 		// Row 10
-		{"","Savoy","","Sardinia","","Parma","Bosnia","Tyrolea","","Naples","Romagna","Dalmatia"},
+		//{"","Savoy","","Sardinia","","Parma","Bosnia","Tyrolea","","Naples","Romagna","Dalmatia"},
+		{"","Savoy","","Sardinia","","Parma","Bosnia","Tyrolea","","Naples","","Dalmatia"},
 		// Row 11
-		{"","","Venice","","","","","Carniola","","Messina","",""},
+		//{"","","","Venice","","","","","Carniola","","Messina","",""},
+		{"","","","Venice","","","","","Carniola","","Messina","","Perugia"},
 		// Row 12
 		{"","","","","Pisa","Aquila","Avignon","Lucca","","Istria","",""},
 	};
@@ -62,9 +69,11 @@ public class RandomProcesses {
 		// Row 1 (actually it is not used)
 		{"","","","","","","","","","","",""},
 		// Row 2
-		{"","Vicenza","Swiss","","","Carniola","","","","","Montferrat","Capua"},
+		//{"","Vicenza","Swiss","","","Carniola","","","","","Montferrat","Capua"},
+		{"","","Swiss","","","Carniola","","","","","Montferrat","Capua"},
 		// Row 3
-		{"","Pontremoli","Bosnia","Slavonia","","","","Croatia","","Tivoli","Bari","Tyrolea"},
+		//{"","Pontremoli","Bosnia","Slavonia","","","","Croatia","","Tivoli","Bari","Tyrolea"},
+		{"","Ragusa","Bosnia","Slavonia","","","","Croatia","","","Bari","Tyrolea"},
 		// Row 4
 		{"","Savoy","","","Friuli","","Rome","","Marseille","Pavia","",""},
 		// Row 5
@@ -78,11 +87,14 @@ public class RandomProcesses {
 		// Row 9
 		{"","","Bergamo","Ancona","Parma","","","","","Mantua","Istria",""},
 		// Row 10
-		{"","Romagna","Hungrary","","Urbino","","","","","Treviso","","Como"},
+		//{"","Romagna","Hungrary","","Urbino","","","","","Treviso","","Como"},
+		{"","Piombino","Hungrary","","Urbino","","","","","Treviso","","Como"},
 		// Row 11
-		{"","Piacencia","Fornova","","","","","","Otranto","","Aquila","Spoleto"},
+		//{"","Piacencia","Fornova","","","","","","Otranto","","Aquila","Spoleto"},
+		{"","Arezzo","Fornova","","","","","","Otranto","","Aquila","Spoleto"},
 		// Row 12
-		{"","Trent","Herzegovina","","Brescia","","","","Corsica","","Patrimony","Saluzzo"},
+		//{"","Trent","Herzegovina","","Brescia","","","","Corsica","","Patrimony","Saluzzo"},
+		{"","Trent","Herzegovina","","","","","","Corsica","","Patrimony","Saluzzo"},
 	};	
 	
 	public static final int NO_DISASTER = 0;
@@ -135,7 +147,21 @@ public class RandomProcesses {
 	}
 	
 	public static int kindOfYear(int diceRoll) {
-		if (diceRoll < 4) {
+  		if (diceRoll == 1) {
+			return NO_DISASTER;
+		}
+		else if (diceRoll == 2 || diceRoll == 3) {
+			return ONLY_ROW;
+		}
+		else if (diceRoll == 4 || diceRoll == 5) {
+			return ONLY_COLUMN;
+		}
+		else { // diceRoll == 6
+			return ROW_AND_COLUMN;
+		}
+		/*	
+		Old game uses the 2-12 range	
+  		if (diceRoll < 4) {
 			return NO_DISASTER;
 		}
 		else if (diceRoll == 4 || diceRoll == 7) {
@@ -146,7 +172,7 @@ public class RandomProcesses {
 		}
 		else { // diceRoll > 7
 			return ROW_AND_COLUMN;
-		}
+		}*/
 	}
 	
 	/**
@@ -316,9 +342,8 @@ public class RandomProcesses {
 			
 			/* Famine */
 			d1 = roll();
-			d2 = roll();
-			koy = kindOfYear(d1+d2);
-			System.out.println("Kind of Year ("+d1+"+"+d2+"): " + kindOfYear2String(koy));
+			koy = kindOfYear(d1);
+			System.out.println("Kind of Year ("+d1+"): " + kindOfYear2String(koy));
 			
 			d1 = roll();
 			d2 = roll();
@@ -349,9 +374,8 @@ public class RandomProcesses {
 			
 			/* Plague */
 			d1 = roll();
-			d2 = roll();
-			koy = kindOfYear(d1+d2);
-			System.out.println("Kind of Year ("+d1+"+"+d2+"): " + kindOfYear2String(koy));
+			koy = kindOfYear(d1);
+			System.out.println("Kind of Year ("+d1+"): " + kindOfYear2String(koy));
 			
 			d1 = roll();
 			d2 = roll();

@@ -55,7 +55,6 @@
 		<HomeProvince>Milan</HomeProvince>
 		<HomeProvince>Parma</HomeProvince>
 		<HomeProvince>Pavia</HomeProvince>
-		<HomeProvince>Piacenzzia</HomeProvince>
 		<Assasin>Austria</Assasin>
 		<Assasin>Florence</Assasin>
 		<Assasin>France</Assasin>
@@ -88,10 +87,8 @@
 		<HomeProvince>Bologna</HomeProvince>
 		<HomeProvince>Patrimony</HomeProvince>
 		<HomeProvince>Perugia</HomeProvince>
-		<HomeProvince>Romagna</HomeProvince>
 		<HomeProvince>Rome</HomeProvince>
 		<HomeProvince>Spoleto</HomeProvince>
-		<HomeProvince>Urbino</HomeProvince>
 		<Assasin>Austria</Assasin>
 		<Assasin>Florence</Assasin>
 		<Assasin>France</Assasin>
@@ -118,7 +115,6 @@
 	<Player name="Venice" incomeRolls="2" conqueredHomeCountries="0">
 		<Money>0</Money>
 		<HomeProvince>Bergamo</HomeProvince>
-		<HomeProvince>Brescia</HomeProvince>
 		<HomeProvince>Dalmatia</HomeProvince>
 		<HomeProvince>Friuli</HomeProvince>
 		<HomeProvince>Istria</HomeProvince>
@@ -126,7 +122,6 @@
 		<HomeProvince>Treviso</HomeProvince>
 		<HomeProvince>Venice</HomeProvince>
 		<HomeProvince>Verona</HomeProvince>
-		<HomeProvince>Vicenza</HomeProvince>
 		<Assasin>Austria</Assasin>
 		<Assasin>Florence</Assasin>
 		<Assasin>France</Assasin>

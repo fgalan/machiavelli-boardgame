@@ -223,6 +223,12 @@ public class Engine {
 					continue;
 				}
 				
+				/* The player has no more than one elite unit */
+				if (m.getEliteUnitFromPlayer(adr.getPlayer()) != null) {
+					r.addResult("- can not process purchase order <>: playher already has a elite unit ("+m.getEliteUnitFromPlayer(adr.getPlayer())+")");
+					continue;
+				}
+				
 				/* Is the province valid?
 				 * a) Exists */
 				if (pr == null) {
@@ -234,17 +240,24 @@ public class Engine {
 					r.addResult("- can not process purchase order <>: Province " +p.getProvince()+ "doesn't belong to player");
 					continue;
 				}
-				/* b) Has a city (no matter if fortified or not, no matter city controller) */
+				
+				/* b) Has no famine */
+				if (pr.hasFamine()) {
+					r.addResult("- can not process purchase order <>: Province " +p.getProvince()+ "has a Famine marker");
+					continue;
+				}
+				
+				/* c) Has a city (no matter if fortified or not, no matter city controller) */
 				if (pr.getCity() == null) {
 					r.addResult("- can not process purchase order <>: Province " +p.getProvince()+ "has no city");
 					continue;
 				}
-				/* c) For fleets, the city has port */
+				/* d) For fleets, the city has port */
 				if (type.equals("Fleet") && !pr.getCity().isPort()) {
 					r.addResult("- can not process purchase order <>: Province " +p.getProvince()+ "has no city");
 					continue;
 				}				
-				/* d) No unpaid unit was removed in the province in the same adjustment phase */
+				/* e) No unpaid unit was removed in the province in the same adjustment phase */
 				if (vp.contains(pr)) {
 					r.addResult("- can not process purchase order <>: a unit was unpayed in the same province this turn, " +p.getProvince());
 					continue;
@@ -307,9 +320,8 @@ public class Engine {
 		Vector<String> v;
 		
 		d1 = RandomProcesses.roll();
-		d2 = RandomProcesses.roll();
-		koy = RandomProcesses.kindOfYear(d1+d2);
-		String prefix = "kind of year ("+d1+"+"+d2+"): " + RandomProcesses.kindOfYear2String(koy);
+		koy = RandomProcesses.kindOfYear(d1);
+		String prefix = "kind of year ("+d1+"): " + RandomProcesses.kindOfYear2String(koy);
 		
 		d1 = RandomProcesses.roll();
 		d2 = RandomProcesses.roll();
@@ -397,9 +409,8 @@ public class Engine {
 		Vector<String> v;
 		
 		d1 = RandomProcesses.roll();
-		d2 = RandomProcesses.roll();
-		koy = RandomProcesses.kindOfYear(d1+d2);
-		String prefix = "kind of year ("+d1+"+"+d2+"): " + RandomProcesses.kindOfYear2String(koy);
+		koy = RandomProcesses.kindOfYear(d1);
+		String prefix = "kind of year ("+d1+"): " + RandomProcesses.kindOfYear2String(koy);
 		
 		d1 = RandomProcesses.roll();
 		d2 = RandomProcesses.roll();
