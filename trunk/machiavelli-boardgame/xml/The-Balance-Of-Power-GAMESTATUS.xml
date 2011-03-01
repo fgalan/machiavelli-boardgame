@@ -6,7 +6,7 @@
     	<HomeCountriesForVictory>1</HomeCountriesForVictory>
     </Configuration>
 	<Player name="Austria" incomeRolls="1" conqueredHomeCountries="0">
-		<Money>0</Money>
+		<Money>1</Money>
 		<HomeProvince>Austria</HomeProvince>
 		<HomeProvince>Carinthia</HomeProvince>
 		<HomeProvince>Hungrary</HomeProvince>
@@ -20,7 +20,7 @@
 		<Assasin>Venice</Assasin>
 	</Player>
 	<Player name="Florence" incomeRolls="2" conqueredHomeCountries="0">
-		<Money>0</Money>
+		<Money>6</Money>
 		<HomeProvince>Arezzo</HomeProvince>
 		<HomeProvince>Florence</HomeProvince>
 		<HomeProvince>Pisa</HomeProvince>
@@ -34,7 +34,7 @@
 		<Assasin>Venice</Assasin>
 	</Player>
 	<Player name="France" incomeRolls="1" conqueredHomeCountries="0">
-		<Money>0</Money>
+		<Money>2</Money>
 		<HomeProvince>Avignon</HomeProvince>
 		<HomeProvince>Marseille</HomeProvince>
 		<HomeProvince>Provence</HomeProvince>
@@ -48,7 +48,7 @@
 		<Assasin>Venice</Assasin>
 	</Player>
 	<Player name="Milan" incomeRolls="1" conqueredHomeCountries="0">
-		<Money>0</Money>
+		<Money>6</Money>
 		<HomeProvince>Como</HomeProvince>
 		<HomeProvince>Cremona</HomeProvince>
 		<HomeProvince>Fornova</HomeProvince>
@@ -64,7 +64,7 @@
 		<Assasin>Venice</Assasin>
 	</Player>
 	<Player name="Naples" incomeRolls="1" conqueredHomeCountries="0">
-		<Money>0</Money>
+		<Money>4</Money>
 		<HomeProvince>Aquila</HomeProvince>
 		<HomeProvince>Bari</HomeProvince>
 		<HomeProvince>Capua</HomeProvince>
@@ -82,13 +82,14 @@
 		<Assasin>Venice</Assasin>	
 	</Player>
 	<Player name="Papacy" incomeRolls="1" conqueredHomeCountries="0">
-		<Money>0</Money>
+		<Money>4</Money>
 		<HomeProvince>Ancona</HomeProvince>
 		<HomeProvince>Bologna</HomeProvince>
 		<HomeProvince>Patrimony</HomeProvince>
 		<HomeProvince>Perugia</HomeProvince>
 		<HomeProvince>Rome</HomeProvince>
 		<HomeProvince>Spoleto</HomeProvince>
+		<HomeProvince>Urbino</HomeProvince>
 		<Assasin>Austria</Assasin>
 		<Assasin>Florence</Assasin>
 		<Assasin>France</Assasin>
@@ -98,7 +99,7 @@
 		<Assasin>Venice</Assasin>
 	</Player>
 	<Player name="Turks" incomeRolls="1" conqueredHomeCountries="0">
-		<Money>0</Money>
+		<Money>4</Money>
 		<HomeProvince>Albania</HomeProvince>
 		<HomeProvince>Bosnia</HomeProvince>
 		<HomeProvince>Durazzo</HomeProvince>
@@ -113,7 +114,7 @@
 		<Assasin>Venice</Assasin>
 	</Player>
 	<Player name="Venice" incomeRolls="2" conqueredHomeCountries="0">
-		<Money>0</Money>
+		<Money>9</Money>
 		<HomeProvince>Bergamo</HomeProvince>
 		<HomeProvince>Dalmatia</HomeProvince>
 		<HomeProvince>Friuli</HomeProvince>
