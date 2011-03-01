@@ -111,7 +111,6 @@
 		<Adj>Tyrolea</Adj>
 		<Adj>Milan</Adj>
 		<Adj>Pavia</Adj>
-		<Unit id="3" type="Army" owner="Milan"/>
 	</Territory>
 	<Territory name="Pavia" type="Province" controller="Milan">
 		<Adj>Turin</Adj>
@@ -178,7 +177,8 @@
 		<Adj>Bergamo</Adj>
 		<Adj>Mantua</Adj>
 		<Adj>Parma</Adj>
-		<City size="1" fortified="yes"/>		
+		<City size="1" fortified="yes"/>
+		<Unit id="3" type="Army" owner="Milan"/>
 	</Territory>
 	<Territory name="Mantua" type="Province">
 		<Adj>Bergamo</Adj>
@@ -267,6 +267,7 @@
 		<Adj>Herzegovina</Adj>
 		<Adj>Upper Adriatic</Adj>
 		<Adj>Lower Adriatic</Adj>
+		<Unit id="1" type="Fleet" owner="Venice"/>
 		<City size="1"/>
 	</Territory>
 	<Territory name="Bosnia" type="Province" controller="Turks">
@@ -370,7 +371,7 @@
 		<City size="3" fortified="yes"/>
 		<Unit id="1" type="Army" owner="Florence"/>
 	</Territory>
-	<Territory name="Urbino" type="Province">
+	<Territory name="Urbino" type="Province" controller="Papacy">
 		<Adj>Florence</Adj>
 		<Adj>Bologna</Adj>
 		<Adj>Ancona</Adj>
