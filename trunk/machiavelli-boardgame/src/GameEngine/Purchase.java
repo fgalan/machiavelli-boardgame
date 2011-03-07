@@ -20,6 +20,8 @@
 
 package GameEngine;
 
+import GameElements.Unit;
+
 public class Purchase {
 	
 	private String type;
@@ -42,6 +44,11 @@ public class Purchase {
 
 	public String getProvince() {
 		return province;
+	}
+	
+	public String toString() {
+		/* Use the first letter of the type ('A', 'F' or 'G') */
+		return "purchase " + type.charAt(0) + Unit.eliteString(elite) + " at " + province + "";
 	}
 	
 }
