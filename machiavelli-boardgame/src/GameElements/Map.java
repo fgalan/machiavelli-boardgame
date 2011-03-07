@@ -581,7 +581,7 @@ public class Map {
 					eliteString =" elite='"+((Province)t).getCity().getUnit().getElite()+"'";
 				}
 					
-				s = s + "      <Unit name='"+id+"' type='Garrison' owner='"+owner+"'"+eliteString+"/>\n";
+				s = s + "      <Unit id='"+id+"' type='Garrison' owner='"+owner+"'"+eliteString+"/>\n";
 				
 			}
 			
@@ -810,7 +810,7 @@ public class Map {
 			}
 			/* Check unit in the territory city (only for Provinces) */
 			if (t instanceof Province && ((Province)t).getCity() != null && ((Province)t).getCity().isFortified() && ((Province)t).getCity().getUnit() != null) {
-				if (((Province)t).getCity().getUnit().equals(player)) {
+				if (((Province)t).getCity().getUnit().getOwner().equals(player)) {
 					if (type == null || type.equals("Garrison")) {
 						v.add(((Province)t).getCity().getUnit());
 					}					
@@ -865,7 +865,7 @@ public class Map {
 		
 		/* Search from 1 to max, returning the first free one */
 		int free = -1;
-		for (int i = 0; i < max; i++) {
+		for (int i = 1; i < max; i++) {
 			free = i;
 			for (Iterator<Unit> j = v.iterator(); j.hasNext(); ) {
 				Unit u = j.next();
