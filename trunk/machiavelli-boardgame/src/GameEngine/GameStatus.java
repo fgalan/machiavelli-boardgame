@@ -172,7 +172,7 @@ public class GameStatus {
 		
 		for (Iterator<String> i = getPlayers().iterator(); i.hasNext(); ) {
 			String player = i.next();
-			s = s + "   <Player name='"+player+"' incomeRolls='"+incomeRolls.get(player)+"' conqueredHomeCountries='"+homeCountries.get(player)+"'>\n";
+			s = s + "   <Player name='"+player+"' incomeRolls='"+incomeRolls.get(player)+"' conqueredHomeCountries='"+conqueredHomeCountries.get(player)+"'>\n";
 			s = s + "      <Money>"+money.get(player)+"</Money>\n";
 			for (Iterator<String> l = homeCountries.get(player).iterator(); l.hasNext(); ) {
 				s = s + "      <HomeProvince>"+l.next()+"</HomeProvince>\n";
@@ -248,6 +248,19 @@ public class GameStatus {
 
 	public int getCampaign() {
 		return campaign;
+	}
+	
+	public String getCampaignString() {
+		switch (campaign) {
+		case SPRING:
+			return "spring";
+		case SUMMER:
+			return "summer";
+		case FALL:
+			return "fall";
+		default:
+			return "UNKNOWN";
+		}
 	}
 	
 	public int getMoney(String player) {

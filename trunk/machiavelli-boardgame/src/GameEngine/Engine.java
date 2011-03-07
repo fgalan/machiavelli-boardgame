@@ -124,16 +124,18 @@ public class Engine {
 	 */
 	public static Result processAdjustments(GameStatus gs, Map m, Vector<Adjustments> adj) throws ProcessAdjustmentsException {
 		
+		GenericResult orderLog = new GenericResult();
 		GenericResult r = new GenericResult();
 		
 		/* This process only can be done in spring, so other campaign will throw an Exception */
 		if (gs.getCampaign() != GameStatus.SPRING) {
-			throw new ProcessAdjustmentsException("wrong campaing " + gs.getCampaign());
+			throw new ProcessAdjustmentsException("wrong campaing " + gs.getCampaignString());
 		}
 		
 		for (Iterator<Adjustments> i = adj.iterator(); i.hasNext() ; ) {
 			Adjustments adr = i.next();
-			r.addResult("player " + adr.getPlayer() + " adjustment:");
+			orderLog.addResult("player " + adr.getPlayer() + " adjustment orders:");
+			r.addResult("player " + adr.getPlayer() + " adjustment processing:");
 			
 			/* Gather all the units belonging to player */
 			Vector<Unit> v = m.getUnitBelongingToPlayer(adr.getPlayer(),null);
@@ -143,6 +145,8 @@ public class Engine {
 				Payment p = j.next();
 				String type = p.getType();
 				int id = p.getId();
+				
+				orderLog.addResult("- " + p);
 				
 				/* Does that Unit belong to the player? */
 				Unit u = null;
@@ -167,18 +171,18 @@ public class Engine {
 					}
 				}
 				if (u == null) {
-					r.addResult("- can not process payment order <>: player has no " + type.substring(0, 1) + id + "unit");
+					r.addResult("- can not process payment order <"+p+">: player has no " + type.substring(0, 1) + id + " unit");
 					continue;
 				}
 				
 				/* Check money and pay */
 				if (u.cost() > gs.getMoney(adr.getPlayer())) {
-					r.addResult("- can not process payment order <>: not enough money");
+					r.addResult("- can not process payment order <"+p+">: not enough money");
 				}
 				else {
 					/* Pay */
 					gs.decMoney(adr.getPlayer(), u.cost());
-					r.addResult("- payment: "+u+" (-"+u.cost()+")");
+					r.addResult("- payment: "+u+" (-"+u.cost()+"d)");
 					
 					/* Remove Unit for the vector*/
 					v.remove(u);
@@ -213,65 +217,67 @@ public class Engine {
 				String type = p.getType();
 				Province pr = (Province) m.getTerritoryByName(p.getProvince());
 				
+				orderLog.addResult("- " + p);				
+				
 				/* The player has not reach unit limit (A < 12, F < 8, G < 6) */
 				int freeId = m.GetFreeId(adr.getPlayer(), type);
 				if ( (type.equals("Army") && freeId == Army.MAX) || 
 				     (type.equals("Fleet") && freeId == Fleet.MAX) ||
 				     (type.equals("Garrison") && freeId == Garrison.MAX)
 				   ) {
-					r.addResult("- can not process purchase order <>: maximum units limit reached for " + type);
+					r.addResult("- can not process purchase order <"+p+">: maximum units limit reached for " + type);
 					continue;
 				}
 				
 				/* The player has no more than one elite unit */
-				if (m.getEliteUnitFromPlayer(adr.getPlayer()) != null) {
-					r.addResult("- can not process purchase order <>: playher already has a elite unit ("+m.getEliteUnitFromPlayer(adr.getPlayer())+")");
+				if (p.getElite()!= Unit.NO_ELITE && m.getEliteUnitFromPlayer(adr.getPlayer()) != null) {
+					r.addResult("- can not process purchase order <"+p+">: player already has a elite unit ("+m.getEliteUnitFromPlayer(adr.getPlayer())+")");
 					continue;
 				}
 				
 				/* Is the province valid?
 				 * a) Exists */
 				if (pr == null) {
-					r.addResult("- can not process purchase order <>: Province " +p.getProvince()+ "doesn't exists");
+					r.addResult("- can not process purchase order <"+p+">: Province " +p.getProvince()+ "doesn't exists");
 					continue;
 				}
 				/* a) Belong to player */
 				if (pr.getController() == null || !pr.getController().equals(adr.getPlayer())) {
-					r.addResult("- can not process purchase order <>: Province " +p.getProvince()+ "doesn't belong to player");
+					r.addResult("- can not process purchase order <"+p+">: Province " +p.getProvince()+ "doesn't belong to player");
 					continue;
 				}
 				
 				/* b) Has no famine */
 				if (pr.hasFamine()) {
-					r.addResult("- can not process purchase order <>: Province " +p.getProvince()+ "has a Famine marker");
+					r.addResult("- can not process purchase order <"+p+">: Province " +p.getProvince()+ "has a Famine marker");
 					continue;
 				}
 				
 				/* c) Has a city (no matter if fortified or not, no matter city controller) */
 				if (pr.getCity() == null) {
-					r.addResult("- can not process purchase order <>: Province " +p.getProvince()+ "has no city");
+					r.addResult("- can not process purchase order <"+p+">: Province " +p.getProvince()+ "has no city");
 					continue;
 				}
 				/* d) For fleets, the city has port */
 				if (type.equals("Fleet") && !pr.getCity().isPort()) {
-					r.addResult("- can not process purchase order <>: Province " +p.getProvince()+ "has no city");
+					r.addResult("- can not process purchase order <"+p+">: Province " +p.getProvince()+ "has no city");
 					continue;
 				}				
 				/* e) No unpaid unit was removed in the province in the same adjustment phase */
 				if (vp.contains(pr)) {
-					r.addResult("- can not process purchase order <>: a unit was unpayed in the same province this turn, " +p.getProvince());
+					r.addResult("- can not process purchase order <"+p+">: a unit was unpayed in the same province this turn, " +p.getProvince());
 					continue;
 				}
 				
 				/* For Army/Fleet, no other Army/Fleet is in the same province */
 				if ( (type.equals("Army") || type.equals("Fleet")) && pr.getUnit() != null) {
-					r.addResult("- can not process purchase order <>: existing unit in " +p.getProvince() + ", " + pr.getUnit());
+					r.addResult("- can not process purchase order <"+p+">: existing unit in " +p.getProvince() + ", " + pr.getUnit());
 					continue;
 				}
 				
 				/* For Garrison, no other Garrison is in the same city */
 				if ( type.equals("Garrison") && pr.getCity().getUnit() != null) {
-					r.addResult("- can not process purchase order <>: existing unit in city in " +p.getProvince() + ", " + pr.getCity().getUnit());
+					r.addResult("- can not process purchase order <"+p+">: existing unit in city in " +p.getProvince() + ", " + pr.getCity().getUnit());
 					continue;
 				}
 				
@@ -289,12 +295,12 @@ public class Engine {
 				
 				/* Check money and buy */
 				if (u.cost() > gs.getMoney(adr.getPlayer())) {
-					r.addResult("- can not process buy order <>: not enough money");
+					r.addResult("- can not process buy order <"+p+">: not enough money");
 				}
 				else {
 					/* Pay */
 					gs.decMoney(adr.getPlayer(), u.cost());
-					r.addResult("- payment: "+u+" (-"+u.cost()+")");
+					r.addResult("- purchase: "+u+" at "+ pr.getName() +" (-"+u.cost()+"d)");
 					
 					/* Attach unit to location in the map */
 					u.setLocation(pr);
@@ -308,7 +314,11 @@ public class Engine {
 			}
 		}
 		
-		return r;
+		ComposedResult cr = new ComposedResult();
+		cr.addResult(orderLog);
+		cr.addResult(r);
+		
+		return cr;
 	}
 	
 	private static Result doFamine(Map m) {

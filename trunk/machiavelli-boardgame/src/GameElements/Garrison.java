@@ -30,7 +30,12 @@ public class Garrison extends Unit {
 	
 	public Garrison(int id, String owner, City c, int elite) {
 		super(id, owner, elite);
-		setLocation(c.getProvince());
+		if (c != null) {
+			setLocation(c.getProvince());
+		}
+		else {
+			setLocation(null);
+		}
 	}
 	
 	public Garrison(int id, String owner, Province p, int elite) {
