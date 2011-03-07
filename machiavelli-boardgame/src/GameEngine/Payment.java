@@ -37,4 +37,11 @@ public class Payment {
 	public int getId() {
 		return id;
 	}
+	
+	public String toString() {
+		/* Use the first letter of the type ('A', 'F' or 'G') */
+		/* FIXME: the asterisk for elite ('*', '**' or '***') are not added, although this is not
+		 * a big problem as the can be inferred by context */
+		return "pay " + type.charAt(0) + id;
+	}
 }
