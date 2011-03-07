@@ -66,7 +66,7 @@ public abstract class Unit {
 		return (id + eliteString() + " ["+owner+"]");
 	}
 	
-	private String eliteString() {
+	public static String eliteString(int elite) {
 		String s = "";
 		if (elite == ELITE_TYPE_1) {
 			s ="*";;
@@ -78,6 +78,11 @@ public abstract class Unit {
 			s = "***";
 		}
 		return s;
+		
+	}
+	
+	private String eliteString() {
+		return eliteString(elite);
 	}
 	
 	public int cost() {
