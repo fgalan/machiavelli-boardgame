@@ -238,29 +238,29 @@ public class Engine {
 				/* Is the province valid?
 				 * a) Exists */
 				if (pr == null) {
-					r.addResult("- can not process purchase order <"+p+">: Province " +p.getProvince()+ "doesn't exists");
+					r.addResult("- can not process purchase order <"+p+">: Province " +p.getProvince()+ " doesn't exists");
 					continue;
 				}
 				/* a) Belong to player */
 				if (pr.getController() == null || !pr.getController().equals(adr.getPlayer())) {
-					r.addResult("- can not process purchase order <"+p+">: Province " +p.getProvince()+ "doesn't belong to player");
+					r.addResult("- can not process purchase order <"+p+">: Province " +p.getProvince()+ " doesn't belong to player");
 					continue;
 				}
 				
 				/* b) Has no famine */
 				if (pr.hasFamine()) {
-					r.addResult("- can not process purchase order <"+p+">: Province " +p.getProvince()+ "has a Famine marker");
+					r.addResult("- can not process purchase order <"+p+">: Province " +p.getProvince()+ " has a Famine marker");
 					continue;
 				}
 				
 				/* c) Has a city (no matter if fortified or not, no matter city controller) */
 				if (pr.getCity() == null) {
-					r.addResult("- can not process purchase order <"+p+">: Province " +p.getProvince()+ "has no city");
+					r.addResult("- can not process purchase order <"+p+">: Province " +p.getProvince()+ " has no city");
 					continue;
 				}
 				/* d) For fleets, the city has port */
 				if (type.equals("Fleet") && !pr.getCity().isPort()) {
-					r.addResult("- can not process purchase order <"+p+">: Province " +p.getProvince()+ "has no city");
+					r.addResult("- can not process purchase order <"+p+">: Province " +p.getProvince()+ " has no city");
 					continue;
 				}				
 				/* e) No unpaid unit was removed in the province in the same adjustment phase */
