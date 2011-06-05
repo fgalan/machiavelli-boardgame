@@ -219,6 +219,12 @@ public class Engine {
 				
 				orderLog.addResult("- " + p);				
 				
+				/* Is the unit type valid? */
+				if (!(type.equals("Army")||type.equals("Fleet")||type.equals("Garrison"))) {
+					r.addResult("- can not process purchase order <"+p+">: type " + type + " is not a valid unit type");
+					continue;
+				}
+				
 				/* The player has not reach unit limit (A < 12, F < 8, G < 6) */
 				int freeId = m.GetFreeId(adr.getPlayer(), type);
 				if ( (type.equals("Army") && freeId == Army.MAX) || 
@@ -233,7 +239,7 @@ public class Engine {
 				if (p.getElite()!= Unit.NO_ELITE && m.getEliteUnitFromPlayer(adr.getPlayer()) != null) {
 					r.addResult("- can not process purchase order <"+p+">: player already has a elite unit ("+m.getEliteUnitFromPlayer(adr.getPlayer())+")");
 					continue;
-				}
+				}				
 				
 				/* Is the province valid?
 				 * a) Exists */
@@ -258,12 +264,20 @@ public class Engine {
 					r.addResult("- can not process purchase order <"+p+">: Province " +p.getProvince()+ " has no city");
 					continue;
 				}
+				
 				/* d) For fleets, the city has port */
 				if (type.equals("Fleet") && !pr.getCity().isPort()) {
 					r.addResult("- can not process purchase order <"+p+">: Province " +p.getProvince()+ " has no city");
 					continue;
-				}				
-				/* e) No unpaid unit was removed in the province in the same adjustment phase */
+				}
+				
+				/* e) For Garrisons, the city has to be fortified */
+				if (type.equals("Garrison") && !pr.getCity().isFortified()) {
+					r.addResult("- can not process purchase order <"+p+">: Province " +p.getProvince()+ " has a city, but it is not fortified");
+					continue;
+				}
+				
+				/* f) No unpaid unit was removed in the province in the same adjustment phase */
 				if (vp.contains(pr)) {
 					r.addResult("- can not process purchase order <"+p+">: a unit was unpayed in the same province this turn, " +p.getProvince());
 					continue;
