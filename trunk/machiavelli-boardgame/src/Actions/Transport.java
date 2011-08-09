@@ -21,6 +21,8 @@
 
 package Actions;
 
+import GameElements.Map;
+
 public class Transport extends Action {
 	
 	private String armyId;
@@ -38,5 +40,17 @@ public class Transport extends Action {
 	public Transport(String aid, String p) {
 		this.armyId = aid;
 		this.player = p;
+	}
+	
+	/**
+	 * The same as toString, but appending '*', '**' or '***' correctly based on the Map and player passed
+	 * as arguments 
+	 * @param m
+	 * @param player
+	 * @return
+	 */
+	public String toStringWithElite(Map m, String player) {
+		String s = super.toStringWithElite(m, player) + " transports army A" + armyId + " of player " + player;
+		return s;
 	}
 }

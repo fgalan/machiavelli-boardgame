@@ -30,5 +30,9 @@ public  class Rebellion extends Expense {
 		 * parent constructor */
 		super(-1);
 		province = p;
-	}	
+	}
+	
+	public String toString() {
+		return super.toString() + " in creating rebellion at province " + province;
+	}
 }

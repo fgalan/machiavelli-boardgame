@@ -21,6 +21,9 @@
 
 package Actions;
 
+import GameElements.Map;
+import GameElements.Unit;
+
 public class Advance extends Action {
 	
 	private String territory;
@@ -35,5 +38,21 @@ public class Advance extends Action {
 	 */
 	public Advance(String territory) {
 		this.territory = territory;
+	}
+	
+	public String getTerritory() {
+		return territory;
+	}
+	
+	/**
+	 * The same as toString, but appending '*', '**' or '***' correctly based on the Map and player passed
+	 * as arguments 
+	 * @param m
+	 * @param player
+	 * @return
+	 */
+	public String toStringWithElite(Map m, String player) {
+		String s = super.toStringWithElite(m, player) + " advances to " + territory;
+		return s;
 	}
 }

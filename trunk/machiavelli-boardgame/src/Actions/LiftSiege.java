@@ -21,6 +21,8 @@
 
 package Actions;
 
+import GameElements.Map;
+
 public class LiftSiege extends Action {
 
 	public LiftSiege(String type, int id) {
@@ -32,6 +34,18 @@ public class LiftSiege extends Action {
 	 */
 	public LiftSiege() {
 		
+	}
+
+	/**
+	 * The same as toString, but appending '*', '**' or '***' correctly based on the Map and player passed
+	 * as arguments 
+	 * @param m
+	 * @param player
+	 * @return
+	 */
+	public String toStringWithElite(Map m, String player) {
+		String s = super.toStringWithElite(m, player) + " leaves siege";
+		return s;
 	}
 	
 }

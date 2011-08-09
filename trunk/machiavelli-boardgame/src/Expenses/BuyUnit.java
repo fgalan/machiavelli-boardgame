@@ -25,12 +25,18 @@ import Actions.Action;
 
 public  class BuyUnit extends Expense {
 
-	private String province;
+	private String territory;
 	private Action action;
+	
+	public static int MIN_AMMOUNT = 24;
 	
 	public BuyUnit(int amount, String p, Action a) {
 		super(amount);
-		province = p;
+		territory = p;
 		action = a;
+	}
+	
+	public String toString() {
+		return super.toString() + " in buying unit at territory " + territory;
 	}	
 }

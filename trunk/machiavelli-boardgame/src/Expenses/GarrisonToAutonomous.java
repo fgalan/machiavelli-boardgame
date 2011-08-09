@@ -25,9 +25,15 @@ public  class GarrisonToAutonomous extends Expense {
 
 	private String province;
 
+	public static int MIN_AMMOUNT = 9;
+	
 	public GarrisonToAutonomous(int amount, String p) {
 		super(amount);
 		province = p;
+	}
+
+	public String toString() {
+		return super.toString() + " in relieving famine at " + province;
 	}
 	
 }

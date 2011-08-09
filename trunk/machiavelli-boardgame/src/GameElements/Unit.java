@@ -62,6 +62,15 @@ public abstract class Unit {
 		return id;
 	}
 	
+	public int getStrength () {
+		if (elite == ELITE_TYPE_1 || elite == ELITE_TYPE_2) {
+			return 2;
+		}
+		else {
+			return 1;
+		}
+	}
+	
 	public String toString() {
 		return (id + eliteString() + " ["+owner+"]");
 	}

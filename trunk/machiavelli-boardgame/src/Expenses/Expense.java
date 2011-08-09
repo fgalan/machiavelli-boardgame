@@ -30,4 +30,12 @@ public abstract class Expense {
 		this.amount = amount;
 	}
 	
+	public String toString() {
+		return String.valueOf(amount) + "d";
+	}
+	
+	public int getAmount() {
+		return amount;
+	}
+	
 }

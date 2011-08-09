@@ -21,6 +21,8 @@
 
 package Actions;
 
+import GameElements.Map;
+
 public class Hold extends Action {
 
 	public Hold(String type, int id) {
@@ -34,4 +36,15 @@ public class Hold extends Action {
 		
 	}
 	
+	/**
+	 * The same as toString, but appending '*', '**' or '***' correctly based on the Map and player passed
+	 * as arguments 
+	 * @param m
+	 * @param player
+	 * @return
+	 */
+	public String toStringWithElite(Map m, String player) {
+		String s = super.toStringWithElite(m, player) + " holds";
+		return s;
+	}
 }
