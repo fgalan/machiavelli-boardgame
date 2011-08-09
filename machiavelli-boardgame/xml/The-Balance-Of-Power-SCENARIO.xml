@@ -5,7 +5,7 @@
 		<Adj>Turin</Adj>
 		<Adj>Provence</Adj>
 		<Adj>Marseille</Adj>
-		<Adj>Western Gulf of Lyons</Adj>
+		<Adj>Gulf of Lyons</Adj>
 		<City size="1" fortified="yes"/>
 		<Unit id="1" type="Army" owner="France"/>
 	</Territory>
@@ -15,13 +15,13 @@
 		<Adj>Saluzzo</Adj>
 		<Adj>Savoy</Adj>
 		<Adj>Marseille</Adj>
-		<Adj>Western Gulf of Lyons</Adj>
-		<Adj>Eastern Gulf of Lyons</Adj>
+		<Adj>Gulf of Lyons</Adj>
+		<Adj>Ligurian Sea</Adj>
 	</Territory>
 	<Territory name="Marseille" type="Province" controller="France">
 		<Adj>Provence</Adj>
 		<Adj>Avignon</Adj>
-		<Adj>Western Gulf of Lyons</Adj>
+		<Adj>Gulf of Lyons</Adj>
 		<City size="1" fortified="yes" port="yes"/>
 		<Unit id="1" type="Fleet" owner="France"/>		
 	</Territory>
@@ -144,7 +144,7 @@
 		<Adj>Turin</Adj>
 		<Adj>Montferrat</Adj>
 		<Adj>Genoa</Adj>
-		<Adj>Eastern Gulf of Lyons</Adj>
+		<Adj>Ligurian Sea</Adj>
 		<City size="1" fortified="yes" port="yes"/>
 		<AutonomousGarrison/>
 	</Territory>
@@ -153,7 +153,7 @@
 		<Adj>Montferrat</Adj>
 		<Adj>Fornova</Adj>
 		<Adj>Modena</Adj>
-		<Adj>Eastern Gulf of Lyons</Adj>
+		<Adj>Ligurian Sea</Adj>
 		<City size="3" fortified="yes" port="yes"/>
 		<AutonomousGarrison/>
 	</Territory>
@@ -332,7 +332,7 @@
 		<Adj>Mantua</Adj>
 		<Adj>Bologna</Adj>
 		<Adj>Lucca</Adj>
-		<Adj>Eastern Gulf of Lyons</Adj>
+		<Adj>Ligurian Sea</Adj>
 		<City size="1" fortified="yes"/>
 		<AutonomousGarrison/>
 	</Territory>
@@ -341,7 +341,7 @@
 		<Adj>Bologna</Adj>
 		<Adj>Pistoia</Adj>
 		<Adj>Pisa</Adj>
-		<Adj>Eastern Gulf of Lyons</Adj>
+		<Adj>Ligurian Sea</Adj>
 		<City size="1" fortified="yes"/>
 		<AutonomousGarrison/>
 	</Territory>
@@ -351,7 +351,7 @@
 		<Adj>Florence</Adj>
 		<Adj>Sienna</Adj>
 		<Adj>Piombino</Adj>
-		<Adj>Eastern Gulf of Lyons</Adj>
+		<Adj>Ligurian Sea</Adj>
 		<City size="1" fortified="yes" port="yes"/>
 		<Unit id="1" type="Fleet" owner="Florence"/>
 	</Territory>
@@ -403,7 +403,7 @@
 		<Adj>Pisa</Adj>
 		<Adj>Sienna</Adj>
 		<Adj>Tyrrhenian Sea</Adj>
-		<Adj>Eastern Gulf of Lyons</Adj>
+		<Adj>Ligurian Sea</Adj>
 		<City size="1" fortified="yes" port="yes"/>
 		<AutonomousGarrison/>
 	</Territory>
@@ -506,7 +506,7 @@
 	<Territory name="Palermo" type="Province" controller="Naples">
 		<Adj>Messina</Adj>
 		<Adj>Ionian Sea</Adj>
-		<Adj>Bay of Tunis</Adj>
+		<Adj>Central Mediterranean</Adj>
 		<Adj>Tyrrhenian Sea</Adj>
 		<Adj>Gulf of Naples</Adj>
 		<City size="1" fortified="yes" port="yes"/>
@@ -514,33 +514,33 @@
 	</Territory>
 	<Territory name="Tunis" type="Province" controller="Turks">
 		<Adj>Western Mediterranean Sea</Adj>
-		<Adj>Bay of Tunis</Adj>
+		<Adj>Central Mediterranean</Adj>
 		<City size="2" fortified="yes" port="yes"/>
 		<Unit id="1" type="Fleet" owner="Turks"/>
 	</Territory>
 	<Territory name="Sardinia" type="Province">
 		<Adj>Western Mediterranean Sea</Adj>
-		<Adj>Western Gulf of Lyons</Adj>
+		<Adj>Gulf of Lyons</Adj>
 		<Adj>Tyrrhenian Sea</Adj>
 		<City size="1" port="yes"/>
 	</Territory>
 	<Territory name="Corsica" type="Province">
-		<Adj>Western Gulf of Lyons</Adj>
-		<Adj>Eastern Gulf of Lyons</Adj>
+		<Adj>Gulf of Lyons</Adj>
+		<Adj>Ligurian Sea</Adj>
 		<Adj>Tyrrhenian Sea</Adj>
 		<City size="1" port="yes"/>
 	</Territory>
-	<Territory name="Western Gulf of Lyons" type="Sea">
+	<Territory name="Gulf of Lyons" type="Sea">
 		<Adj>Avignon</Adj>
 		<Adj>Provence</Adj>
 		<Adj>Marseille</Adj>
-		<Adj>Eastern Gulf of Lyons</Adj>
+		<Adj>Ligurian Sea</Adj>
 		<Adj>Corsica</Adj>
 		<Adj>Sardinia</Adj>
 		<Adj>Western Mediterranean Sea</Adj>
 		<Adj>Tyrrhenian Sea</Adj>
 	</Territory>	
-	<Territory name="Eastern Gulf of Lyons" type="Sea">
+	<Territory name="Ligurian Sea" type="Sea">
 		<Adj>Provence</Adj>
 		<Adj>Savoy</Adj>
 		<Adj>Genoa</Adj>
@@ -550,14 +550,14 @@
 		<Adj>Corsica</Adj>
 		<Adj>Piombino</Adj>
 		<Adj>Tyrrhenian Sea</Adj>
-		<Adj>Western Gulf of Lyons</Adj>
+		<Adj>Gulf of Lyons</Adj>
 	</Territory>
 	<Territory name="Western Mediterranean Sea" type="Sea">
 		<Adj>Sardinia</Adj>
 		<Adj>Tunis</Adj>
-		<Adj>Western Gulf of Lyons</Adj>
+		<Adj>Gulf of Lyons</Adj>
 		<Adj>Tyrrhenian Sea</Adj>
-		<Adj>Bay of Tunis</Adj>
+		<Adj>Central Mediterranean</Adj>
 	</Territory>
 	<Territory name="Tyrrhenian Sea" type="Sea">
 		<Adj>Sardinia</Adj>
@@ -569,13 +569,13 @@
 		<Adj>Rome</Adj>
 		<Adj>Capua</Adj>
 		<Adj>Naples</Adj>
-		<Adj>Western Gulf of Lyons</Adj>
-		<Adj>Eastern Gulf of Lyons</Adj>
+		<Adj>Gulf of Lyons</Adj>
+		<Adj>Ligurian Sea</Adj>
 		<Adj>Gulf of Naples</Adj>
-		<Adj>Bay of Tunis</Adj>
+		<Adj>Central Mediterranean</Adj>
 		<Adj>Western Mediterranean Sea</Adj>
 	</Territory>
-	<Territory name="Bay of Tunis" type="Sea">
+	<Territory name="Central Mediterranean" type="Sea">
 		<Adj>Tunis</Adj>
 		<Adj>Palermo</Adj>
 		<Adj>Western Mediterranean Sea</Adj>
@@ -597,7 +597,7 @@
 		<Adj>Otranto</Adj>
 		<Adj>Durazzo</Adj>
 		<Adj>Gulf of Naples</Adj>
-		<Adj>Bay of Tunis</Adj>
+		<Adj>Central Mediterranean</Adj>
 		<Adj>Lower Adriatic</Adj>
 	</Territory>
 	<Territory name="Lower Adriatic" type="Sea">
