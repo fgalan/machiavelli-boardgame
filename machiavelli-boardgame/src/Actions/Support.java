@@ -21,6 +21,8 @@
 
 package Actions;
 
+import GameElements.Map;
+
 public class Support extends Action {
 	
 	private String territory;
@@ -31,6 +33,14 @@ public class Support extends Action {
 		this.territory = t;
 		this.player = p;
 	}
+
+	public String getTerritory() {
+		return territory;
+	}
+	
+	public String getPlayer() {
+		return player;
+	}	
 	
 	/**
 	 * For "anonymous unit" actions (in <Buy*>)
@@ -38,5 +48,17 @@ public class Support extends Action {
 	public Support(String t, String p) {
 		this.territory = t;
 		this.player = p;
+	}
+	
+	/**
+	 * The same as toString, but appending '*', '**' or '***' correctly based on the Map and player passed
+	 * as arguments 
+	 * @param m
+	 * @param player
+	 * @return
+	 */
+	public String toStringWithElite(Map m, String player) {
+		String s = super.toStringWithElite(m, player) + " supports to " + territory + " in favour of " + player;
+		return s;
 	}
 }

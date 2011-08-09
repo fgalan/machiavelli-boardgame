@@ -25,9 +25,14 @@ public  class DisbandAutonomousGarrison extends Expense {
 
 	private String province;
 	
+	public static int MIN_AMMOUNT = 6;
+	
 	public DisbandAutonomousGarrison(int amount, String p) {
 		super(amount);
 		province = p;
 	}
 	
+	public String toString() {
+		return super.toString() + " in disbanding autonomous garrision at " + province;
+	}	
 }

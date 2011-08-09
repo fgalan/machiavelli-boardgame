@@ -34,4 +34,7 @@ public  class CounterBride extends Expense {
 		player = p;
 	}
 	
+	public String toString() {
+		return super.toString() + " in counterbridging unit " + type + id + " belonging to player " + player;
+	}	
 }

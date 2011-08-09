@@ -23,10 +23,16 @@ package Expenses;
 
 public  class DisbandUnit extends Expense {
 
-	private String province;
+	private String territory;
+	
+	public static int MIN_AMMOUNT = 12;
 	
 	public DisbandUnit(int amount, String p) {
 		super(amount);
-		province = p;
-	}	
+		territory = p;
+	}
+
+	public String toString() {
+		return super.toString() + " in disbanding unit at " + territory;
+	}
 }

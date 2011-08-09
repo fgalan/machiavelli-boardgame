@@ -21,6 +21,8 @@
 
 package Actions;
 
+import GameElements.Map;
+
 public class Besiege extends Action {
 
 	public Besiege(String type, int id) {
@@ -32,6 +34,18 @@ public class Besiege extends Action {
 	 */
 	public Besiege() {
 		
+	}
+	
+	/**
+	 * The same as toString, but appending '*', '**' or '***' correctly based on the Map and player passed
+	 * as arguments 
+	 * @param m
+	 * @param player
+	 * @return
+	 */
+	public String toStringWithElite(Map m, String player) {
+		String s = super.toStringWithElite(m, player) + " besieges";
+		return s;
 	}
 
 }

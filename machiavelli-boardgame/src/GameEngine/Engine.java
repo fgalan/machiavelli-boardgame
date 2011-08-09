@@ -22,12 +22,33 @@ package GameEngine;
 
 import java.util.Iterator;
 import java.util.Vector;
+import java.util.concurrent.CountDownLatch;
 
 import org.apache.log4j.Logger;
 
+import Actions.Action;
+import Actions.Advance;
+import Actions.Besiege;
+import Actions.Convert;
+import Actions.Hold;
+import Actions.LiftSiege;
+import Actions.Support;
+import Actions.Transport;
 import Exceptions.ProcessAdjustmentsException;
 import Exceptions.ProcessCommandsException;
 import Exceptions.UnknownCountryException;
+import Expenses.Assasination;
+import Expenses.BuyAutonomousGarrison;
+import Expenses.BuyUnit;
+import Expenses.CounterBride;
+import Expenses.DisbandAutonomousGarrison;
+import Expenses.DisbandGarrison;
+import Expenses.DisbandUnit;
+import Expenses.Expense;
+import Expenses.FamineRelief;
+import Expenses.GarrisonToAutonomous;
+import Expenses.PacifyRebellion;
+import Expenses.Rebellion;
 import GameElements.Army;
 import GameElements.Fleet;
 import GameElements.Garrison;
@@ -59,44 +80,351 @@ public class Engine {
 		r2.addResult("------ Turn "+gs.campaing2Text() + " "+gs.getYear()+" ------");
 		r.addResult(r2);
 		
-		/* Famine phase and income phase only in Spring */
-		if (gs.getCampaign() == GameStatus.SPRING) {
-			r.addResult(doFamine(m));
-			try {
-				r.addResult(doIncome(gs,m));
-			} 
-			catch (UnknownCountryException e) {
-				throw new ProcessCommandsException(e.toString());
-			}
-		}
-		
-		/* Famine markers removal phase and plague only in Summer */
-		if (gs.getCampaign() == GameStatus.SUMMER) {
-			r.addResult(clearFamine(m));
-			r.addResult(doPlague(m));
-		}
-		
 		/* Process actions, except at the beginning of the game (in that case cmd is null) */
 		if (cmds != null) {
-		
-			/* Process Assassinations */
-			for (Iterator<String> i = gs.getPlayers().iterator(); i.hasNext() ; i.next()) {
-				// TODO
-			}
 			
-			/* Process other Expenses */
-			for (Iterator<String> i = gs.getPlayers().iterator(); i.hasNext() ; i.next()) {
-				// TODO
+			GenericResult rExpenses = new GenericResult();
+			GenericResult rActions = new GenericResult();
+			GenericResult rResolv = new GenericResult();
+			
+			/* Process Expenses */
+			
+			boolean atLeatOneExpense = false;			
+			rExpenses.addResult("expenses: ");			
+			for (Iterator<Commands> i = cmds.iterator(); i.hasNext() ; ) {
+				
+				Commands c = i.next();
+				
+				/* Note that we are processing differently the output for Expenses and Actions,  
+				 * in rExpenses and rActions respectively (e.g. rActions is per-player while rExpenses
+				 * includes all player simultaneously). This is due to Expenses are rarer than Actions
+				 * (i.e. it is possible a turn without any Expense for any player, but this is almost
+				 * impossible in the case of Actions) 
+				 */
+
+				for (Iterator<Expense> j = c.getExpenses().iterator(); j.hasNext();  ) {
+					Expense e = j.next();
+					rExpenses.addResult("- " + c.getPlayer() + " expends " + e);
+					atLeatOneExpense = true;
+					
+					if (e instanceof Assasination) {
+						// TODO: process Assassinations first, before than other expenses, no matter its position in the
+						// Vector
+						throw new ProcessCommandsException("'Assasination' expense not implemented for player " + c.getPlayer() + ": " + e);
+					}
+					else if (e instanceof BuyAutonomousGarrison) {
+						BuyAutonomousGarrison bag = (BuyAutonomousGarrison)e;
+						 
+						/* Check that expense is legal */
+						Province p = ((Province)m.getTerritoryByName(bag.getProvince()));
+						if (gs.getMoney(c.getPlayer()) < bag.getAmount()) {
+							rExpenses.addResult("  * INVALID: player has no enough money");
+							continue; // for in j
+						}
+						if (p.getCity() == null) {
+							rExpenses.addResult("  * INVALID: province " + bag.getProvince() + " has no city");
+							continue; // for in j
+						}
+						if ( ! p.getCity().hasAutonomousGarrison() ) {
+							rExpenses.addResult("  * INVALID: province " + bag.getProvince() + " city has no autonomous garrison");
+							continue; // for in j
+						}
+						boolean adjacency = false;
+						for (Iterator<Unit> k = m.getUnitBelongingToPlayer(c.getPlayer(), null).iterator(); k.hasNext() ;) {
+							/* FIXME: rules doubt: Garrison count for checking adjacency in the case of
+							 * bridges or not? */
+							Unit u = k.next();
+							if (m.areAdjancent(u.getLocation(), p)) {
+								adjacency = true;
+								break; // for in k
+							}
+						}
+						if (! adjacency) {
+							rExpenses.addResult("  * INVALID: province " + bag.getProvince() + " is not adjacent to any Unit of the player");
+							continue; // for in j
+						}
+						if (m.GetFreeId(c.getPlayer(), "Garrison") == Garrison.MAX) {
+							rExpenses.addResult("  * INVALID: Garrison units limit reached");
+							continue; // for in j
+						}
+						
+						/* Sum counter-brides */
+						// TODO: actually implement this
+						int counterBride = 0;
+						rExpenses.addResult("  * Counter brides: " + counterBride + "d");
+						
+						/* Check amount */
+						int min = BuyAutonomousGarrison.MIN_AMMOUNT;
+						if (p.getCity().getSize() > 1 ) {
+							rExpenses.addResult("  * Bride in capital city (size greater than 1) doubles minimum ammount");
+							min = 2 * min;
+						}
+						min = min + counterBride;
+						
+						gs.decMoney(c.getPlayer(), bag.getAmount());
+						if (bag.getAmount() < min) {
+							rExpenses.addResult("  * Required " + min + "d, result is FAIL. Player expends " + bag.getAmount() + "d");
+						}
+						else {
+							rExpenses.addResult("  * Required " + min + "d, result is SUCCESS. Player expends " + bag.getAmount() + "d");
+							/* Create new unit and attach it to the map */
+							p.getCity().clearAutonomousGarrison();
+							Garrison g = new Garrison(m.GetFreeId(c.getPlayer(), "Garrison"), c.getPlayer(), p.getCity(), Unit.NO_ELITE);
+							g.setLocation(p);
+							p.getCity().setUnit(g);
+							
+							/* Create action for the new unit, inserting it in the Action vector of the player */
+							bag.getAction().setId(g.getId());
+							bag.getAction().setType("Garrison");
+							c.addAction(bag.getAction());
+							
+							rExpenses.addResult("  * Created '" + g + "' with action '" + bag.getAction().toStringWithElite(m, c.getPlayer()) + "'");
+						}
+						
+						//throw new ProcessCommandsException("'BuyAutonomousGarrison' expense not implemented for player " + c.getPlayer() + ": " + e);
+					}
+					else if (e instanceof BuyUnit) {
+						// TODO
+						throw new ProcessCommandsException("'BuyUnit' expense not implemented for player " + c.getPlayer() + ": " + e);
+					}
+					else if (e instanceof CounterBride) {
+						// TODO
+						throw new ProcessCommandsException("'CounterBride' expense not implemented for player " + c.getPlayer() + ": " + e);
+					}
+					else if (e instanceof DisbandAutonomousGarrison) {
+						// TODO
+						throw new ProcessCommandsException("'DisbandAutonomousGarrison' expense not implemented for player " + c.getPlayer() + ": " + e);
+					}
+					else if (e instanceof DisbandGarrison) {
+						// TODO
+						throw new ProcessCommandsException("'DisbandGarrison' expense not implemented for player " + c.getPlayer() + ": " + e);
+					}
+					else if (e instanceof DisbandUnit) {
+						// TODO
+						throw new ProcessCommandsException("'DisbandUnit' expense not implemented for player " + c.getPlayer() + ": " + e);
+					}
+					else if (e instanceof FamineRelief) {
+						// TODO
+						throw new ProcessCommandsException("'FamineRelief' expense not implemented for player " + c.getPlayer() + ": " + e);
+					}
+					else if (e instanceof GarrisonToAutonomous) {
+						// TODO
+						throw new ProcessCommandsException("'GarrisonToAutonomous' expense not implemented for player " + c.getPlayer() + ": " + e);
+					}
+					else if (e instanceof PacifyRebellion) {
+						// TODO
+						throw new ProcessCommandsException("'PacifyRebellion' expense not implemented for player " + c.getPlayer() + ": " + e);
+					}
+					else if (e instanceof Rebellion) {
+						// TODO
+						throw new ProcessCommandsException("'Rebellion' expense not implemented for player " + c.getPlayer() + ": " + e);
+					}
+					else {
+						// This must not happen!
+						throw new ProcessCommandsException("unknown expense for player " + c.getPlayer() + ": " + e);						
+					}
+				}
 			}
+			if (!atLeatOneExpense) {
+				rExpenses.addResult("  none");
+			}
+			r.addResult(rExpenses);			
 			
 			/* Process Actions */
-			for (Iterator<String> i = gs.getPlayers().iterator(); i.hasNext() ; i.next()) {
-				// TODO
+			Vector <TerritoryUnderMovement> tums = new Vector<TerritoryUnderMovement>();			
+			for (Iterator<Commands> i = cmds.iterator(); i.hasNext() ; ) {
+				
+				Commands c = i.next();				
+								
+				rActions.addResult("player " + c.getPlayer() + " commands:");
+				
+				for (Iterator<Action> j = c.getActions().iterator(); j.hasNext();  ) {
+					Action a = j.next();
+					rActions.addResult("- " + a.toStringWithElite(m, c.getPlayer()));
+					
+					/* Search for a matching unit in the map */
+					Unit u = a.getAssociatedUnitInMap(c.getPlayer(), m);
+					if (u == null) {
+						throw new ProcessCommandsException("action '" + a.toStringWithElite(m, c.getPlayer()) + "' for player " + c.getPlayer() +" has no matching unit in the map");
+					}
+					
+					if (a instanceof Advance) {
+						
+						Advance ad = (Advance)a;
+					
+						/* To check that advance is legally valid */
+						String lm = m.isLegalMove(u, m.getTerritoryByName(ad.getTerritory()));
+						if (!lm.equals("")) {
+							rActions.addResult("  * INVALID: ilegal advance, unit actions becomes 'Hold': " + lm);
+							continue; //for in j
+						}
+						
+						/* Search for a TerritoryUnderMovement associated to the same province; if doesn't
+						 * exits created a new one */
+						TerritoryUnderMovement tum = null;
+						for (Iterator<TerritoryUnderMovement> k = tums.iterator(); k.hasNext();) {
+							TerritoryUnderMovement tumAux = k.next();
+							if (tumAux.getTerritory().getName().equals(ad.getTerritory())) {
+								tum = tumAux;
+							}
+						}
+						if (tum == null) {
+							tum = new TerritoryUnderMovement(ad.getTerritory(), m);
+							tums.add(tum);
+						}
+						
+						/* Add Unit to the advancing units list */						
+						tum.addAdvancingUnit(u);
+
+					}
+					else if (a instanceof Besiege) {
+						// TODO
+						throw new ProcessCommandsException("'Besiege' operation not implemented for player " + c.getPlayer() + " action: " + a.toStringWithElite(m, c.getPlayer()));
+					}
+					else if (a instanceof Convert) {
+						// TODO: implement voluntary disband as convert operation
+						
+						Convert co = (Convert) a;
+						
+						/* To check that convert is legally valid */
+						if (u instanceof Army && co.getNewType().equals("Fleet")) {
+							rActions.addResult("  * INVALID: ilegal convert, unit actions becomes 'Hold': Army cannot be converted to Fleet");
+							continue; // for in j
+						}
+						if (u instanceof Fleet && co.getNewType().equals("Army")) {
+							rActions.addResult("  * INVALID: ilegal convert, unit actions becomes 'Hold': Fleet cannot be converted to Army");
+							continue; // for in j
+						}
+						if ( (u instanceof Army && co.getNewType().equals("Army"))||(u instanceof Fleet && co.getNewType().equals("Fleet")) ) {
+							rActions.addResult("  * INVALID: ilegal convert, unit actions becomes 'Hold': original and new types cannot be the same");
+							continue; // for in j
+						}						
+						if (!(u.getLocation() instanceof Province)) {
+							rActions.addResult("  * INVALID: ilegal convert, unit actions becomes 'Hold': unit must be in a province with a fortificed city");
+							continue; // for in j
+						}
+						Province p = (Province) u.getLocation();
+						if ( (p.getCity() == null) || (p.getCity() != null && !p.getCity().isFortified()) ) {
+							rActions.addResult("  * INVALID: ilegal convert, unit actions becomes 'Hold': unit must be in a province with a fortificed city");
+							continue; // for in j
+						}
+						if ((co.getNewType().equals("Fleet") || u instanceof Fleet) && ! p.getCity().isPort() ) {
+							rActions.addResult("  * INVALID: ilegal convert, unit actions becomes 'Hold': this kind of conversion required a city with port");
+							continue; // for in j
+						}
+						
+						if (u instanceof Garrison) {
+							/* Garrison -> Fleet/Army */
+							/* Search for a TerritoryUnderMovement associated to the same province; if doesn't
+							 * exits created a new one */
+							TerritoryUnderMovement tum = null;
+							for (Iterator<TerritoryUnderMovement> k = tums.iterator(); k.hasNext();) {
+								TerritoryUnderMovement tumAux = k.next();
+								if (tumAux.getTerritory().getName().equals(p.getName())) {
+									tum = tumAux;
+								}
+							}
+							if (tum == null) {
+								tum = new TerritoryUnderMovement(p.getName(), m);
+								tums.add(tum);
+							}
+							
+							/* Set garrisonConvert* */
+							if (co.getNewType().equals("Army")) {
+								tum.setGarrisonConvertToArmy((Garrison)u);
+							}
+							else {  // Fleet
+								tum.setGarrisonConvertToFleet((Garrison)u);
+							}
+						}
+						else { /* Army/Fleet -> Garrison */
+							/* Check that city is empty, otherwise the action is invalid (note that in this
+							 * case it is not a conflict) */
+							if (p.getCity().getUnit() != null || p.getCity().hasAutonomousGarrison()) {
+								rActions.addResult("  * INVALID: ilegal convert, unit actions becomes 'Hold': city has a Garrison");
+							}
+							else {
+								
+								String player = u.getOwner();
+								int elite = u.getElite();
+								
+								Garrison g = new Garrison(m.GetFreeId(player, "Garrison"), player, p.getCity(), elite);
+								p.getCity().setUnit(g);
+								p.setUnit(null);
+								rResolv.addResult("- unit " + u + " in " + p.getName() + " converts into " + g);
+								
+							}	
+						}
+						
+					}
+					else if (a instanceof Hold) {
+						/* Do nothing */
+					}
+					else if (a instanceof LiftSiege) {
+						// TODO
+						throw new ProcessCommandsException("'LiftSiege' operation not implemented for player " + c.getPlayer() + " action: " + a.toStringWithElite(m, c.getPlayer()));
+					}
+					else if (a instanceof Support) {
+						Support sp = (Support)a;
+						
+						/* To check that support is legally valid */
+						String lm = m.isLegalMove(u, m.getTerritoryByName(sp.getTerritory()));
+						if (!lm.equals("")) {
+							rActions.addResult("  * INVALID: ilegal support, unit actions becomes 'Hold': " + lm);
+							continue; // for in j
+						}						
+						
+						/* To check "support break" due to advances from provinces different of the supported one */
+						// TODO
+						
+						/* Search for a TerritoryUnderMovement associated to the same province; if doesn't
+						 * exits created a new one */
+						TerritoryUnderMovement tum = null;
+						for (Iterator<TerritoryUnderMovement> k = tums.iterator(); k.hasNext();) {
+							TerritoryUnderMovement tumAux = k.next();
+							if (tumAux.getTerritory().getName().equals(sp.getTerritory())) {
+								tum = tumAux;
+							}
+						}
+						if (tum == null) {
+							tum = new TerritoryUnderMovement(sp.getTerritory(), m);
+							tums.add(tum);
+						}
+						
+						/* Add Unit to the supporting units list, along with the player in favor 
+						 * of which the support action is being done */
+						tum.addSupportingUnit(u,sp.getPlayer());
+						
+					}
+					else if (a instanceof Transport) {
+						// TODO
+						throw new ProcessCommandsException("'Transport' operation not implemented for player " + c.getPlayer() + " action: " + a.toStringWithElite(m, c.getPlayer()));
+					}
+					else {
+						// This must not happen!
+						throw new ProcessCommandsException("unknown action for player " + c.getPlayer() + ": " + a.toStringWithElite(m, c.getPlayer()));
+					}
+				}
+				
+				/* For formatting purposes */
+				rActions.addResult("");
 			}
 			
-			/* Resolve conflicts */
-			// TODO
+			rActions.addResult("turn resolution (including conflicts):");
+			r.addResult(rActions);
+			
+			rResolv.addResult(processNoConflict(tums, m));
+			
+			/* Process TerritoryUnderMovement accumulated list, including conflict resolution */
+			for (Iterator<TerritoryUnderMovement> j = tums.iterator(); j.hasNext();) {
+				TerritoryUnderMovement tum = j.next();
+				rResolv.addResult(tum.toString());
+				rResolv.addResult("");
+				// TODO: actual processing (i.e. changes in Map m) here
+			}
 		
+			r.addResult(rResolv);
+			
 			/* Check victory conditions */
 			// TODO
 			
@@ -110,10 +438,94 @@ public class Engine {
 			}			
 			
 		}
+
+		/* Famine phase and income phase only in Spring */
+		if (gs.getCampaign() == GameStatus.SPRING) {
+			r.addResult(doFamine(m));
+			try {
+				r.addResult(doIncome(gs,m));
+			} 
+			catch (UnknownCountryException e) {
+				throw new ProcessCommandsException(e.toString());
+			}
+		}	
+		
+		/* Famine markers removal phase and plague only in Summer */
+		if (gs.getCampaign() == GameStatus.SUMMER) {
+			r.addResult(clearFamine(m));
+			r.addResult(doPlague(m));
+		}
 		
 		return r;
 	}
 	
+	private static String processNoConflict(Vector<TerritoryUnderMovement> tums, Map m) {
+		/* We process elements in the TerritoryUnderMovement Vector that doesn't involve conflict: 
+		 * 
+		 * 1) only 1 member in the advancing units vector, no garrison conversion and no unit currently 
+		 *   Occupying territory
+		 * 2) 0 members in the advancing units vector, garrison conversion and no unit currently occuping
+		 *   territory
+		 * 
+		 */
+		
+		boolean recursiveInvocation = false;
+		String s = "";
+		Vector<TerritoryUnderMovement> tumsRemoval = new Vector<TerritoryUnderMovement>();
+		
+		for (Iterator<TerritoryUnderMovement> j = tums.iterator(); j.hasNext();) {
+			TerritoryUnderMovement tum = j.next();
+			
+			if (tum.getAdvancingUnits().size() == 1 && tum.getGarrisonConvertToArmy() == null 
+					&& tum.getGarrisonConvertToFleet() == null && tum.getTerritory().getUnit() == null) {
+				
+				Unit u = tum.getAdvancingUnits().firstElement();
+				s = s + "- unit " + u + " advances from " + u.getLocation().getName() + " to " + tum.getTerritory().getName() + "\n";
+				m.getTerritoryByName(u.getLocation().getName()).setUnit(null);
+				m.getTerritoryByName(tum.getTerritory().getName()).setUnit(u);
+				u.setLocation(tum.getTerritory());
+				tumsRemoval.add(tum);
+				recursiveInvocation = true;
+			}
+			else if (tum.getAdvancingUnits().size() == 0 && tum.getTerritory().getUnit() == null &&
+					(tum.getGarrisonConvertToArmy() != null || tum.getGarrisonConvertToFleet() != null) ) {
+				
+				/* Create the new unit */
+				Unit u;
+				if (tum.getGarrisonConvertToArmy() != null) {
+					String player = tum.getGarrisonConvertToArmy().getOwner();
+					int elite = tum.getGarrisonConvertToArmy().getElite();
+					u = new Army(m.GetFreeId(player, "Army"), player, (Province)tum.getTerritory(), elite);
+					s = s + "- unit " + tum.getGarrisonConvertToArmy() + " in " + tum.getTerritory().getName() + " converts into " + u + "\n";
+				}
+				else { // tum.getCarrisonConvertToFleet() != null
+					String player = tum.getGarrisonConvertToFleet().getOwner();
+					int elite = tum.getGarrisonConvertToFleet().getElite();
+					u = new Army(m.GetFreeId(player, "Fleet"), player, (Province)tum.getTerritory(), elite);
+					s = s + "- unit " + tum.getGarrisonConvertToFleet() + " in " + tum.getTerritory().getName() + " converts into " + u + "\n";					
+				}
+				
+				((Province)m.getTerritoryByName(tum.getTerritory().getName())).getCity().setUnit(null);
+				m.getTerritoryByName(tum.getTerritory().getName()).setUnit(u);
+				tumsRemoval.add(tum);
+				recursiveInvocation = true;
+			}
+		}
+		
+		/* Remove processed elements from tum. Note that we can not this inside the loop, because a
+		 * ConcurrentModificationException will occur */
+		for (Iterator<TerritoryUnderMovement> j = tumsRemoval.iterator(); j.hasNext();) {
+			TerritoryUnderMovement tum = j.next();
+			tums.remove(tum);
+		}
+		
+		/* If at least one change has been done, invoke recursively the function */
+		if (recursiveInvocation) {
+			return s + processNoConflict(tums, m);
+		}
+		
+		return s;
+	}
 
 	/**
 	 * Processes a set of Adjustments orders (supposed each one from a different player) on the

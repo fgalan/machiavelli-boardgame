@@ -27,6 +27,8 @@ public  class BuyAutonomousGarrison extends Expense {
 
 	private String province;
 	private Action action;
+	
+	public static int MIN_AMMOUNT = 9;
 
 	public BuyAutonomousGarrison(int amount, String p, Action a) {
 		super(amount);
@@ -34,4 +36,15 @@ public  class BuyAutonomousGarrison extends Expense {
 		action = a;
 	}
 	
+	public String toString() {
+		return super.toString() + " in buying autonomous garrison at " + province;
+	}
+	
+	public String getProvince() {
+		return province;
+	}
+	
+	public Action getAction() {
+		return action;
+	}	
 }

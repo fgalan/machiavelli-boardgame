@@ -408,7 +408,17 @@ public class Map {
 			s = s + controlledProvinces.get(player);
 			s = s + "\n";
 		}
-			
+		
+		s = s + " Code:\n";
+		s = s + "   Swiss      -> the player controls the province and the unfortified city (if any)\n";
+		s = s + "   Turin(+)   -> the player controls the province *and* the fortified city\n";
+		s = s + "   Turin(-)   -> the player controls the province *but not* the fortified city (which is controlled\n";
+		s = s + "                 by another player with a Garrison unit there or has an AutonomousGarrison)\n";
+		s = s + "   Turin(c)   -> the player controls the city *but not* the province\n";
+		s = s + "\n";
+		s = s + " (Note that Seas have no controller by definition)\n";
+		s = s + "\n";
+		
 		/* MILITARY UNITS */
 		
 		/* Using a hashmap to index list by owing player and simple String for autonomous garrisons*/
@@ -905,5 +915,75 @@ public class Map {
 		}
 		
 		return v;
+	}
+	
+	/**
+	 * Chech that a movement action (Advance or Support) for Unit u to Territory t is legal according rules. 
+	 * Return "" if the movement is legal or a String describing the problem otherwise
+	 * @param u
+	 * @param t
+	 * @return
+	 */
+	public String isLegalMove(Unit u, Territory t) {
+		/* Garrison */
+		if (u instanceof Garrison) {
+			Garrison g = (Garrison) u;
+			/* For Garrisons the only legal move (in Support actions) is the province where the city
+			 * Garrison is located */
+			if (!g.getLocation().getName().equals(t.getName())) {
+				return "Garrison in " + g.getLocation().getName() + " to territory not holding its city: " + t.getName();
+			}
+
+		}
+		/* Army */
+		else if (u instanceof Army) {
+			Army a = (Army) u;
+			/* Is adjacent? */
+			if (! areAdjancent(a.getLocation(), t)) {
+				return "Army in " + a.getLocation().getName() + " to not adjacent territory: " + t.getName();
+			}
+			
+			/* Is a province? (i.e. not a sea) */
+			if (t instanceof Sea) {
+				return "Army in " + a.getLocation().getName() + " to a Sea: " + t.getName();
+			}
+			
+			/* Is not occupied by a Fleet/Army of the same player? */
+			if ((t.getUnit()!= null) && (t.getUnit().getOwner().equals(a.getOwner()))) {
+				return "Army in " + a.getLocation().getName() + " to territory occuped by the same player: " + t.getName();
+			}
+			
+		}
+		/* Fleet */
+		else {
+			Fleet f = (Fleet) u;
+			/* Is adjacent? */
+			if (! areAdjancent(f.getLocation(), t)) {
+				return "Fleet in " + f.getLocation().getName() + " to not adjacent territory: " + t.getName();
+			}
+			
+			/* Is a sea or coastal province sharing a costal line? */
+			// TODO: the sharing of a coastal line is not checked, so e.g. Capua -> Aquila (ilegal 
+			// according rules) is not deteced as ilegal movement			
+			if (t instanceof Province && !((Province)t).isCoast(this) ) {
+				return "Fleet in " + f.getLocation().getName() + " to inland province: " + t.getName();
+			}
+
+			/* Is not occupied by a Fleet/Army of the same player? */
+			if ((t.getUnit()!= null) && (t.getUnit().getOwner().equals(f.getOwner()))) {
+				return "Fleet in " + f.getLocation().getName() + " to territory occuped by the same player: " + t.getName();
+			}
+		}
+		
+		return "";
+	}
+	
+	public boolean areAdjancent(Territory t1, Territory t2) {
+		for (Iterator<String> i = t1.getAdjacents().iterator(); i.hasNext(); ) {
+			if (t2.getName().equals(i.next())) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

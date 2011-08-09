@@ -31,4 +31,8 @@ public  class FamineRelief extends Expense {
 		super(FAMINERELIEF_AMMOUNT);
 		province = p;
 	}
+	
+	public String toString() {
+		return super.toString() + " in relieving famine at " + province;
+	}	
 }

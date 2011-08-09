@@ -21,6 +21,15 @@
 
 package Actions;
 
+import java.util.Iterator;
+import java.util.Vector;
+
+import GameElements.Army;
+import GameElements.Fleet;
+import GameElements.Garrison;
+import GameElements.Map;
+import GameElements.Unit;
+
 public abstract class Action {
 
 	private String type;
@@ -35,5 +44,64 @@ public abstract class Action {
 	 * For "anonymous actions" (in <Buy*>)
 	 */
 	public Action() { };
+	
+	/**
+	 * For "anonymous actions" (in <Buy*>)
+	 */
+	public void setType(String type) {
+		this.type = type;
+	}
+	
+	/**
+	 * For "anonymous actions" (in <Buy*>)
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	/**
+	 * Search for the Unit associated to the action in the Map provides as argument. The player to which
+	 * the Unit belong is also specified as argument. If a matching Unit is not found, then 'null' is
+	 * returned
+	 * 
+	 * @param player
+	 * @param m
+	 */
+	public Unit getAssociatedUnitInMap(String player, Map m) {
+		Vector<Unit> units = m.getUnitBelongingToPlayer(player, type);
+		for (Iterator<Unit> i = units.iterator(); i.hasNext() ; ) {
+			Unit u = i.next();
+			if (u.getId() == id) {
+				return u;
+			}
+		}
+		return null;
+	}
+	
+	public String toString() {
+		String s = "" + type.charAt(0) + id;
+		return s;
+	}
+	
+	/**
+	 * The same as toString, but appending '*', '**' or '***' correctly based on the Map and player passed
+	 * as arguments 
+	 * @param m
+	 * @param player
+	 * @return
+	 */
+	public String toStringWithElite(Map m, String player) {
+		Unit u = m.getEliteUnitFromPlayer(player);
+		if (u != null) {
+			if ( ( (u instanceof Army && type.equals("Army")) ||
+			       (u instanceof Fleet && type.equals("Fleet")) ||
+			       (u instanceof Garrison && type.equals("Garrison")) ) 
+			      && (u.getId() == id) 
+			    ) {
+			return toString() + Unit.eliteString(u.getElite());
+			}
+		}
+		return toString();
+	}	
 	
 }

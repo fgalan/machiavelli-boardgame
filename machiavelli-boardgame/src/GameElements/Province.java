@@ -20,6 +20,8 @@
 
 package GameElements;
 
+import java.util.Iterator;
+
 import org.apache.log4j.Logger;
 
 public class Province extends Territory {
@@ -78,5 +80,16 @@ public class Province extends Territory {
 	
 	public void clearController() {
 		controller = null;
+	}
+	
+	public boolean isCoast (Map m) {
+		/* A province is Coast if at least one of its adjacencies is a sea */
+		for (Iterator<String> i = getAdjacents().iterator(); i.hasNext(); ) {
+			Territory t = m.getTerritoryByName(i.next());
+			if (t instanceof Sea) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

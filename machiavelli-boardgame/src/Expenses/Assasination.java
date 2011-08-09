@@ -30,4 +30,8 @@ public  class Assasination extends Expense {
 		this.player = p;
 	}
 	
+	public String toString() {
+		return super.toString() + " in assesinating " + player;
+	}
+	
 }

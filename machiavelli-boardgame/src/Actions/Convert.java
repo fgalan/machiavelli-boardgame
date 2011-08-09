@@ -21,6 +21,8 @@
 
 package Actions;
 
+import GameElements.Map;
+
 public class Convert extends Action {
 
 	private String newType;
@@ -35,6 +37,22 @@ public class Convert extends Action {
 	 */
 	public Convert(String newType) {
 		this.newType = newType;
+	}
+	
+	public String getNewType() {
+		return newType;
+	}
+	
+	/**
+	 * The same as toString, but appending '*', '**' or '***' correctly based on the Map and player passed
+	 * as arguments 
+	 * @param m
+	 * @param player
+	 * @return
+	 */
+	public String toStringWithElite(Map m, String player) {
+		String s = super.toStringWithElite(m, player) + " converts into " + newType;
+		return s;
 	}
 	
 }

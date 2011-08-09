@@ -31,4 +31,8 @@ public  class PacifyRebellion extends Expense {
 		super(PACIFYREBELLION_AMMOUNT);
 		province = p;
 	}
+	
+	public String toString() {
+		return super.toString() + " in pacifiying rebellion at " + province;
+	}
 }

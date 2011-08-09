@@ -308,6 +308,11 @@ public class Commands {
 		
 		/* Pattern: <Action type="Army" id="1"> [Action] </Action> */
 		String type = item.getAttributes().getNamedItem("type").getNodeValue();
+		
+		/* Ensure only valid types are used */
+		if (!(type.equals("Army") || type.equals("Fleet") || type.equals("Garrison"))) {
+			throw new ParseCommandsException("type '" + type + "' is not valid");
+		}
 		int id = Integer.parseInt(item.getAttributes().getNamedItem("id").getNodeValue());
 		
 		NodeList l = item.getChildNodes();		
@@ -351,4 +356,28 @@ public class Commands {
 		}
 		throw new ParseCommandsException("<Action> not found");
 	}
+
+	public String getPlayer() {
+		return player;
+	}
+	
+	public Vector<Action> getActions() {
+		return actions;
+	}
+	
+	public Vector<Expense> getExpenses () {
+		return expenses;
+	}
+	
+	public Vector<Retreats> getRetreats() {
+		return retreats;
+	}
+	
+	/** 
+	 * This method is only used to insert actions during turn processing due to Buy bridges action
+	 * @param a
+	 */
+	public void addAction(Action a) {
+		 actions.add(a);
+	 }
 }
