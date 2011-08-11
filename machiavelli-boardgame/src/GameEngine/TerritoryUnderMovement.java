@@ -157,9 +157,15 @@ public class TerritoryUnderMovement {
 		}		
 		
 		/* Process supporting unit vector */
-		/*for (int i = 0 ; i < supportingUnits.size(); i ++) {
-			s = s + "   " + supportingUnits.get(i) + " in favor of " + inFavorOf.get(i) + "\n";
-		}*/
+		for (int i = 0 ; i < supportingUnits.size(); i ++) {
+			if (sides.get(inFavorOf.elementAt(i)) != null) {
+				int currentStrength = sides.get(inFavorOf.elementAt(i)).intValue();
+				sides.put(inFavorOf.elementAt(i), new Integer(currentStrength + supportingUnits.elementAt(i).getStrength()));
+			}
+			else {
+				throw new ProcessCommandsException("support of unit " + supportingUnits.elementAt(i) + "not acting at terrotory " + territory.getName());
+			}
+		}
 		
 		return sides;
 		
