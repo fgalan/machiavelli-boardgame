@@ -20,6 +20,7 @@
 
 package GameEngine;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 import java.util.concurrent.CountDownLatch;
@@ -143,7 +144,7 @@ public class Engine {
 							rExpenses.addResult("  * INVALID: province " + bag.getProvince() + " is not adjacent to any Unit of the player");
 							continue; // for in j
 						}
-						if (m.GetFreeId(c.getPlayer(), "Garrison") == Garrison.MAX) {
+						if (m.getFreeId(c.getPlayer(), "Garrison") == Garrison.MAX) {
 							rExpenses.addResult("  * INVALID: Garrison units limit reached");
 							continue; // for in j
 						}
@@ -169,7 +170,7 @@ public class Engine {
 							rExpenses.addResult("  * Required " + min + "d, result is SUCCESS. Player expends " + bag.getAmount() + "d");
 							/* Create new unit and attach it to the map */
 							p.getCity().clearAutonomousGarrison();
-							Garrison g = new Garrison(m.GetFreeId(c.getPlayer(), "Garrison"), c.getPlayer(), p.getCity(), Unit.NO_ELITE);
+							Garrison g = new Garrison(m.getFreeId(c.getPlayer(), "Garrison"), c.getPlayer(), p.getCity(), Unit.NO_ELITE);
 							g.setLocation(p);
 							p.getCity().setUnit(g);
 							
@@ -348,7 +349,7 @@ public class Engine {
 								String player = u.getOwner();
 								int elite = u.getElite();
 								
-								Garrison g = new Garrison(m.GetFreeId(player, "Garrison"), player, p.getCity(), elite);
+								Garrison g = new Garrison(m.getFreeId(player, "Garrison"), player, p.getCity(), elite);
 								p.getCity().setUnit(g);
 								p.setUnit(null);
 								rResolv.addResult("- unit " + u + " in " + p.getName() + " converts into " + g);
@@ -413,15 +414,15 @@ public class Engine {
 			rActions.addResult("turn resolution (including conflicts):");
 			r.addResult(rActions);
 			
-			rResolv.addResult(processNoConflict(tums, m));
-			
+			rResolv.addResult(processNoConflicts(tums, m));
+			rResolv.addResult(processConflicts(tums, m));
+
 			/* Process TerritoryUnderMovement accumulated list, including conflict resolution */
-			for (Iterator<TerritoryUnderMovement> j = tums.iterator(); j.hasNext();) {
-				TerritoryUnderMovement tum = j.next();
-				rResolv.addResult(tum.toString());
-				rResolv.addResult("");
-				// TODO: actual processing (i.e. changes in Map m) here
-			}
+			//for (Iterator<TerritoryUnderMovement> j = tums.iterator(); j.hasNext();) {
+			//	TerritoryUnderMovement tum = j.next();
+			//	rResolv.addResult(tum.toString());
+			//	rResolv.addResult("");
+			//}
 		
 			r.addResult(rResolv);
 			
@@ -459,7 +460,7 @@ public class Engine {
 		return r;
 	}
 	
-	private static String processNoConflict(Vector<TerritoryUnderMovement> tums, Map m) {
+	private static String processNoConflicts(Vector<TerritoryUnderMovement> tums, Map m) {
 		/* We process elements in the TerritoryUnderMovement Vector that doesn't involve conflict: 
 		 * 
 		 * 1) only 1 member in the advancing units vector, no garrison conversion and no unit currently 
@@ -484,6 +485,9 @@ public class Engine {
 				m.getTerritoryByName(u.getLocation().getName()).setUnit(null);
 				m.getTerritoryByName(tum.getTerritory().getName()).setUnit(u);
 				u.setLocation(tum.getTerritory());
+				if (m.getTerritoryByName(tum.getTerritory().getName()) instanceof Province) {
+					((Province)m.getTerritoryByName(tum.getTerritory().getName())).setController(u.getOwner());					
+				}
 				tumsRemoval.add(tum);
 				recursiveInvocation = true;
 			}
@@ -495,13 +499,13 @@ public class Engine {
 				if (tum.getGarrisonConvertToArmy() != null) {
 					String player = tum.getGarrisonConvertToArmy().getOwner();
 					int elite = tum.getGarrisonConvertToArmy().getElite();
-					u = new Army(m.GetFreeId(player, "Army"), player, (Province)tum.getTerritory(), elite);
+					u = new Army(m.getFreeId(player, "Army"), player, (Province)tum.getTerritory(), elite);
 					s = s + "- unit " + tum.getGarrisonConvertToArmy() + " in " + tum.getTerritory().getName() + " converts into " + u + "\n";
 				}
 				else { // tum.getCarrisonConvertToFleet() != null
 					String player = tum.getGarrisonConvertToFleet().getOwner();
 					int elite = tum.getGarrisonConvertToFleet().getElite();
-					u = new Army(m.GetFreeId(player, "Fleet"), player, (Province)tum.getTerritory(), elite);
+					u = new Fleet(m.getFreeId(player, "Fleet"), player, (Province)tum.getTerritory(), elite);
 					s = s + "- unit " + tum.getGarrisonConvertToFleet() + " in " + tum.getTerritory().getName() + " converts into " + u + "\n";					
 				}
 				
@@ -521,12 +525,52 @@ public class Engine {
 		
 		/* If at least one change has been done, invoke recursively the function */
 		if (recursiveInvocation) {
-			return s + processNoConflict(tums, m);
+			return s + processNoConflicts(tums, m);
 		}
 		
 		return s;
 	}
 
+	private static String processConflicts(Vector<TerritoryUnderMovement> tums, Map m) throws ProcessCommandsException {
+		
+		String s = "";
+		
+		for (Iterator<TerritoryUnderMovement> j = tums.iterator(); j.hasNext();) {
+			TerritoryUnderMovement tum = j.next();
+			
+			s = s + "- conflict at " + tum.getTerritory().getName() + ":\n";
+			
+			HashMap<String,Integer> sides = tum.getSides();
+			
+			/* Search the winner */
+			String winnerName = "";
+			int winnerStrength = -1;
+			boolean tie = false;
+			for (Iterator<String> i = sides.keySet().iterator() ; i.hasNext() ; ) {
+				String player = i.next();
+				int strength = sides.get(player).intValue();
+				if (strength > winnerStrength) {
+					winnerName = player;
+					winnerStrength = strength;
+					tie = false;
+				}
+				else if (strength == winnerStrength) {
+					tie = true;
+				}
+			}
+			
+			if (tie) {
+				s = s + "  * tied at strength " + winnerStrength + "\n";
+			}
+			else {
+				s = s + "  * winner is " + winnerName + " with strength " + winnerStrength + "\n"; 
+			}
+			
+		}
+		
+		return s;
+	}
+	
 	/**
 	 * Processes a set of Adjustments orders (supposed each one from a different player) on the
 	 * map, in the context of a given game status. 
@@ -638,7 +682,7 @@ public class Engine {
 				}
 				
 				/* The player has not reach unit limit (A < 12, F < 8, G < 6) */
-				int freeId = m.GetFreeId(adr.getPlayer(), type);
+				int freeId = m.getFreeId(adr.getPlayer(), type);
 				if ( (type.equals("Army") && freeId == Army.MAX) || 
 				     (type.equals("Fleet") && freeId == Fleet.MAX) ||
 				     (type.equals("Garrison") && freeId == Garrison.MAX)
@@ -710,13 +754,13 @@ public class Engine {
 				/* Pre-create the Unit (note that creation could fail beyond this point) */
 				Unit u;
 				if (type.equals("Army")) {
-					u = new Army(m.GetFreeId(adr.getPlayer(), type), adr.getPlayer(), null, p.getElite());
+					u = new Army(m.getFreeId(adr.getPlayer(), type), adr.getPlayer(), null, p.getElite());
 				}
 				else if (type.equals("Fleet")) {
-					u = new Fleet(m.GetFreeId(adr.getPlayer(), type), adr.getPlayer(), null, p.getElite());
+					u = new Fleet(m.getFreeId(adr.getPlayer(), type), adr.getPlayer(), null, p.getElite());
 				}
 				else { // garrison
-					u = new Garrison(m.GetFreeId(adr.getPlayer(), type), adr.getPlayer(), (City)null, p.getElite());
+					u = new Garrison(m.getFreeId(adr.getPlayer(), type), adr.getPlayer(), (City)null, p.getElite());
 				}
 				
 				/* Check money and buy */
