@@ -347,7 +347,7 @@ public class Map {
 		for (Iterator<String> i = l.iterator(); i.hasNext() ; ) {
 			Territory t = territories.get(i.next());
 			
-			if (t instanceof Province && ((Province)t).getController()!=null) {
+			if (t instanceof Province) {
 				
 				/* The "code" is as follows:
 				 * 
@@ -360,41 +360,49 @@ public class Map {
 				 * Note that Seas have no controller by definition */
 			 
 				String provinceName = ((Province)t).getName();
-				String provinceController = ((Province)t).getController();
 				
-				/* has city? */
-				City c = ((Province)t).getCity();
-				if (c == null) {
-					appendToHashMap(controlledProvinces, provinceController, provinceName);
-				}
-				/* is fortified? */
-				else if (c.isFortified()) {
-					
-					/* has autonomous garrison? */
-					if (c.hasAutonomousGarrison()) {
-						appendToHashMap(controlledProvinces, provinceController, provinceName + "(-)");
+				if (((Province)t).getController()!=null) {
+					String provinceController = ((Province)t).getController();
+				
+					/* has city? */
+					City c = ((Province)t).getCity();
+					if (c == null) {
+						appendToHashMap(controlledProvinces, provinceController, provinceName);
 					}
-					/* has occupying garrison? */
-					else if (c.getUnit()!=null) {
-						String cityController = c.getUnit().getOwner();
+					/* is fortified? */
+					else if (c.isFortified()) {
+					
+						/* has autonomous garrison? */
+						if (c.hasAutonomousGarrison()) {
+							appendToHashMap(controlledProvinces, provinceController, provinceName + "(-)");
+						}
+						/* has occupying garrison? */
+						else if (c.getUnit()!=null) {
+							String cityController = c.getUnit().getOwner();
 						
-						/* garrison owner is the same than province controller? */
-						if (cityController.equals(provinceController)) {
+							/* garrison owner is the same than province controller? */
+							if (cityController.equals(provinceController)) {
+								appendToHashMap(controlledProvinces, provinceController, provinceName + "(+)");
+							}
+							/* is not the same */
+							else {
+								appendToHashMap(controlledProvinces, provinceController, provinceName + "(-)");
+								appendToHashMap(controlledProvinces, cityController, provinceName + "(c)");								
+							}
+						}
+						else {
+							/* no garrison, so city belongs to the province controller */
 							appendToHashMap(controlledProvinces, provinceController, provinceName + "(+)");
 						}
-						/* is not the same */
-						else {
-							appendToHashMap(controlledProvinces, provinceController, provinceName + "(-)");
-							appendToHashMap(controlledProvinces, cityController, provinceName + "(c)");								
-						}
 					}
-					else {
-						/* no garrison, so city belongs to the province controller */
-						appendToHashMap(controlledProvinces, provinceController, provinceName + "(+)");
+					else { // city but not fortified
+						appendToHashMap(controlledProvinces, provinceController, provinceName);
 					}
 				}
-				else { // city but not fortified
-					appendToHashMap(controlledProvinces, provinceController, provinceName);
+				/* Even in the case the province has no controller (i.e. controller null), the city could have a controller */
+				else if (((Province)t).getCity() != null && ((Province)t).getCity().getUnit()!=null) {
+					String cityController = ((Province)t).getCity().getUnit().getOwner();
+					appendToHashMap(controlledProvinces, cityController, provinceName + "(c)");
 				}
 			}
 		}
@@ -416,7 +424,7 @@ public class Map {
 		s = s + "                 by another player with a Garrison unit there or has an AutonomousGarrison)\n";
 		s = s + "   Turin(c)   -> the player controls the city *but not* the province\n";
 		s = s + "\n";
-		s = s + " (Note that Seas have no controller by definition)\n";
+		s = s + "   (Note that Seas have no controller by definition)\n";
 		s = s + "\n";
 		
 		/* MILITARY UNITS */
@@ -854,7 +862,7 @@ public class Map {
 	 * @param type
 	 * @return the first free identifier, or 'max' if no free identifier is found
 	 */
-	public int GetFreeId(String player, String type) {
+	public int getFreeId(String player, String type) {
 				
 		Vector<Unit> v;
 
