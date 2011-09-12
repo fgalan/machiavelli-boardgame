@@ -253,6 +253,11 @@ public class Engine {
 						
 						Advance ad = (Advance)a;
 					
+						/* To check if the territory to advance is on the map */
+						if (m.getTerritoryByName(ad.getTerritory())==null) {
+							throw new ProcessCommandsException("processing <"+ad+">: "+ad.getTerritory()+" is not a valid territory name on the map");
+						}
+					
 						/* To check that advance is legally valid */
 						String lm = m.isLegalMove(u, m.getTerritoryByName(ad.getTerritory()));
 						if (!lm.equals("")) {
@@ -367,6 +372,11 @@ public class Engine {
 					}
 					else if (a instanceof Support) {
 						Support sp = (Support)a;
+						
+						/* To check if the supported territory is on the map */
+						if (m.getTerritoryByName(sp.getTerritory())==null) {
+							throw new ProcessCommandsException("processing <"+sp+">: "+sp.getTerritory()+" is not a valid territory name on the map");
+						}
 						
 						/* To check that support is legally valid */
 						String lm = m.isLegalMove(u, m.getTerritoryByName(sp.getTerritory()));
