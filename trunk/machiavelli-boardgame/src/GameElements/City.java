@@ -53,9 +53,12 @@ public class City {
 	public void clearUnit() {
 		unit = null;
 	}	
-	public void setUnderSiege(boolean underSiege) {
-		this.underSiege = underSiege;
+	public void setUnderSiege() {
+		this.underSiege = true;
 	}
+	public void clearUnderSiege() {
+		this.underSiege = false;
+	}	
 	public boolean isUnderSiege() {
 		return underSiege;
 	}

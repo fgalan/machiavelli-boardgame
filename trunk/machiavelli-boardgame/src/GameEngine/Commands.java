@@ -240,7 +240,7 @@ public class Commands {
 				}
 				/* <Transport armyId="" player=""/> */
 				else if (actionType.equals("Transport")) {
-					return new BuyUnit(amount, province, new Transport(at.getNamedItem("armyId").getNodeValue(), at.getNamedItem("player").getNodeValue()));
+					return new BuyUnit(amount, province, new Transport(Integer.parseInt(at.getNamedItem("armyId").getNodeValue()), at.getNamedItem("player").getNodeValue()));
 				}
 				/* <Convert newType="Fleet"/> */
 				else if (actionType.equals("Convert")) {
@@ -289,7 +289,7 @@ public class Commands {
 				}
 				/* <Transport armyId="" player=""/> */
 				else if (actionType.equals("Transport")) {
-					return new BuyAutonomousGarrison(amount, province, new Transport(at.getNamedItem("armyId").getNodeValue(), at.getNamedItem("player").getNodeValue()));
+					return new BuyAutonomousGarrison(amount, province, new Transport(Integer.parseInt(at.getNamedItem("armyId").getNodeValue()), at.getNamedItem("player").getNodeValue()));
 				}
 				/* <Convert newType="Fleet"/> */
 				else if (actionType.equals("Convert")) {
@@ -343,7 +343,7 @@ public class Commands {
 				}
 				/* <Transport armyId="" player=""/> */
 				else if (actionType.equals("Transport")) {
-					return new Transport(type, id, at.getNamedItem("armyId").getNodeValue(), at.getNamedItem("player").getNodeValue());
+					return new Transport(type, id, Integer.parseInt(at.getNamedItem("armyId").getNodeValue()), at.getNamedItem("player").getNodeValue());
 				}
 				/* <Convert newType="Fleet"/> */
 				else if (actionType.equals("Convert")) {
