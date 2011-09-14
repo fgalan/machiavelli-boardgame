@@ -25,10 +25,10 @@ import GameElements.Map;
 
 public class Transport extends Action {
 	
-	private String armyId;
+	private int armyId;
 	private String player;
 	
-	public Transport(String type, int id, String aid, String p) {
+	public Transport(String type, int id, int  aid, String p) {
 		super(type, id);
 		this.armyId = aid;
 		this.player = p;
@@ -37,7 +37,7 @@ public class Transport extends Action {
 	/**
 	 * For "anonymous unit" actions (in <Buy*>)
 	 */
-	public Transport(String aid, String p) {
+	public Transport(int aid, String p) {
 		this.armyId = aid;
 		this.player = p;
 	}
@@ -53,4 +53,12 @@ public class Transport extends Action {
 		String s = super.toStringWithElite(m, player) + " transports army A" + armyId + " of player " + player;
 		return s;
 	}
+
+	public String getPlayer() {
+		return player;
+	}
+	
+	public int getArmyId() {
+		return armyId;
+	}	
 }
