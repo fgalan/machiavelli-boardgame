@@ -31,7 +31,7 @@ public class RandomProcesses {
 	
 	private static Random generator = new Random(System.currentTimeMillis());
 	
-	/* Comented lines in tables are for the old Machiavelli board*/
+	/* Commented lines in tables are for the old Machiavelli board*/
 	
 	private static final String famineTable[][] = { 
 		// Row 1 (actually it is not used)
