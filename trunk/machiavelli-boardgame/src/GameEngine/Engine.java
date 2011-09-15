@@ -22,6 +22,7 @@ package GameEngine;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Random;
 import java.util.Vector;
 import java.util.concurrent.CountDownLatch;
 
@@ -56,6 +57,7 @@ import GameElements.Garrison;
 import GameElements.City;
 import GameElements.Map;
 import GameElements.Province;
+import GameElements.Sea;
 import GameElements.Territory;
 import GameElements.Unit;
 
@@ -85,13 +87,13 @@ public class Engine {
 		if (cmds != null) {
 			
 			GenericResult rExpenses = new GenericResult();
-			GenericResult rActions = new GenericResult();
+			rExpenses.addResult("expenses: ");
 			GenericResult rResolv = new GenericResult();
+			rResolv.addResult("turn resolution (including conflicts):");
 			
 			/* Process Expenses */
 			
-			boolean atLeatOneExpense = false;			
-			rExpenses.addResult("expenses: ");			
+			boolean atLeatOneExpense = false;						
 			for (Iterator<Commands> i = cmds.iterator(); i.hasNext() ; ) {
 				
 				Commands c = i.next();
@@ -135,7 +137,7 @@ public class Engine {
 							/* FIXME: rules doubt: Garrison count for checking adjacency in the case of
 							 * bridges or not? */
 							Unit u = k.next();
-							if (m.areAdjancent(u.getLocation(), p)) {
+							if (m.areAdjacent(u.getLocation(), p)) {
 								adjacency = true;
 								break; // for in k
 							}
@@ -229,19 +231,82 @@ public class Engine {
 			if (!atLeatOneExpense) {
 				rExpenses.addResult("  none");
 			}
-			r.addResult(rExpenses);			
+			r.addResult(rExpenses);
 			
-			/* Process Actions */
+			HashMap<String,GenericResult> rActions = new HashMap<String,GenericResult>(); 
+			/* Create HashMap with GenericResult for each player */
+			for (Iterator<Commands> i = cmds.iterator(); i.hasNext() ; ) {
+				Commands c = i.next();
+				rActions.put(c.getPlayer(), new GenericResult());
+				rActions.get(c.getPlayer()).addResult("player " + c.getPlayer() + " commands:");
+			}
+			
+			/* Transport actions are processed first, because they need to be processed before Advance */
+			// FIXME: chicken-and-egg problem with doing processing in this way: Transport-Advance-Conflict,
+			// as the result of the conflict could be the retreat of a Fleet ordering transport
+			HashMap<String,Transportation> transportations = new HashMap<String,Transportation>(); 
+			for (Iterator<Commands> i = cmds.iterator(); i.hasNext() ; ) {
+				Commands c = i.next();
+				for (Iterator<Action> j = c.getActions().iterator(); j.hasNext();  ) {
+					Action a = j.next();
+					
+					/* FIXME: I don't like the following too much, but is the easy way of splitting actions
+					 * processing in the two consecutive loops */
+					if (!(a instanceof Transport)) {
+						continue;
+					}
+					Transport tr = (Transport)a;
+					
+					rActions.get(c.getPlayer()).addResult("- " + a.toStringWithElite(m, c.getPlayer()));
+					
+					/* Search for a matching unit in the map */
+					Unit u = a.getAssociatedUnitInMap(c.getPlayer(), m);
+					if (u == null) {
+						throw new ProcessCommandsException("action '" + a.toStringWithElite(m, c.getPlayer()) + "' for player " + c.getPlayer() +" has no matching unit in the map");
+					}
+					
+					/* Check the transported unit exist in the map */
+					Vector<Unit> units = m.getUnitBelongingToPlayer(tr.getPlayer(), "Army");
+					boolean found = false;
+					for (Iterator<Unit> k = units.iterator(); k.hasNext() ; ) {
+						Unit uu = k.next();
+						if (uu.getId() == tr.getArmyId()) {
+							found = true;
+							break;
+						}
+					}
+					if (!found) {
+						rActions.get(c.getPlayer()).addResult("  * INVALID: ilegal transport, A"+tr.getArmyId()+" from player "+tr.getPlayer()+" doesn't exist, unit actions becomes 'Hold'");
+						continue;
+					}
+					
+					/* Check that transport make sense (i.e. is there a "tranportation line" between the
+					 * Fleet and the Army */
+					//FIXME: this could be great, but is difficult :) and actually not necessary (it is up
+					// to the player ensure that Transport make sense)					
+					
+					/* Add Transportation instance to the HashMap */
+					transportations.put(tr.getAssociatedUnitInMap(c.getPlayer(), m).getLocation().getName(),new Transportation(tr.getArmyId(), tr.getPlayer()));
+					
+				}
+			}
+			
+			/* Process other Actions */
 			Vector <TerritoryUnderMovement> tums = new Vector<TerritoryUnderMovement>();			
 			for (Iterator<Commands> i = cmds.iterator(); i.hasNext() ; ) {
 				
 				Commands c = i.next();				
 								
-				rActions.addResult("player " + c.getPlayer() + " commands:");
-				
 				for (Iterator<Action> j = c.getActions().iterator(); j.hasNext();  ) {
 					Action a = j.next();
-					rActions.addResult("- " + a.toStringWithElite(m, c.getPlayer()));
+					
+					/* FIXME: I don't like the following too much, but is the easy way of splitting actions
+					 * processing in the two consecutive loops */					
+					if (a instanceof Transport) {
+						continue;
+					}
+					
+					rActions.get(c.getPlayer()).addResult("- " + a.toStringWithElite(m, c.getPlayer()));
 					
 					/* Search for a matching unit in the map */
 					Unit u = a.getAssociatedUnitInMap(c.getPlayer(), m);
@@ -259,11 +324,14 @@ public class Engine {
 						}
 					
 						/* To check that advance is legally valid */
-						String lm = m.isLegalMove(u, m.getTerritoryByName(ad.getTerritory()));
+						String lm = m.isLegalMove(u, m.getTerritoryByName(ad.getTerritory()), transportations);
 						if (!lm.equals("")) {
-							rActions.addResult("  * INVALID: ilegal advance, unit actions becomes 'Hold': " + lm);
+							rActions.get(c.getPlayer()).addResult("  * INVALID: ilegal advance, unit actions becomes 'Hold': " + lm);
 							continue; //for in j
 						}
+						
+						/* To check that the Unit is not besieging */
+						// TODO: not sure if this is actually a rule
 						
 						/* Search for a TerritoryUnderMovement associated to the same province; if doesn't
 						 * exits created a new one */
@@ -284,8 +352,39 @@ public class Engine {
 
 					}
 					else if (a instanceof Besiege) {
-						// TODO
-						throw new ProcessCommandsException("'Besiege' operation not implemented for player " + c.getPlayer() + " action: " + a.toStringWithElite(m, c.getPlayer()));
+						
+						/* To check if there is the unit is in a Province with city */
+						if (!(u.getLocation() instanceof Province)) {
+							rActions.get(c.getPlayer()).addResult("  * INVALID: ilegal Besiegue, unit actions becomes 'Hold': can not Besiegue in the Sea");
+							continue; // for in j							
+						}
+						Province p = ((Province)u.getLocation());
+						
+						if (p.getCity() == null) {
+							rActions.get(c.getPlayer()).addResult("  * INVALID: ilegal Besiegue, unit actions becomes 'Hold': can not Besiegue in a Province without city");
+							continue; // for in j							
+						}
+						/* If the unit is a Fleet, to check if the city has a port */
+						if (u instanceof Fleet && !(p.getCity().isPort())) {
+							rActions.get(c.getPlayer()).addResult("  * INVALID: ilegal Besiegue, unit actions becomes 'Hold': Fleets only can besiegue cities with port");
+							continue; // for in j
+						}	
+						/* To check if there is actually a Garrison in the city */
+						if (p.getCity().getUnit() == null && !p.getCity().hasAutonomousGarrison()) {
+							rActions.get(c.getPlayer()).addResult("  * INVALID: ilegal Besiegue, unit actions becomes 'Hold': city has no garrison inside");
+							continue; // for in j
+						}
+							
+						/* Resolve action */
+						if (p.getCity().isUnderSiege()) {
+							/* City under siege: resolve the siege */
+							//TODO
+						}
+						else {
+							/* Cite not under siege: put it under siege */
+							p.getCity().setUnderSiege();
+							rResolv.addResult("- unit " + u + " in " + p.getName() + " besiegues city");
+						}
 					}
 					else if (a instanceof Convert) {
 						// TODO: implement voluntary disband as convert operation
@@ -294,28 +393,28 @@ public class Engine {
 						
 						/* To check that convert is legally valid */
 						if (u instanceof Army && co.getNewType().equals("Fleet")) {
-							rActions.addResult("  * INVALID: ilegal convert, unit actions becomes 'Hold': Army cannot be converted to Fleet");
+							rActions.get(c.getPlayer()).addResult("  * INVALID: ilegal convert, unit actions becomes 'Hold': Army cannot be converted to Fleet");
 							continue; // for in j
 						}
 						if (u instanceof Fleet && co.getNewType().equals("Army")) {
-							rActions.addResult("  * INVALID: ilegal convert, unit actions becomes 'Hold': Fleet cannot be converted to Army");
+							rActions.get(c.getPlayer()).addResult("  * INVALID: ilegal convert, unit actions becomes 'Hold': Fleet cannot be converted to Army");
 							continue; // for in j
 						}
 						if ( (u instanceof Army && co.getNewType().equals("Army"))||(u instanceof Fleet && co.getNewType().equals("Fleet")) ) {
-							rActions.addResult("  * INVALID: ilegal convert, unit actions becomes 'Hold': original and new types cannot be the same");
+							rActions.get(c.getPlayer()).addResult("  * INVALID: ilegal convert, unit actions becomes 'Hold': original and new types cannot be the same");
 							continue; // for in j
 						}						
 						if (!(u.getLocation() instanceof Province)) {
-							rActions.addResult("  * INVALID: ilegal convert, unit actions becomes 'Hold': unit must be in a province with a fortificed city");
+							rActions.get(c.getPlayer()).addResult("  * INVALID: ilegal convert, unit actions becomes 'Hold': unit must be in a province with a fortificed city");
 							continue; // for in j
 						}
 						Province p = (Province) u.getLocation();
 						if ( (p.getCity() == null) || (p.getCity() != null && !p.getCity().isFortified()) ) {
-							rActions.addResult("  * INVALID: ilegal convert, unit actions becomes 'Hold': unit must be in a province with a fortificed city");
+							rActions.get(c.getPlayer()).addResult("  * INVALID: ilegal convert, unit actions becomes 'Hold': unit must be in a province with a fortificed city");
 							continue; // for in j
 						}
 						if ((co.getNewType().equals("Fleet") || u instanceof Fleet) && ! p.getCity().isPort() ) {
-							rActions.addResult("  * INVALID: ilegal convert, unit actions becomes 'Hold': this kind of conversion required a city with port");
+							rActions.get(c.getPlayer()).addResult("  * INVALID: ilegal convert, unit actions becomes 'Hold': this kind of conversion required a city with port");
 							continue; // for in j
 						}
 						
@@ -347,7 +446,7 @@ public class Engine {
 							/* Check that city is empty, otherwise the action is invalid (note that in this
 							 * case it is not a conflict) */
 							if (p.getCity().getUnit() != null || p.getCity().hasAutonomousGarrison()) {
-								rActions.addResult("  * INVALID: ilegal convert, unit actions becomes 'Hold': city has a Garrison");
+								rActions.get(c.getPlayer()).addResult("  * INVALID: ilegal convert, unit actions becomes 'Hold': city has a Garrison");
 							}
 							else {
 								
@@ -379,9 +478,9 @@ public class Engine {
 						}
 						
 						/* To check that support is legally valid */
-						String lm = m.isLegalMove(u, m.getTerritoryByName(sp.getTerritory()));
+						String lm = m.isLegalMove(u, m.getTerritoryByName(sp.getTerritory()), null);
 						if (!lm.equals("")) {
-							rActions.addResult("  * INVALID: ilegal support, unit actions becomes 'Hold': " + lm);
+							rActions.get(c.getPlayer()).addResult("  * INVALID: ilegal support, unit actions becomes 'Hold': " + lm);
 							continue; // for in j
 						}						
 						
@@ -407,32 +506,25 @@ public class Engine {
 						tum.addSupportingUnit(u,sp.getPlayer());
 						
 					}
-					else if (a instanceof Transport) {
-						// TODO
-						throw new ProcessCommandsException("'Transport' operation not implemented for player " + c.getPlayer() + " action: " + a.toStringWithElite(m, c.getPlayer()));
-					}
 					else {
 						// This must not happen!
 						throw new ProcessCommandsException("unknown action for player " + c.getPlayer() + ": " + a.toStringWithElite(m, c.getPlayer()));
 					}
 				}
 				
-				/* For formatting purposes */
-				rActions.addResult("");
 			}
 			
-			rActions.addResult("turn resolution (including conflicts):");
-			r.addResult(rActions);
+			/* Merging all the per-player GenericResult in the general Result objec */
+			for (Iterator<String> j = rActions.keySet().iterator(); j.hasNext();) {
+				r.addResult(rActions.get(j.next()));
+			}
 			
-			rResolv.addResult(processNoConflicts(tums, m));
-			rResolv.addResult(processConflicts(tums, m));
-
-			/* Process TerritoryUnderMovement accumulated list, including conflict resolution */
-			//for (Iterator<TerritoryUnderMovement> j = tums.iterator(); j.hasNext();) {
-			//	TerritoryUnderMovement tum = j.next();
-			//	rResolv.addResult(tum.toString());
-			//	rResolv.addResult("");
-			//}
+			Vector<String> retreatForbidden = new Vector<String>();
+			Vector<Unit> mustRetreat = new Vector<Unit>();
+			rResolv.addResult(processNoConflicts(tums, m, retreatForbidden));
+			rResolv.addResult(processConflicts(tums, m, retreatForbidden, mustRetreat));
+			rResolv.addResult(proccessRetreats(m, retreatForbidden, mustRetreat));
+			rResolv.addResult(processSelfBlocks(tums, m));
 		
 			r.addResult(rResolv);
 			
@@ -469,15 +561,15 @@ public class Engine {
 		
 		return r;
 	}
-	
-	private static String processNoConflicts(Vector<TerritoryUnderMovement> tums, Map m) {
-		/* We process elements in the TerritoryUnderMovement Vector that doesn't involve conflict: 
+
+	private static String processNoConflicts(Vector<TerritoryUnderMovement> tums, Map m, Vector<String> retreatForbidden) {
+		/* We process elements in the TerritoryUnderMovement Vector that don't involve conflict: 
 		 * 
 		 * 1) only 1 member in the advancing units vector, no garrison conversion and no unit currently 
 		 *   Occupying territory
-		 * 2) 0 members in the advancing units vector, garrison conversion and no unit currently occuping
-		 *   territory
-		 * 
+		 * 2) 0 members in the advancing units vector and
+		 *   a. garrison conversion and no unit currently occupying territory
+		 *   b. other situation (e.g. a unit supporting a place where no other unit is advancing)
 		 */
 		
 		boolean recursiveInvocation = false;
@@ -488,7 +580,7 @@ public class Engine {
 			TerritoryUnderMovement tum = j.next();
 			
 			if (tum.getAdvancingUnits().size() == 1 && tum.getGarrisonConvertToArmy() == null 
-					&& tum.getGarrisonConvertToFleet() == null && tum.getTerritory().getUnit() == null) {
+					&& tum.getGarrisonConvertToFleet() == null && tum.getTerritory().getUnit() == null) {  // 1)
 				
 				Unit u = tum.getAdvancingUnits().firstElement();
 				s = s + "- unit " + u + " advances from " + u.getLocation().getName() + " to " + tum.getTerritory().getName() + "\n";
@@ -499,29 +591,36 @@ public class Engine {
 					((Province)m.getTerritoryByName(tum.getTerritory().getName())).setController(u.getOwner());					
 				}
 				tumsRemoval.add(tum);
+				retreatForbidden.add(tum.getTerritory().getName());
 				recursiveInvocation = true;
 			}
-			else if (tum.getAdvancingUnits().size() == 0 && tum.getTerritory().getUnit() == null &&
-					(tum.getGarrisonConvertToArmy() != null || tum.getGarrisonConvertToFleet() != null) ) {
+			else if (tum.getAdvancingUnits().size() == 0) { // 2.a)
 				
-				/* Create the new unit */
-				Unit u;
-				if (tum.getGarrisonConvertToArmy() != null) {
-					String player = tum.getGarrisonConvertToArmy().getOwner();
-					int elite = tum.getGarrisonConvertToArmy().getElite();
-					u = new Army(m.getFreeId(player, "Army"), player, (Province)tum.getTerritory(), elite);
-					s = s + "- unit " + tum.getGarrisonConvertToArmy() + " in " + tum.getTerritory().getName() + " converts into " + u + "\n";
-				}
-				else { // tum.getCarrisonConvertToFleet() != null
-					String player = tum.getGarrisonConvertToFleet().getOwner();
-					int elite = tum.getGarrisonConvertToFleet().getElite();
-					u = new Fleet(m.getFreeId(player, "Fleet"), player, (Province)tum.getTerritory(), elite);
-					s = s + "- unit " + tum.getGarrisonConvertToFleet() + " in " + tum.getTerritory().getName() + " converts into " + u + "\n";					
-				}
+				if (tum.getTerritory().getUnit() == null 
+					&& (tum.getGarrisonConvertToArmy() != null || tum.getGarrisonConvertToFleet() != null) ) {
+					
+					/* Create the new unit */
+					Unit u;
+					if (tum.getGarrisonConvertToArmy() != null) {
+						String player = tum.getGarrisonConvertToArmy().getOwner();
+						int elite = tum.getGarrisonConvertToArmy().getElite();
+						u = new Army(m.getFreeId(player, "Army"), player, (Province)tum.getTerritory(), elite);
+						s = s + "- unit " + tum.getGarrisonConvertToArmy() + " in " + tum.getTerritory().getName() + " converts into " + u + "\n";
+					}
+					else { // tum.getCarrisonConvertToFleet() != null
+						String player = tum.getGarrisonConvertToFleet().getOwner();
+						int elite = tum.getGarrisonConvertToFleet().getElite();
+						u = new Fleet(m.getFreeId(player, "Fleet"), player, (Province)tum.getTerritory(), elite);
+						s = s + "- unit " + tum.getGarrisonConvertToFleet() + " in " + tum.getTerritory().getName() + " converts into " + u + "\n";					
+					}
 				
-				((Province)m.getTerritoryByName(tum.getTerritory().getName())).getCity().setUnit(null);
-				m.getTerritoryByName(tum.getTerritory().getName()).setUnit(u);
+					((Province)m.getTerritoryByName(tum.getTerritory().getName())).getCity().setUnit(null);
+					m.getTerritoryByName(tum.getTerritory().getName()).setUnit(u);
+				}
+				/* There is not an explicit clause for 2.b), it would be an empty 'else' in this place */
+					
 				tumsRemoval.add(tum);
+				retreatForbidden.add(tum.getTerritory().getName());
 				recursiveInvocation = true;
 			}
 		}
@@ -535,30 +634,31 @@ public class Engine {
 		
 		/* If at least one change has been done, invoke recursively the function */
 		if (recursiveInvocation) {
-			return s + processNoConflicts(tums, m);
+			return s + processNoConflicts(tums, m, retreatForbidden);
 		}
 		
 		return s;
 	}
-
-	private static String processConflicts(Vector<TerritoryUnderMovement> tums, Map m) throws ProcessCommandsException {
+	
+	private static String processConflicts(Vector<TerritoryUnderMovement> tums, Map m, Vector<String> retreatForbidden, Vector<Unit> mustRetreat) throws ProcessCommandsException {
 		
 		String s = "";
+		Vector<TerritoryUnderMovement> tumsRemoval = new Vector<TerritoryUnderMovement>();
 		
-		for (Iterator<TerritoryUnderMovement> j = tums.iterator(); j.hasNext();) {
-			TerritoryUnderMovement tum = j.next();
+		for (Iterator<TerritoryUnderMovement> i = tums.iterator(); i.hasNext();) {
 			
-			s = s + "- conflict at " + tum.getTerritory().getName() + ":\n";
-			
+			TerritoryUnderMovement tum = i.next();
 			HashMap<String,Integer> sides = tum.getSides();
 			
 			/* Search the winner */
 			String winnerName = "";
+			String sidesString = "( ";
 			int winnerStrength = -1;
 			boolean tie = false;
-			for (Iterator<String> i = sides.keySet().iterator() ; i.hasNext() ; ) {
-				String player = i.next();
+			for (Iterator<String> j = sides.keySet().iterator() ; j.hasNext() ; ) {
+				String player = j.next();
 				int strength = sides.get(player).intValue();
+				sidesString = sidesString + player + "=" + strength + " ";
 				if (strength > winnerStrength) {
 					winnerName = player;
 					winnerStrength = strength;
@@ -568,18 +668,98 @@ public class Engine {
 					tie = true;
 				}
 			}
+			sidesString = sidesString + ")";
 			
+			s = s + "- conflict at " + tum.getTerritory().getName() + " " + sidesString + ":\n";
 			if (tie) {
 				s = s + "  * tied at strength " + winnerStrength + "\n";
+				s = s + "  * as result, nothing happens\n";
+				retreatForbidden.add(tum.getTerritory().getName());
 			}
-			else {
-				s = s + "  * winner is " + winnerName + " with strength " + winnerStrength + "\n"; 
+			else {				
+				s = s + "  * winner is " + winnerName + " with strength " + winnerStrength + "\n";
+				
+				/* If a not-winning unit is in the territory, make it Retreat */
+				if  (tum.getTerritory().getUnit() != null) {
+					Unit u = tum.getTerritory().getUnit();
+					s = s + "  * " + u + " at the place must retreat\n";
+					mustRetreat.add(u);
+				}
+				
+				/* Search the advancing (or converting) unit belonging to the winning player and put in the Territory,
+				 * or doing nothing if the winning unit was Holding */
+				// TODO				
+				
+				retreatForbidden.add(tum.getTerritory().getName());
 			}
 			
 		}
 		
+		/* Remove processed elements from tum. Note that we can not this inside the loop, because a
+		 * ConcurrentModificationException will occur */
+		for (Iterator<TerritoryUnderMovement> j = tumsRemoval.iterator(); j.hasNext();) {
+			TerritoryUnderMovement tum = j.next();
+			tums.remove(tum);
+		}		
+		
 		return s;
 	}
+	
+	private static String processSelfBlocks(Vector<TerritoryUnderMovement> tums, Map m) {
+				
+		String s = "";
+		
+		for (Iterator<TerritoryUnderMovement> i = tums.iterator(); i.hasNext();) {
+			TerritoryUnderMovement tum = i.next();
+			
+			Unit u1 = ((Unit)tum.getAdvancingUnits().get(0));
+			Unit u2 = tum.getTerritory().getUnit();
+			
+			if (u2 != null) {
+				s = s + "- unit " + u1 + " at " + u1.getLocation().getName() + " can not move to " + tum.getTerritory().getName() + " due to " + u2 + " (owned by the same player) is at that place\n";
+			}
+		}
+		
+		if (!s.isEmpty()) {
+			s = "blocked movements:\n" + s;
+		}
+		
+		return s;
+
+	}
+	
+	private static String proccessRetreats(Map m, Vector<String> retreatForbidden, Vector<Unit> mustRetreat) {
+		String s = "";
+		
+		for (Iterator<Unit> i = mustRetreat.iterator(); i.hasNext(); ) {
+			Unit u = i.next();
+			Vector<String> candidates = new Vector();
+			for (Iterator<String> j = u.getLocation().getAdjacents().iterator(); j.hasNext(); ) {
+				String t = j.next();
+				/* Check if the adjacency is a valid retreat place */
+				if (retreatForbidden.indexOf(t) < 0 
+					&& (!(m.getTerritoryByName(t) instanceof Sea && u instanceof Army))
+				    && m.getTerritoryByName(t).getUnit() != null) {
+					candidates.add(t);
+				}
+			}
+			//FIXME: use Retreat list, if available
+			//NOOOOOOOOOOOOOOOOOO, we need also a personalized retreatForbidden, to avoid that a
+			//pushed out unit gets into the territory (now free) of the pushing unit by the shared border
+			Random generator = new Random(System.currentTimeMillis());
+			String dest = candidates.get(generator.nextInt(candidates.size()));
+			s = s + "- " + u + "retreats to " + dest + "\n";
+			m.getTerritoryByName(u.getLocation().getName()).setUnit(null);
+			m.getTerritoryByName(dest).setUnit(u);
+			u.setLocation(m.getTerritoryByName(dest));
+		}
+		
+		if (!s.isEmpty()) {
+			s = "retreats:\n" + s;
+		}
+		
+		return s;
+	}	
 	
 	/**
 	 * Processes a set of Adjustments orders (supposed each one from a different player) on the
