@@ -41,6 +41,7 @@ import org.xml.sax.SAXException;
 
 import Exceptions.MapCoherenceException;
 import Exceptions.ParseMapException;
+import GameEngine.Transportation;
 
 public class Map {
 	
@@ -326,6 +327,12 @@ public class Map {
 	public String toString() {
 		String s = "";
 		
+		/* Check map consistency */
+		String ss = checkInconsistencies();
+		if (ss != null) {
+			return "Inconsistent map: " + ss;
+		}
+		
 		/* PLAYERS */
 		
 		s = s + "PLAYERS:\n";
@@ -469,6 +476,7 @@ public class Map {
 		/* TEMPORARY MARKERS */
 		String famine = "";
 		String rebellion = "";
+		String siege = "";
 		/* Process territories one by one (in alphabetic order)*/
 		l = new Vector<String>(territories.keySet());
 		Collections.sort(l);
@@ -481,15 +489,18 @@ public class Map {
 				if (((Province)t).hasFamine()) {
 					famine = famine + "   famine in " + t.getName() + "\n";
 				}
+				if ( (((Province)t).getCity() != null) && ((Province)t).getCity().isUnderSiege()) {
+					siege = siege + "   city in "+t.getName()+" is under siege by "+t.getUnit()+"\n";
+				}
 			}
-		}
+		}	
 		
 		s = s + "TEMPORARY MARKERS:\n";
-		if (famine.isEmpty() && rebellion.isEmpty()) {
+		if (famine.isEmpty() && rebellion.isEmpty() && siege.isEmpty()) {
 			s = s + "   none\n";
 		}
 		else {
-			s = s + famine + rebellion;
+			s = s + famine + rebellion + siege;
 		}
 		
 		return s;
@@ -926,13 +937,14 @@ public class Map {
 	}
 	
 	/**
-	 * Chech that a movement action (Advance or Support) for Unit u to Territory t is legal according rules. 
+	 * Check that a movement action (Advance or Support) for Unit u to Territory t is legal according rules. 
 	 * Return "" if the movement is legal or a String describing the problem otherwise
-	 * @param u
-	 * @param t
+	 * @param u the Unit to move
+	 * @param t the destination Territory
+	 * @param tr a Transportation hashmap used to extend adjacenties (if null, no adjacenties extensions are used)
 	 * @return
 	 */
-	public String isLegalMove(Unit u, Territory t) {
+	public String isLegalMove(Unit u, Territory t, HashMap<String,Transportation> tr) {
 		/* Garrison */
 		if (u instanceof Garrison) {
 			Garrison g = (Garrison) u;
@@ -947,7 +959,7 @@ public class Map {
 		else if (u instanceof Army) {
 			Army a = (Army) u;
 			/* Is adjacent? */
-			if (! areAdjancent(a.getLocation(), t)) {
+			if (! areAdjacent(a.getLocation(), t, tr, a)) {
 				return "Army in " + a.getLocation().getName() + " to not adjacent territory: " + t.getName();
 			}
 			
@@ -957,41 +969,89 @@ public class Map {
 			}
 			
 			/* Is not occupied by a Fleet/Army of the same player? */
-			if ((t.getUnit()!= null) && (t.getUnit().getOwner().equals(a.getOwner()))) {
-				return "Army in " + a.getLocation().getName() + " to territory occuped by the same player: " + t.getName();
-			}
+			//FIXME: this is only a problem when the unit in that place is not moving or has been blocked by
+			//a conflict
+			//if ((t.getUnit()!= null) && (t.getUnit().getOwner().equals(a.getOwner()))) {
+			//	return "Army in " + a.getLocation().getName() + " to territory occupied by the same player: " + t.getName();
+			//}
 			
 		}
 		/* Fleet */
 		else {
 			Fleet f = (Fleet) u;
 			/* Is adjacent? */
-			if (! areAdjancent(f.getLocation(), t)) {
+			if (! areAdjacent(f.getLocation(), t)) {
 				return "Fleet in " + f.getLocation().getName() + " to not adjacent territory: " + t.getName();
 			}
 			
-			/* Is a sea or coastal province sharing a costal line? */
+			/* Is a sea or coastal province sharing a coastal line? */
 			// TODO: the sharing of a coastal line is not checked, so e.g. Capua -> Aquila (ilegal 
-			// according rules) is not deteced as ilegal movement			
+			// according rules) is not detected as illegal movement			
 			if (t instanceof Province && !((Province)t).isCoast(this) ) {
 				return "Fleet in " + f.getLocation().getName() + " to inland province: " + t.getName();
 			}
 
 			/* Is not occupied by a Fleet/Army of the same player? */
-			if ((t.getUnit()!= null) && (t.getUnit().getOwner().equals(f.getOwner()))) {
-				return "Fleet in " + f.getLocation().getName() + " to territory occuped by the same player: " + t.getName();
-			}
+			//FIXME: this is only a problem when the unit in that place is not moving or has been blocked by
+			//a conflict			
+			//if ((t.getUnit()!= null) && (t.getUnit().getOwner().equals(f.getOwner()))) {
+			//	return "Fleet in " + f.getLocation().getName() + " to territory occupied by the same player: " + t.getName();
+			//}
 		}
 		
 		return "";
 	}
 	
-	public boolean areAdjancent(Territory t1, Territory t2) {
-		for (Iterator<String> i = t1.getAdjacents().iterator(); i.hasNext(); ) {
-			if (t2.getName().equals(i.next())) {
+	/**
+	 * @param tOrig a Territory (where the Army is, in the case of using transportation extension)
+	 * @param tDest a Territory
+	 * @param tr a Transportation hashmap used to extend adjacenties (if null, no adjacenties extensions are used)
+	 * @param a Army (needed if transportation is used)
+	 * @return
+	 */
+	public boolean areAdjacent(Territory tOrig, Territory tDest, HashMap<String,Transportation> tr, Army a) {
+		Vector<String> extraAdjacencies = new Vector<String>(); 
+		if (tr != null) {
+			/* Add new elements to the Vector, based on Transportation */
+			//FIXME: implement the 1-hop transport, enrich with a general (probably recursive) procedure
+			for (Iterator<String> i = tOrig.getAdjacents().iterator(); i.hasNext(); ) {
+				String s = i.next();
+				Territory t1 = getTerritoryByName(s);
+				/* If territory is a Sea and there is a transportation action in that place associated
+				 * to the Unit, then add their not-Sea adjacents to the Vector */
+				if (t1 instanceof Sea && tr.get(t1.getName()) != null 
+						&& tr.get(t1.getName()).getArmyId() == a.getId()
+						&& tr.get(t1.getName()).getPlayer().equals(a.getOwner())) {
+					for (Iterator<String> j = t1.getAdjacents().iterator(); j.hasNext(); ) {
+						Territory t2 = getTerritoryByName(j.next());
+						if (t2 instanceof Province) {
+							// FIXME (check): not sure if adding elements to a Vector "open" in the i-loop
+							// is right
+							extraAdjacencies.add(t2.getName());
+						}
+					}						
+				}
+			}
+		}
+		
+		/* Add extraAdjacencies to tOrig.getAdjacents() clone (the clone is needed to avoid 
+		 * modifying the "hardwire" map on the fly) */
+		Vector<String> adjacencies = (Vector<String>) tOrig.getAdjacents().clone();
+		for (Iterator<String> i = extraAdjacencies.iterator(); i.hasNext();) {
+			adjacencies.add(i.next());
+		}		
+		
+		for (Iterator<String> i = adjacencies.iterator(); i.hasNext(); ) {
+			if (tDest.getName().equals(i.next())) {
 				return true;
 			}
 		}
 		return false;
 	}
+	
+	/* Two-argument polymorphic method variant of the above */
+	public boolean areAdjacent(Territory t1, Territory t2) {
+		return  areAdjacent(t1, t2, null, null);
+	}
+	
 }
