@@ -520,10 +520,11 @@ public class Engine {
 			}
 			
 			Vector<String> retreatForbidden = new Vector<String>();
+			HashMap<Unit, Vector<String>> retreatForbiddenPerUnit = new HashMap<Unit, Vector<String>>();
 			Vector<Unit> mustRetreat = new Vector<Unit>();
 			rResolv.addResult(processNoConflicts(tums, m, retreatForbidden));
-			rResolv.addResult(processConflicts(tums, m, retreatForbidden, mustRetreat));
-			rResolv.addResult(proccessRetreats(m, retreatForbidden, mustRetreat));
+			rResolv.addResult(processConflicts(tums, m, retreatForbidden, retreatForbiddenPerUnit, mustRetreat));
+			rResolv.addResult(proccessRetreats(m, retreatForbidden, retreatForbiddenPerUnit, mustRetreat));
 			rResolv.addResult(processSelfBlocks(tums, m));
 		
 			r.addResult(rResolv);
@@ -640,7 +641,7 @@ public class Engine {
 		return s;
 	}
 	
-	private static String processConflicts(Vector<TerritoryUnderMovement> tums, Map m, Vector<String> retreatForbidden, Vector<Unit> mustRetreat) throws ProcessCommandsException {
+	private static String processConflicts(Vector<TerritoryUnderMovement> tums, Map m, Vector<String> retreatForbidden, HashMap<Unit,Vector<String>> retreatForbiddenPerUnit, Vector<Unit> mustRetreat) throws ProcessCommandsException {
 		
 		String s = "";
 		Vector<TerritoryUnderMovement> tumsRemoval = new Vector<TerritoryUnderMovement>();
@@ -650,8 +651,14 @@ public class Engine {
 			TerritoryUnderMovement tum = i.next();
 			HashMap<String,Integer> sides = tum.getSides();
 			
+			if (sides.size() == 1) {
+				/* This is not actually a conflict, but a self-block that will be 
+				 * processed in processSelfBlocks() */
+				continue;
+			}
+			
 			/* Search the winner */
-			String winnerName = "";
+			String winnerPlayer = "";
 			String sidesString = "( ";
 			int winnerStrength = -1;
 			boolean tie = false;
@@ -660,7 +667,7 @@ public class Engine {
 				int strength = sides.get(player).intValue();
 				sidesString = sidesString + player + "=" + strength + " ";
 				if (strength > winnerStrength) {
-					winnerName = player;
+					winnerPlayer = player;
 					winnerStrength = strength;
 					tie = false;
 				}
@@ -677,22 +684,46 @@ public class Engine {
 				retreatForbidden.add(tum.getTerritory().getName());
 			}
 			else {				
-				s = s + "  * winner is " + winnerName + " with strength " + winnerStrength + "\n";
+				s = s + "  * winner is " + winnerPlayer + " with strength " + winnerStrength + "\n";
+				
+				Unit winnerUnit = null;
+				for (Iterator<Unit> j = tum.getAdvancingUnits().iterator(); j.hasNext(); ) {
+					/* Search the advancing (or converting) unit belonging to the winning player */
+					Unit u = j.next();
+					if (u.getOwner().equals(winnerPlayer)) {
+						winnerUnit = u;
+						break;
+					}
+				}
+				if (winnerUnit == null) {
+					new ProcessCommandsException("not implemented yet converting units or holding units as winners");
+				}				
 				
 				/* If a not-winning unit is in the territory, make it Retreat */
 				if  (tum.getTerritory().getUnit() != null) {
 					Unit u = tum.getTerritory().getUnit();
 					s = s + "  * " + u + " at the place must retreat\n";
 					mustRetreat.add(u);
+					/* The place where the attacking unit came is also forbidden but only for that unit */
+					if (retreatForbiddenPerUnit.get(u) == null) {
+						retreatForbiddenPerUnit.put(u, new Vector<String>());
+					}
+					retreatForbiddenPerUnit.get(u).add(winnerUnit.getLocation().getName());					
 				}
 				
-				/* Search the advancing (or converting) unit belonging to the winning player and put in the Territory,
-				 * or doing nothing if the winning unit was Holding */
-				// TODO				
-				
+				/* Put the winning unit in place in the Territory, or doing nothing if the winning unit 
+				 * was Holding */
+				//FIXME: not implemented for converting units
+				s = s + "  * unit " + winnerUnit + " advances from " + winnerUnit.getLocation().getName() + " to " + tum.getTerritory().getName() + "\n";
+				m.getTerritoryByName(winnerUnit.getLocation().getName()).setUnit(null);
+				m.getTerritoryByName(tum.getTerritory().getName()).setUnit(winnerUnit);
+				winnerUnit.setLocation(tum.getTerritory());
+				if (m.getTerritoryByName(tum.getTerritory().getName()) instanceof Province) {
+					((Province)m.getTerritoryByName(tum.getTerritory().getName())).setController(winnerPlayer);					
+				}
 				retreatForbidden.add(tum.getTerritory().getName());
 			}
-			
+			tumsRemoval.add(tum);	
 		}
 		
 		/* Remove processed elements from tum. Note that we can not this inside the loop, because a
@@ -728,30 +759,42 @@ public class Engine {
 
 	}
 	
-	private static String proccessRetreats(Map m, Vector<String> retreatForbidden, Vector<Unit> mustRetreat) {
+	private static String proccessRetreats(Map m, Vector<String> retreatForbidden, HashMap<Unit,Vector<String>> retreatForbiddenPerUnit, Vector<Unit> mustRetreat) {
 		String s = "";
 		
 		for (Iterator<Unit> i = mustRetreat.iterator(); i.hasNext(); ) {
 			Unit u = i.next();
-			Vector<String> candidates = new Vector();
+			Vector<String> candidates = new Vector<String>();
+			Vector<String> retreatForbiddenPerUnitVector = retreatForbiddenPerUnit.get(u);
 			for (Iterator<String> j = u.getLocation().getAdjacents().iterator(); j.hasNext(); ) {
 				String t = j.next();
 				/* Check if the adjacency is a valid retreat place */
-				if (retreatForbidden.indexOf(t) < 0 
+				if (retreatForbidden.indexOf(t) < 0
+					&& (retreatForbiddenPerUnitVector != null && retreatForbiddenPerUnitVector.indexOf(t) < 0)
 					&& (!(m.getTerritoryByName(t) instanceof Sea && u instanceof Army))
 				    && m.getTerritoryByName(t).getUnit() != null) {
 					candidates.add(t);
 				}
 			}
-			//FIXME: use Retreat list, if available
-			//NOOOOOOOOOOOOOOOOOO, we need also a personalized retreatForbidden, to avoid that a
-			//pushed out unit gets into the territory (now free) of the pushing unit by the shared border
-			Random generator = new Random(System.currentTimeMillis());
-			String dest = candidates.get(generator.nextInt(candidates.size()));
-			s = s + "- " + u + "retreats to " + dest + "\n";
-			m.getTerritoryByName(u.getLocation().getName()).setUnit(null);
-			m.getTerritoryByName(dest).setUnit(u);
-			u.setLocation(m.getTerritoryByName(dest));
+			
+			if (candidates != null && candidates.size() != 0) {
+				//FIXME: use Retreat preferred list, if available
+				Random generator = new Random(System.currentTimeMillis());
+				String dest = candidates.get(generator.nextInt(candidates.size()));
+				m.getTerritoryByName(u.getLocation().getName()).setUnit(null);
+				m.getTerritoryByName(dest).setUnit(u);
+				u.setLocation(m.getTerritoryByName(dest));
+				if (m.getTerritoryByName(dest) instanceof Province) {
+					((Province)m.getTerritoryByName(dest)).setController(u.getOwner());
+				}
+				//FIXME: it seems to be a very improbable situation that two units overlap in their retirement zones */
+				//retreatForbidden.add(tum.getTerritory().getName());
+			}
+			else {
+				s = s + "- unit " + u + " has no legal place to retreat so it is DESTROYED\n";
+				//FIXME: this is not needed, as the unit has been indirectly cleare
+				//m.getTerritoryByName(u.getLocation().getName()).setUnit(null);
+			}
 		}
 		
 		if (!s.isEmpty()) {

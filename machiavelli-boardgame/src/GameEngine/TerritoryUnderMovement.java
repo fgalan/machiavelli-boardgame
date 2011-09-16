@@ -132,7 +132,8 @@ public class TerritoryUnderMovement {
 				sides.put(u.getOwner(), new Integer(u.getStrength()));
 			}
 			else {
-				throw new ProcessCommandsException("player " + u.getOwner() + " self-conflict at " + territory.getName());
+				// FIXME: this is not necessary at the, because this kind of blocking is solved now at processSelfBlocks
+				//throw new ProcessCommandsException("player " + u.getOwner() + " self-conflict at " + territory.getName());
 			}
 		}
 		
