@@ -378,7 +378,20 @@ public class Engine {
 						/* Resolve action */
 						if (p.getCity().isUnderSiege()) {
 							/* City under siege: resolve the siege */
-							//TODO
+							Garrison g = (Garrison)p.getCity().getUnit();
+							if (g != null) {
+								rResolv.addResult("- unit " + u + " in " + p.getName() + " finishes siege: unit " + g + " is destroyed");
+								p.getCity().clearUnit();
+								p.getCity().clearUnderSiege();
+							}
+							else if (p.getCity().hasAutonomousGarrison()){
+								rResolv.addResult("- unit " + u + " in " + p.getName() + " finishes siege: autonomous garrision unit is destroyed");
+								p.getCity().clearAutonomousGarrison();
+								p.getCity().clearUnderSiege();
+							}
+							else {
+								throw new ProcessCommandsException("siegue finishing at " + p.getName() +" but not garrision nor autonomous garrison is at the place!");
+							}
 						}
 						else {
 							/* Cite not under siege: put it under siege */
@@ -657,6 +670,10 @@ public class Engine {
 				continue;
 			}
 			
+			if (tum.getGarrisonConvertToArmy()!= null || tum.getGarrisonConvertToFleet()!=null ) {
+				throw new ProcessCommandsException("at " + tum.getTerritory() + " conflict: converting units taking part in conflicts is not yet implemented");
+			}
+			
 			/* Search the winner */
 			String winnerPlayer = "";
 			String sidesString = "( ";
@@ -695,33 +712,37 @@ public class Engine {
 						break;
 					}
 				}
+				
+				Unit u = tum.getTerritory().getUnit();
 				if (winnerUnit == null) {
-					new ProcessCommandsException("not implemented yet converting units or holding units as winners");
+					/* This means that the winning unit belongs to the player that is holding/converting */
+					s = s + "  * " + u + " at the place mantains its position\n";
 				}				
-				
-				/* If a not-winning unit is in the territory, make it Retreat */
-				if  (tum.getTerritory().getUnit() != null) {
-					Unit u = tum.getTerritory().getUnit();
-					s = s + "  * " + u + " at the place must retreat\n";
-					mustRetreat.add(u);
-					/* The place where the attacking unit came is also forbidden but only for that unit */
-					if (retreatForbiddenPerUnit.get(u) == null) {
-						retreatForbiddenPerUnit.put(u, new Vector<String>());
-					}
+				else { 
+					
+					/* If a not-winning unit is in the territory, make it Retreat */
+					if  (tum.getTerritory().getUnit() != null) {
+						s = s + "  * " + u + " at the place must retreat\n";
+						mustRetreat.add(u);
+						/* The place where the attacking unit came is also forbidden but only for that unit */
+						if (retreatForbiddenPerUnit.get(u) == null) {
+							retreatForbiddenPerUnit.put(u, new Vector<String>());
+						}
 					retreatForbiddenPerUnit.get(u).add(winnerUnit.getLocation().getName());					
-				}
+					}
 				
-				/* Put the winning unit in place in the Territory, or doing nothing if the winning unit 
-				 * was Holding */
-				//FIXME: not implemented for converting units
-				s = s + "  * unit " + winnerUnit + " advances from " + winnerUnit.getLocation().getName() + " to " + tum.getTerritory().getName() + "\n";
-				m.getTerritoryByName(winnerUnit.getLocation().getName()).setUnit(null);
-				m.getTerritoryByName(tum.getTerritory().getName()).setUnit(winnerUnit);
-				winnerUnit.setLocation(tum.getTerritory());
-				if (m.getTerritoryByName(tum.getTerritory().getName()) instanceof Province) {
-					((Province)m.getTerritoryByName(tum.getTerritory().getName())).setController(winnerPlayer);					
+					/* Put the winning unit in place in the Territory, or doing nothing if the winning unit 
+					 *was Holding */
+					//FIXME: not implemented for converting units
+					s = s + "  * unit " + winnerUnit + " advances from " + winnerUnit.getLocation().getName() + " to " + tum.getTerritory().getName() + "\n";
+					m.getTerritoryByName(winnerUnit.getLocation().getName()).setUnit(null);
+					m.getTerritoryByName(tum.getTerritory().getName()).setUnit(winnerUnit);
+					winnerUnit.setLocation(tum.getTerritory());
+					if (m.getTerritoryByName(tum.getTerritory().getName()) instanceof Province) {
+						((Province)m.getTerritoryByName(tum.getTerritory().getName())).setController(winnerPlayer);					
+					}
+					retreatForbidden.add(tum.getTerritory().getName());
 				}
-				retreatForbidden.add(tum.getTerritory().getName());
 			}
 			tumsRemoval.add(tum);	
 		}
