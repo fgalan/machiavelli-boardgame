@@ -267,10 +267,9 @@ public class Map {
 						break;
 					}
 				}
-				
+								
 				c = new City(p, size, fortified, port, ng);
 				
-				break;
 			}
 		}
 		
@@ -299,6 +298,16 @@ public class Map {
 					}
 				}
 			}
+		}
+		
+		/* check if there is a siege marker */
+		if (c != null) {
+			for (int j = 0; j < l.getLength(); j++) {
+				if (l.item(j).getNodeName().equals("UnderSiege")) {
+					c.setUnderSiege();
+					break;
+				}
+			}			
 		}
 	
 		return c;
@@ -619,6 +628,11 @@ public class Map {
 			if (territoryType.equals("Province") && ((Province)t).hasFamine()) {
 				s = s + "      <Famine/>\n";
 			}
+			
+			/* Generate siegue market */
+			if (territoryType.equals("Province") && ((Province)t).getCity() !=null && ((Province)t).getCity().isUnderSiege()) {
+				s = s + "      <UnderSiege/>\n";
+			}			
 			
 			/* Generate rebellion */
 			if (territoryType.equals("Province") && ((Province)t).getRebellion()!=null) {
