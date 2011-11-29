@@ -1067,5 +1067,36 @@ public class Map {
 	public boolean areAdjacent(Territory t1, Territory t2) {
 		return  areAdjacent(t1, t2, null, null);
 	}
+
+	/**
+	 * Remove control in provinces where an enemy (or autonomous) garrison is occupying the city
+	 * and no unit is there, accordingly to: "If one player has a garrison unit in the city while 
+	 * another player has a military unit in the city's province, no one controls the area"
+	 * (rules section 4.3).
+	 * @return string describing changes
+	 */
+	public String removeControls() {
+		
+		String s = "";
+		
+		/* Search all provinces */
+		for (Iterator<String> i = territories.keySet().iterator(); i.hasNext(); ) {
+			Territory t = territories.get(i.next());
+			if (t instanceof Province) {
+				Province p = (Province) t;
+				if (p.getController() != null && p.getCity() != null) { 
+					if (p.getUnit() == null && p.getCity().hasAutonomousGarrison()) {
+						s += "- player "+p.getController()+" loss control on "+p.getName()+" due to he doesn't have any unit there and a autonomous garrison is at the city\n";
+						p.clearController();
+					}
+					else if (p.getUnit() == null && p.getCity().getUnit() != null && !p.getCity().getUnit().getOwner().equals(p.getController())) {
+						s += "- player "+p.getController()+" loss control on "+p.getName()+" due to he doesn't have any unit there and an enemy garrison ("+p.getCity().getUnit()+") is at the city\n";
+						p.clearController();
+					}
+				}
+			}
+		}
+		return s;
+	}
 	
 }

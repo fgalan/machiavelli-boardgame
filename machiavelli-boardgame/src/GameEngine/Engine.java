@@ -540,13 +540,20 @@ public class Engine {
 			rResolv.addResult(proccessRetreats(m, retreatForbidden, retreatForbiddenPerUnit, mustRetreat));
 			rResolv.addResult(processSelfBlocks(tums, m));
 		
+			/* Remove control in provinces where an enemy (or autonomous) garrison is occupying the city
+			 * and no unit is there, accordingly to: "If one player has a garrison unit in the city while 
+			 * another player has a military unit in the city's province, no one controls the area"
+			 * (rules section 4.3). 
+			 */
+			rResolv.addResult(m.removeControls());
+						
+			/* Check home country changes */
+			// TODO
+
 			r.addResult(rResolv);
 			
 			/* Check victory conditions */
-			// TODO
-			
-			/* Check home country changes */
-			// TODO
+			// TODO			
 			
 			/* Set the date of the new turn */
 			gs.incCampaign();
