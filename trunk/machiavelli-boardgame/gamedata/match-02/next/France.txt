@@ -1,0 +1,7 @@
+Status for player France in 1455 spring:
+--------------------------------------------------------------
+Treasury: 9
+Conquered home countries: 0
+Controlled cities: 3
+Home country provinces: Avignon, Marseille, Provence, Swiss, 
+Assasins: Austria, Florence, Milan, Naples, Papacy, Turks, Venice, 

@@ -1,0 +1,44 @@
+------ Turn spring 1454 ------
+
+kind of year (5): good year (only column), column=6+4
+famine strikes at Herzegovina
+famine strikes at Trent
+famine strikes at Treviso
+famine strikes at Naples
+famine strikes at Istria
+
+player Austria gets: 
+   fixed: 7d
+   variable at home (rolling 3): 3d
+   TOTAL: 10d
+player Florence gets: 
+   fixed: 9d
+   variable at home (rolling 2): 2d
+   variable at home (rolling 1): 1d
+   TOTAL: 12d
+player France gets: 
+   fixed: 7d
+   variable at home (rolling 6): 6d
+   TOTAL: 13d
+player Milan gets: 
+   fixed: 11d
+   variable at home (rolling 5): 4d
+   TOTAL: 15d
+player Naples gets: 
+   fixed: 10d
+   variable at home (rolling 6): 4d
+   TOTAL: 14d
+player Papacy gets: 
+   fixed: 12d
+   variable at home (rolling 2): 3d
+   TOTAL: 15d
+player Turks gets: 
+   fixed: 8d
+   variable at home (rolling 6): 6d
+   TOTAL: 14d
+player Venice gets: 
+   fixed: 10d
+   variable at home (rolling 3): 3d
+   variable at home (rolling 6): 5d
+   TOTAL: 18d
+

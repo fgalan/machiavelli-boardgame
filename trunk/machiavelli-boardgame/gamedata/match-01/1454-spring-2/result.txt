@@ -1,0 +1,42 @@
+------ Turn spring 1454 ------
+
+kind of year (2): good year (only row), row=1+2
+famine strikes at Piombino
+famine strikes at Tunis
+famine strikes at Palermo
+
+player Austria gets: 
+   fixed: 7d
+   variable at home (rolling 4): 3d
+   TOTAL: 10d
+player Florence gets: 
+   fixed: 9d
+   variable at home (rolling 1): 1d
+   variable at home (rolling 4): 3d
+   TOTAL: 13d
+player France gets: 
+   fixed: 7d
+   variable at home (rolling 5): 5d
+   TOTAL: 12d
+player Milan gets: 
+   fixed: 11d
+   variable at home (rolling 5): 4d
+   TOTAL: 15d
+player Naples gets: 
+   fixed: 11d
+   variable at home (rolling 2): 2d
+   TOTAL: 13d
+player Papacy gets: 
+   fixed: 12d
+   variable at home (rolling 6): 6d
+   TOTAL: 18d
+player Turks gets: 
+   fixed: 6d
+   variable at home (rolling 5): 5d
+   TOTAL: 11d
+player Venice gets: 
+   fixed: 13d
+   variable at home (rolling 5): 4d
+   variable at home (rolling 2): 3d
+   TOTAL: 20d
+

@@ -1,0 +1,7 @@
+Status for player Venice in 1455 spring:
+--------------------------------------------------------------
+Treasury: 25
+Conquered home countries: 0
+Controlled cities: 6
+Home country provinces: Bergamo, Dalmatia, Friuli, Istria, Padua, Treviso, Venice, Verona, 
+Assasins: Austria, Florence, France, Milan, Naples, Papacy, Turks, 

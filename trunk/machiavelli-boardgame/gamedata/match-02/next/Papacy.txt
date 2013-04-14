@@ -1,0 +1,7 @@
+Status for player Papacy in 1455 spring:
+--------------------------------------------------------------
+Treasury: 21
+Conquered home countries: 0
+Controlled cities: 4
+Home country provinces: Ancona, Bologna, Patrimony, Perugia, Rome, Spoleto, Urbino, 
+Assasins: Austria, Florence, France, Milan, Naples, Turks, Venice, 

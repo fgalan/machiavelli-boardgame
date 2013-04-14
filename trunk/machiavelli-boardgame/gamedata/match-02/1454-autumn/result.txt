@@ -1,0 +1,100 @@
+------ Turn spring 1454 ------
+
+expenses: 
+- Venice expends 9d in buying autonomous garrison at Ferrara
+  * Counter brides: 0d
+  * Required 9d, result is SUCCESS. Player expends 9d
+  * Created 'G3 [Venice] (Garrison)' with action 'G3 converts into Army'
+
+player Austria commands:
+- A1 holds
+- A2 advances to Carinthia
+- A3 advances to Slavonia
+
+player Florence commands:
+- F1 advances to Ligurian Sea
+- G1 converts into Army
+- G2** converts into Army
+- A1 advances to Sienna
+- A2 supports to Sienna in favour of Florence
+
+player France commands:
+- A1 advances to Turin
+- A2 supports to Turin in favour of France
+- F1 advances to Gulf of Lyons
+- G1 converts into Army
+- G2 converts into Army
+
+player Milan commands:
+- A1 converts into Garrison
+- A2 advances to Fornova
+- A3 advances to Parma
+
+player Naples commands:
+- A1 holds
+- A2 advances to Aquila
+- F1 advances to Gulf of Naples
+- F2 advances to Tyrrhenian Sea
+
+player Papacy commands:
+- A1 advances to Patrimony
+- A2 advances to Spoleto
+- A3 advances to Ferrara
+- G1** converts into Army
+- G2 converts into Army
+
+player Turks commands:
+- F1 advances to Central Mediterranean
+- F2 advances to Lower Adriatic
+- A1 advances to Ragusa
+- G1 converts into Fleet
+
+player Venice commands:
+- A1 advances to Verona
+- A2 advances to Friuli
+- F1 advances to Upper Adriatic
+- G1 converts into Fleet
+- G2 converts into Army
+- G3 converts into Army
+
+turn resolution (including conflicts):
+
+- unit A1 [Milan] (Army) in Milan converts into G1 [Milan] (Garrison)
+- unit A2 [Austria] (Army) advances from Austria to Carinthia
+- unit A3 [Austria] (Army) advances from Hungrary to Slavonia
+- unit F1 [Florence] (Fleet) advances from Pisa to Ligurian Sea
+- unit G1 [Florence] (Garrison) in Pisa converts into A3 [Florence] (Army)
+- unit A1 [Florence] (Army) advances from Florence to Sienna
+- unit A1 [France] (Army) advances from Avignon to Turin
+- unit F1 [France] (Fleet) advances from Marseille to Gulf of Lyons
+- unit G1 [France] (Garrison) in Marseille converts into A3 [France] (Army)
+- unit G2 [France] (Garrison) in Avignon converts into A4 [France] (Army)
+- unit A2 [Milan] (Army) advances from Pavia to Fornova
+- unit A3 [Milan] (Army) advances from Cremona to Parma
+- unit A2 [Naples] (Army) advances from Bari to Aquila
+- unit F1 [Naples] (Fleet) advances from Palermo to Gulf of Naples
+- unit F2 [Naples] (Fleet) advances from Naples to Tyrrhenian Sea
+- unit A1 [Papacy] (Army) advances from Rome to Patrimony
+- unit A2 [Papacy] (Army) advances from Perugia to Spoleto
+- unit G1** [Papacy] (Garrison) in Perugia converts into A4** [Papacy] (Army)
+- unit G2 [Papacy] (Garrison) in Rome converts into A5 [Papacy] (Army)
+- unit F1 [Turks] (Fleet) advances from Tunis to Central Mediterranean
+- unit F2 [Turks] (Fleet) advances from Durazzo to Lower Adriatic
+- unit A1 [Turks] (Army) advances from Albania to Ragusa
+- unit G1 [Turks] (Garrison) in Durazzo converts into F3 [Turks] (Fleet)
+- unit A1 [Venice] (Army) advances from Padua to Verona
+- unit A2 [Venice] (Army) advances from Treviso to Friuli
+- unit F1 [Venice] (Fleet) advances from Dalmatia to Upper Adriatic
+- unit G1 [Venice] (Garrison) in Venice converts into F2 [Venice] (Fleet)
+- unit G2 [Venice] (Garrison) in Padua converts into A3 [Venice] (Army)
+- unit G2** [Florence] (Garrison) in Florence converts into A4** [Florence] (Army)
+
+- conflict at Ferrara:
+  * tied at strength 1
+
+
+autonomous garrison removed due to famine at Trent
+
+kind of year (1): no natural disaster, no plague
+no plague this year
+

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Adjustments player="Florence">
+	<Payment type="Army" id="1"/>
+	<Payment type="Army" id="2"/>
+	<Payment type="Fleet" id="1"/>
+	<Purchase type="Garrison" elite="0" province="Pisa"/>
+</Adjustments>

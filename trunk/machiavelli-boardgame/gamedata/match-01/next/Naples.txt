@@ -1,0 +1,7 @@
+Status for player Naples in 1454 spring:
+--------------------------------------------------------------
+Treasury: 2
+Conquered home countries: 0
+Controlled cities: 4
+Home country provinces: Aquila, Bari, Capua, Messina, Naples, Otranto, Palermo, Salerno, 
+Assasins: Austria, Florence, France, Milan, Papacy, Turks, Venice, 

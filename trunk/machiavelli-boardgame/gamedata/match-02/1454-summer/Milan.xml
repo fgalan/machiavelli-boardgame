@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Commands player="Milan">
+	<Action type="Army" id="1">
+		<Convert newType="Garrison"/>
+	</Action>
+	<Action type="Army" id="2">
+		<Advance territory="Fornova"/>
+	</Action>
+	<Action type="Army" id="3">
+		<Advance territory="Parma"/>
+	</Action>
+</Commands>

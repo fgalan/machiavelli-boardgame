@@ -1,0 +1,138 @@
+PLAYERS:
+   Austria, Florence, France, Milan, Naples, Papacy, Turks, Venice, 
+
+CONTROLLED PROVINCES:
+   Austria:
+      Austria(+)
+      Carinthia
+      Hungrary
+      Tyrolea(+)
+      
+   Florence:
+      Arezzo(+)
+      Florence(+)
+      Pisa(+)
+      Pistoia
+      
+   France:
+      Avignon(+)
+      Marseille(+)
+      Provence
+      Swiss
+      
+   Milan:
+      Como
+      Cremona(+)
+      Fornova
+      Milan(+)
+      Parma
+      Pavia(+)
+      
+   Naples:
+      Aquila
+      Bari(+)
+      Capua
+      Messina(+)
+      Naples(+)
+      Otranto
+      Palermo(+)
+      Salerno
+      
+   Papacy:
+      Ancona(+)
+      Bologna(+)
+      Patrimony
+      Perugia(+)
+      Rome(+)
+      Spoleto
+      Urbino
+      
+   Turks:
+      Albania
+      Bosnia
+      Durazzo(+)
+      Herzegovina
+      Tunis(+)
+      
+   Venice:
+      Bergamo
+      Dalmatia
+      Friuli
+      Istria
+      Padua(+)
+      Treviso(+)
+      Venice(+)
+      Verona
+      
+MILLITARY UNITS:
+   Austria:
+      A2 [Austria] (Army) in Austria
+      A3 [Austria] (Army) in Hungrary
+      A1 [Austria] (Army) in Tyrolea
+      
+   Florence:
+      A2 [Florence] (Army) in Arezzo
+      A1 [Florence] (Army) in Florence
+      G2** [Florence] (Garrison) in Florence
+      F1 [Florence] (Fleet) in Pisa
+      G1 [Florence] (Garrison) in Pisa
+      
+   France:
+      A1 [France] (Army) in Avignon
+      G2 [France] (Garrison) in Avignon
+      F1 [France] (Fleet) in Marseille
+      G1 [France] (Garrison) in Marseille
+      A2 [France] (Army) in Swiss
+      
+   Milan:
+      A3 [Milan] (Army) in Cremona
+      A1 [Milan] (Army) in Milan
+      A2 [Milan] (Army) in Pavia
+      
+   Naples:
+      A2 [Naples] (Army) in Bari
+      A1 [Naples] (Army) in Messina
+      F2 [Naples] (Fleet) in Naples
+      F1 [Naples] (Fleet) in Palermo
+      
+   Papacy:
+      A3 [Papacy] (Army) in Bologna
+      A2 [Papacy] (Army) in Perugia
+      G1** [Papacy] (Garrison) in Perugia
+      A1 [Papacy] (Army) in Rome
+      G2 [Papacy] (Garrison) in Rome
+      
+   Turks:
+      A1 [Turks] (Army) in Albania
+      F2 [Turks] (Fleet) in Durazzo
+      G1 [Turks] (Garrison) in Durazzo
+      F1 [Turks] (Fleet) in Tunis
+      
+   Venice:
+      F1 [Venice] (Fleet) in Dalmatia
+      A1 [Venice] (Army) in Padua
+      G2 [Venice] (Garrison) in Padua
+      A2 [Venice] (Army) in Treviso
+      G1 [Venice] (Garrison) in Venice
+      
+   Autonomous Garrisons:
+      Ferrara
+      Genoa
+      Lucca
+      Mantua
+      Modena
+      Montferrat
+      Piombino
+      Ragusa
+      Saluzzo
+      Savoy
+      Sienna
+      Trent
+      Turin
+      
+TEMPORARY MARKERS:
+   famine in Herzegovina
+   famine in Istria
+   famine in Naples
+   famine in Trent
+   famine in Treviso

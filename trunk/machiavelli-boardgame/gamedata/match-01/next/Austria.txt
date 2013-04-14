@@ -1,0 +1,7 @@
+Status for player Austria in 1454 spring:
+--------------------------------------------------------------
+Treasury: 2
+Conquered home countries: 0
+Controlled cities: 3
+Home country provinces: Austria, Carinthia, Hungrary, Tyrolea, 
+Assasins: Florence, France, Milan, Naples, Papacy, Turks, Venice, 

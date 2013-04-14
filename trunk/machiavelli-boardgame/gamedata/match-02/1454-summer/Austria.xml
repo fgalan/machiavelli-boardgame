@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Commands player="Austria">
+	<Action type="Army" id="1">
+		<Hold/>
+	</Action>
+	<Action type="Army" id="2">
+		<Advance territory="Carinthia"/>
+	</Action>
+	<Action type="Army" id="3">
+		<Advance territory="Slavonia"/>
+	</Action>
+</Commands>

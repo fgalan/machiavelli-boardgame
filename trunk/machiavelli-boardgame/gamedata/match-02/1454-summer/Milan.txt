@@ -1,0 +1,7 @@
+Status for player Milan in 1454 spring:
+--------------------------------------------------------------
+Treasury: 12
+Conquered home countries: 0
+Controlled cities: 3
+Home country provinces: Como, Cremona, Fornova, Milan, Parma, Pavia, 
+Assasins: Austria, Florence, France, Naples, Papacy, Turks, Venice, 

@@ -1,0 +1,147 @@
+PLAYERS:
+   Austria, Florence, France, Milan, Naples, Papacy, Turks, Venice, 
+
+CONTROLLED PROVINCES:
+   Austria:
+      Austria(+)
+      Carinthia
+      Hungrary
+      Slavonia
+      Tyrolea(+)
+      
+   Florence:
+      Arezzo(+)
+      Florence(+)
+      Pisa(+)
+      Pistoia
+      Sienna(-)
+      
+   France:
+      Avignon(+)
+      Marseille(+)
+      Provence
+      Swiss
+      Turin(-)
+      
+   Milan:
+      Como
+      Cremona(+)
+      Fornova
+      Milan(+)
+      Parma
+      Pavia(+)
+      
+   Naples:
+      Aquila
+      Bari(+)
+      Capua
+      Messina(+)
+      Naples(+)
+      Otranto
+      Palermo(+)
+      Salerno
+      
+   Papacy:
+      Ancona(+)
+      Bologna(+)
+      Patrimony
+      Perugia(+)
+      Rome(+)
+      Spoleto
+      Urbino
+      
+   Turks:
+      Albania
+      Bosnia
+      Durazzo(+)
+      Herzegovina
+      Ragusa(-)
+      Tunis(+)
+      
+   Venice:
+      Bergamo
+      Dalmatia
+      Friuli
+      Istria
+      Padua(+)
+      Treviso(+)
+      Venice(+)
+      Verona
+      Ferrara(c)
+      
+ Code:
+   Swiss      -> the player controls the province and the unfortified city (if any)
+   Turin(+)   -> the player controls the province *and* the fortified city
+   Turin(-)   -> the player controls the province *but not* the fortified city (which is controlled
+                 by another player with a Garrison unit there or has an AutonomousGarrison)
+   Turin(c)   -> the player controls the city *but not* the province
+
+ (Note that Seas have no controller by definition)
+
+MILLITARY UNITS:
+   Austria:
+      A2 [Austria] (Army) in Carinthia
+      A3 [Austria] (Army) in Slavonia
+      A1 [Austria] (Army) in Tyrolea
+      
+   Florence:
+      A2 [Florence] (Army) in Arezzo
+      A4** [Florence] (Army) in Florence
+      F1 [Florence] (Fleet) in Ligurian Sea
+      A3 [Florence] (Army) in Pisa
+      A1 [Florence] (Army) in Sienna
+      
+   France:
+      A4 [France] (Army) in Avignon
+      F1 [France] (Fleet) in Gulf of Lyons
+      A3 [France] (Army) in Marseille
+      A2 [France] (Army) in Swiss
+      A1 [France] (Army) in Turin
+      
+   Milan:
+      A2 [Milan] (Army) in Fornova
+      G1 [Milan] (Garrison) in Milan
+      A3 [Milan] (Army) in Parma
+      
+   Naples:
+      A2 [Naples] (Army) in Aquila
+      F1 [Naples] (Fleet) in Gulf of Naples
+      A1 [Naples] (Army) in Messina
+      F2 [Naples] (Fleet) in Tyrrhenian Sea
+      
+   Papacy:
+      A3 [Papacy] (Army) in Bologna
+      A1 [Papacy] (Army) in Patrimony
+      A4** [Papacy] (Army) in Perugia
+      A5 [Papacy] (Army) in Rome
+      A2 [Papacy] (Army) in Spoleto
+      
+   Turks:
+      F1 [Turks] (Fleet) in Central Mediterranean
+      F3 [Turks] (Fleet) in Durazzo
+      F2 [Turks] (Fleet) in Lower Adriatic
+      A1 [Turks] (Army) in Ragusa
+      
+   Venice:
+      G3 [Venice] (Garrison) in Ferrara
+      A2 [Venice] (Army) in Friuli
+      A3 [Venice] (Army) in Padua
+      F1 [Venice] (Fleet) in Upper Adriatic
+      F2 [Venice] (Fleet) in Venice
+      A1 [Venice] (Army) in Verona
+      
+   Autonomous Garrisons:
+      Genoa
+      Lucca
+      Mantua
+      Modena
+      Montferrat
+      Piombino
+      Ragusa
+      Saluzzo
+      Savoy
+      Sienna
+      Turin
+      
+TEMPORARY MARKERS:
+   none

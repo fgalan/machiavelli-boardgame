@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Commands player="Venice">
+	<Action type="Army" id="1">
+		<Advance territory="Verona"/>
+	</Action>
+	<Action type="Army" id="2">
+		<Advance territory="Friuli"/>
+	</Action>
+	<Action type="Fleet" id="1">
+		<Advance territory="Upper Adriatic"/>
+	</Action>
+	<Action type="Garrison" id="1">
+		<Convert newType="Fleet"/>
+	</Action>
+	<Action type="Garrison" id="2">
+		<Convert newType="Army"/>
+	</Action>
+	<BuyAutonomousGarrison province="Ferrara" amount="9">
+		<Convert newType="Army"/>
+	</BuyAutonomousGarrison>
+</Commands>
