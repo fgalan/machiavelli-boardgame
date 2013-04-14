@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Commands player="Florence">
+	<Action type="Fleet" id="1">
+		<Transport armyId="3" player="Florence"/>
+	</Action>	
+	<Action type="Army" id="1">
+		<Advance territory="Piombino"/>
+	</Action>
+	<Action type="Army" id="2">
+		<Advance territory="Sienna"/>
+	</Action>
+	<Action type="Army" id="3">
+		<Advance territory="Savoy"/>
+	</Action>
+	<Action type="Army" id="4">
+		<Advance territory="Pistoia"/>
+	</Action>	
+</Commands>

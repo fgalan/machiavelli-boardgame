@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Commands player="Naples">
+	<Action type="Army" id="1">
+		<Hold/>
+	</Action>
+	<Action type="Army" id="2">
+		<Advance territory="Aquila"/>
+	</Action>
+	<Action type="Fleet" id="1">
+		<Advance territory="Gulf of Naples"/>
+	</Action>
+	<Action type="Fleet" id="2">
+		<Advance territory="Tyrrhenian Sea"/>
+	</Action>
+</Commands>

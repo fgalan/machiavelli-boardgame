@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Commands player="Papacy">
+	<Action type="Army" id="1">
+		<Advance territory="Patrimony"/>
+	</Action>
+	<Action type="Army" id="2">
+		<Advance territory="Spoleto"/>
+	</Action>
+	<Action type="Army" id="3">
+		<Advance territory="Ferrara"/>
+	</Action>
+	<Action type="Garrison" id="1">
+		<Convert newType="Army"/>
+	</Action>
+	<Action type="Garrison" id="2">
+		<Convert newType="Army"/>
+	</Action>	
+</Commands>

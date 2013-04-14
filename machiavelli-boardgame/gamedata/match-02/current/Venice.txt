@@ -1,0 +1,7 @@
+Status for player Venice in 1454 fall:
+--------------------------------------------------------------
+Treasury: 3
+Conquered home countries: 0
+Controlled cities: 4
+Home country provinces: Bergamo, Dalmatia, Friuli, Istria, Padua, Treviso, Venice, Verona, 
+Assasins: Austria, Florence, France, Milan, Naples, Papacy, Turks, 

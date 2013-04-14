@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Commands player="Venice">
+	<Action type="Army" id="1">
+		<Advance territory="Bergamo"/>
+	</Action>
+	<Action type="Army" id="2">
+		<Advance territory="Verona"/>
+	</Action>
+	<Action type="Army" id="3">
+		<Support territory="Verona" player="Venice"/>
+	</Action>
+	<Action type="Garrison" id="3">
+		<Convert newType="Army"/>
+	</Action>
+	<Action type="Fleet" id="1">
+		<Hold/>
+	</Action>
+	<Action type="Fleet" id="2">
+		<Hold/>
+	</Action>
+</Commands>

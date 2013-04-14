@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Commands player="Turks">
+	<Action type="Fleet" id="1">
+		<Advance territory="Central Mediterranean"/>
+	</Action>
+	<Action type="Fleet" id="2">
+		<Advance territory="Lower Adriatic"/>
+	</Action>
+	<Action type="Army" id="1">
+		<Advance territory="Ragusa"/>
+	</Action>
+	<Action type="Garrison" id="1">
+		<Convert newType="Fleet"/>
+	</Action>
+</Commands>

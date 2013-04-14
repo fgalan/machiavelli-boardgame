@@ -1,0 +1,120 @@
+------ Turn fall 1454 ------
+
+expenses: 
+  none
+
+player France commands:
+- F1 transports army A4 of player France
+- A1 advances to Saluzzo
+- A2 holds
+- A3 advances to Savoy
+- A4 advances to Corsica
+
+player Naples commands:
+- F2 transports army A1 of player Naples
+- A1 advances to Capua
+- A2 advances to Ancona
+- F1 holds
+
+player Florence commands:
+- F1 advances to Corsica
+- A1 advances to Sienna
+- A3 advances to Florence
+- A4** supports to Florence in favour of Florence
+
+player Milan commands:
+- G1 holds
+- A2 advances to Montferrat
+- A3 advances to Fornova
+
+player Venice commands:
+- A1 supports to Trent in favour of Venice
+- A2 advances to Trent
+- A3 advances to Verona
+- A4 advances to Bologna
+- F1 supports to Bologna in favour of Venice
+- F2 holds
+
+player Turks commands:
+- F1 advances to Western Mediterranean Sea
+- F2 holds
+- F3 advances to Ionian Sea
+- A1 besieges
+
+player Papacy commands:
+- A1 advances to Sienna
+- A2 advances to Bologna
+- A3 holds
+- A4** supports to Florence in favour of Papacy
+- A5 supports to Patrimony in favour of Papacy
+
+turn resolution (including conflicts):
+- unit A1 [Turks] (Army) in Ragusa finishes siege: autonomous garrision unit is destroyed
+- unit A1 [France] (Army) advances from Turin to Saluzzo
+- unit A3 [France] (Army) advances from Provence to Savoy
+- unit A2 [Milan] (Army) advances from Pavia to Montferrat
+- unit A3 [Milan] (Army) advances from Parma to Fornova
+- unit A1 [Naples] (Army) advances from Palermo to Capua
+- unit A2 [Naples] (Army) advances from Aquila to Ancona
+- unit F1 [Turks] (Fleet) advances from Central Mediterranean to Western Mediterranean Sea
+- unit F3 [Turks] (Fleet) advances from Durazzo to Ionian Sea
+- unit A2 [Venice] (Army) advances from Verona to Trent
+- unit A3 [Venice] (Army) advances from Padua to Verona
+
+- conflict at Corsica ( France=1 Florence=1 ):
+  * tied at strength 1
+  * as result, nothing happens
+- conflict at Sienna ( Florence=1 Papacy=1 ):
+  * tied at strength 1
+  * as result, nothing happens
+- conflict at Florence ( Florence=3 Papacy=3 ):
+  * tied at strength 3
+  * as result, nothing happens
+- conflict at Bologna ( Venice=2 Papacy=1 ):
+  * winner is Venice with strength 2
+  * unit A4 [Venice] (Army) advances from Ferrara to Bologna
+
+
+
+- player Florence loss control on Sienna due to he doesn't have any unit there and a autonomous garrison is at the city
+- player France loss control on Turin due to he doesn't have any unit there and a autonomous garrison is at the city
+
+
+kind of year (4): good year (only column), column=3+4
+famine strikes at Cremona
+famine strikes at Fornova
+famine strikes at Turin
+famine strikes at Bosnia
+famine strikes at Avignon
+
+player Florence gets: 
+   fixed: 5d
+   variable at home (rolling 6): 5d
+   variable at home (rolling 4): 3d
+   TOTAL: 13d
+player France gets: 
+   fixed: 8d
+   variable at home (rolling 1): 1d
+   TOTAL: 9d
+player Milan gets: 
+   fixed: 9d
+   variable at home (rolling 1): 2d
+   TOTAL: 11d
+player Naples gets: 
+   fixed: 17d
+   variable at home (rolling 4): 3d
+   TOTAL: 20d
+player Papacy gets: 
+   fixed: 14d
+   variable at home (rolling 6): 6d
+   TOTAL: 20d
+player Turks gets: 
+   fixed: 13d
+   variable at home (rolling 5): 5d
+   TOTAL: 18d
+player Venice gets: 
+   fixed: 16d
+   variable at home (rolling 3): 3d
+   variable at home (rolling 2): 3d
+   TOTAL: 22d
+

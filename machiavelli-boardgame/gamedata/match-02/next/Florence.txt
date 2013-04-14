@@ -1,0 +1,7 @@
+Status for player Florence in 1455 spring:
+--------------------------------------------------------------
+Treasury: 13
+Conquered home countries: 0
+Controlled cities: 1
+Home country provinces: Arezzo, Florence, Pisa, Pistoia, 
+Assasins: Austria, France, Milan, Naples, Papacy, Turks, Venice, 

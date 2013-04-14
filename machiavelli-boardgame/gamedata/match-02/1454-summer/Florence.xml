@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Commands player="Florence">
+	<Action type="Fleet" id="1">
+		<Advance territory="Ligurian Sea"/>
+	</Action>
+	<Action type="Garrison" id="1">
+		<Convert newType="Army"/>
+	</Action>
+	<Action type="Garrison" id="2">
+		<Convert newType="Army"/>
+	</Action>	
+	<Action type="Army" id="1">
+		<Advance territory="Sienna"/>
+	</Action>
+	<Action type="Army" id="2">
+		<Support territory="Sienna" player="Florence"/>
+	</Action>
+	<Retreat type="Army" id="1">
+		<Province>Pistoia</Province>
+		<Province>Urbino</Province>
+	</Retreat>
+</Commands>

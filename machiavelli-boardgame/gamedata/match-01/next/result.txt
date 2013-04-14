@@ -1,0 +1,88 @@
+player Austria adjustment orders:
+- pay A1
+- pay A2
+- pay A3
+player Florence adjustment orders:
+- pay A1
+- pay A2
+- pay F1
+- purchase G at Pisa
+player France adjustment orders:
+- pay A1
+- pay A2
+- pay F1
+- purchase G at Marseille
+player Milan adjustment orders:
+- pay A1
+- pay A2
+- pay A3
+- purchase G at Milan
+player Naples adjustment orders:
+- pay A1
+- pay A2
+- pay F1
+- pay F2
+- purchase G at Messina
+player Papacy adjustment orders:
+- pay A1
+- pay A2
+- pay A3
+- pay F1
+- purchase G at Bologna
+player Turks adjustment orders:
+- pay A1
+- pay F1
+- pay F2
+- purchase G** at Durazzo
+player Venice adjustment orders:
+- pay A1
+- pay A2
+- pay F1
+- pay G1
+- purchase G* at Padua
+- purchase G at Treviso
+
+player Austria adjustment processing:
+- payment: A1 [Austria] (Army) (-3d)
+- payment: A2 [Austria] (Army) (-3d)
+- payment: A3 [Austria] (Army) (-3d)
+player Florence adjustment processing:
+- payment: A1 [Florence] (Army) (-3d)
+- payment: A2 [Florence] (Army) (-3d)
+- payment: F1 [Florence] (Fleet) (-3d)
+- purchase: G1 [Florence] (Garrison) at Pisa (-3d)
+player France adjustment processing:
+- payment: A1 [France] (Army) (-3d)
+- payment: A2 [France] (Army) (-3d)
+- payment: F1 [France] (Fleet) (-3d)
+- purchase: G1 [France] (Garrison) at Marseille (-3d)
+player Milan adjustment processing:
+- payment: A1 [Milan] (Army) (-3d)
+- payment: A2 [Milan] (Army) (-3d)
+- payment: A3 [Milan] (Army) (-3d)
+- purchase: G1 [Milan] (Garrison) at Milan (-3d)
+player Naples adjustment processing:
+- payment: A1 [Naples] (Army) (-3d)
+- payment: A2 [Naples] (Army) (-3d)
+- payment: F1 [Naples] (Fleet) (-3d)
+- payment: F2 [Naples] (Fleet) (-3d)
+- purchase: G1 [Naples] (Garrison) at Messina (-3d)
+player Papacy adjustment processing:
+- payment: A1 [Papacy] (Army) (-3d)
+- payment: A2 [Papacy] (Army) (-3d)
+- payment: A3 [Papacy] (Army) (-3d)
+- payment: F1 [Papacy] (Fleet) (-3d)
+- purchase: G1 [Papacy] (Garrison) at Bologna (-3d)
+player Turks adjustment processing:
+- payment: A1 [Turks] (Army) (-3d)
+- payment: F1 [Turks] (Fleet) (-3d)
+- payment: F2 [Turks] (Fleet) (-3d)
+- purchase: G1** [Turks] (Garrison) at Durazzo (-6d)
+player Venice adjustment processing:
+- payment: A1 [Venice] (Army) (-3d)
+- payment: A2 [Venice] (Army) (-3d)
+- payment: F1 [Venice] (Fleet) (-3d)
+- payment: G1 [Venice] (Garrison) (-3d)
+- purchase: G2* [Venice] (Garrison) at Padua (-6d)
+- purchase: G3 [Venice] (Garrison) at Treviso (-3d)
+

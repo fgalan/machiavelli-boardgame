@@ -1,0 +1,91 @@
+------ Turn summer 1454 ------
+
+expenses: 
+  none
+
+player France commands:
+- A1 advances to Savoy
+- A2 holds
+- A3 advances to Provence
+- A4 advances to Turin
+- F1 holds
+
+player Naples commands:
+- A1 advances to Palermo
+- A2 holds
+- F1 advances to Ionian Sea
+- F2 supports to Palermo in favour of Naples
+
+player Florence commands:
+- F1 transports army A3 of player Florence
+- A1 advances to Piombino
+- A2 advances to Sienna
+- A3 advances to Savoy
+- A4** advances to Pistoia
+
+player Milan commands:
+- G1 holds
+- A2 advances to Pavia
+- A3 supports to Pavia in favour of Milan
+
+player Venice commands:
+- A1 advances to Bergamo
+- A2 advances to Verona
+- A3 supports to Verona in favour of Venice
+- G3 converts into Army
+- F1 holds
+- F2 holds
+
+player Turks commands:
+- F1 holds
+- F2 holds
+- F3 advances to Ionian Sea
+- A1 besieges
+
+player Austria commands:
+- A1 supports to Carinthia in favour of Austria
+- A2 supports to Tyrolea in favour of Austria
+- A3 advances to Carniola
+
+player Papacy commands:
+- A1 advances to Sienna
+- A2 advances to Urbino
+- A3 advances to Florence
+- A4** advances to Arezzo
+- A5 supports to Patrimony in favour of Papacy
+
+turn resolution (including conflicts):
+- unit A1 [Turks] (Army) in Ragusa besiegues city
+- unit A3 [Austria] (Army) advances from Slavonia to Carniola
+- unit A1 [Florence] (Army) advances from Sienna to Piombino
+- unit A4** [Florence] (Army) advances from Florence to Pistoia
+- unit A3 [France] (Army) advances from Marseille to Provence
+- unit A2 [Milan] (Army) advances from Fornova to Pavia
+- unit A1 [Naples] (Army) advances from Messina to Palermo
+- unit A2 [Papacy] (Army) advances from Spoleto to Urbino
+- unit A3 [Papacy] (Army) advances from Bologna to Florence
+- unit A1 [Venice] (Army) advances from Verona to Bergamo
+- unit A2 [Venice] (Army) advances from Friuli to Verona
+- unit G3 [Venice] (Garrison) in Ferrara converts into A4 [Venice] (Army)
+
+- conflict at Sienna ( Florence=1 Papacy=1 ):
+  * tied at strength 1
+  * as result, nothing happens
+- conflict at Savoy ( France=1 Florence=1 ):
+  * tied at strength 1
+  * as result, nothing happens
+- conflict at Ionian Sea ( Naples=1 Turks=1 ):
+  * tied at strength 1
+  * as result, nothing happens
+- conflict at Arezzo ( Florence=1 Papacy=2 ):
+  * winner is Papacy with strength 2
+  * A2 [Florence] (Army) at the place must retreat
+  * unit A4** [Papacy] (Army) advances from Perugia to Arezzo
+
+retreats:
+- unit A2 [Florence] (Army) has no legal place to retreat so it is DESTROYED
+
+blocked movements:
+- unit A4 [France] (Army) at Avignon can not move to Turin due to A1 [France] (Army) (owned by the same player) is at that place
+
+

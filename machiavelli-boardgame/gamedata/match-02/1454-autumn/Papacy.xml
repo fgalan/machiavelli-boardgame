@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Commands player="Papacy">
+	<Action type="Army" id="1">
+		<Advance territory="Sienna"/>
+	</Action>
+	<Action type="Army" id="2">
+		<Advance territory="Urbino"/>
+	</Action>
+	<Action type="Army" id="3">
+		<Advance territory="Florence"/>
+	</Action>
+	<Action type="Army" id="4">
+		<Advance territory="Arezzo"/>
+	</Action>
+	<Action type="Army" id="5">
+		<Support territory="Patrimony" player="Papacy"/>
+	</Action>	
+</Commands>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Commands player="Milan">
+	<Action type="Garrison" id="1">
+		<Hold/>
+	</Action>
+	<Action type="Army" id="2">
+		<Advance territory="Pavia"/>
+	</Action>
+	<Action type="Army" id="3">
+		<Support territory="Pavia" player="Milan"/>
+	</Action>
+</Commands>

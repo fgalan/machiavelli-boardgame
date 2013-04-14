@@ -1,0 +1,7 @@
+Status for player Turks in 1454 spring:
+--------------------------------------------------------------
+Treasury: 0
+Conquered home countries: 0
+Controlled cities: 3
+Home country provinces: Albania, Bosnia, Durazzo, Herzegovina, Tunis, 
+Assasins: Austria, Florence, France, Milan, Naples, Papacy, Venice, 

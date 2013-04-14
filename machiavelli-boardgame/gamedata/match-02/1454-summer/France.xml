@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Commands player="France">
+	<Action type="Army" id="1">
+		<Advance territory="Turin"/>
+	</Action>
+	<Action type="Army" id="2">
+		<Support territory="Turin" player="France"/>
+	</Action>
+	<Action type="Fleet" id="1">
+		<Advance territory="Gulf of Lyons"/>
+	</Action>
+	<Action type="Garrison" id="1">
+		<Convert newType="Army"/>
+	</Action>
+	<Action type="Garrison" id="2">
+		<Convert newType="Army"/>
+	</Action>
+</Commands>
