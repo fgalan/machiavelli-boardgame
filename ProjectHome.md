@@ -1,0 +1,1 @@
+This project implements the Machiavelli board game logic. It is composed of three phases: 1) implementing the turn engine, 2) implementing the graphic map render, 3) implement an online system to automate turn submission and results delivery.
